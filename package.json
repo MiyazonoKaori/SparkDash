@@ -1,0 +1,52 @@
+{
+  "name": "SP-Dashboard",
+  "description": "Mobile Dashboard",
+  "author": {
+    "name": "TZ Martin",
+    "email": "martin@semanticpress.com",
+    "url": "http://tzmartin.com/"
+  },
+  "version": "1.0.0",
+  "license": "Commercial",
+  "copyright": "2013",
+  "url": "http://semanticpress.com",
+  "private": "true",
+  "noAnalyze": true,
+  "repository": {
+    "url": "git://"
+  },
+  "keywords": [
+    "data"
+  ],
+  "main": "lib/main.js",
+  "dependencies": {
+    "request": ">=2.9.x",
+    "express": "*",
+    "node-sass": "~0.6.6",
+    "colors": "~0.6.2",
+    "wrench": "~1.5.1",
+    "node-minify": "~0.7.2",
+    "requirejs": "~2.1.8",
+    "hbs": "~2.1.0",
+    "redis": "~0.8.4",
+    "faye": "~0.8.9",
+    "faye-redis": "~0.1.3",
+    "pusher": "~0.1.3",
+    "json-store": "~0.0.1",
+    "vague-time": "~0.5.5",
+    "moment": "~2.2.1",
+    "bcrypt": "~0.7.7"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": ">= 0.6.0",
+    "npm": ">= 1.x.x"
+  },
+  "scripts": {
+    "start": "node bin/main.js",
+    "start debug": "node bin/main.js -d"
+  },
+  "_id": "sp-dashboard@0.1",
+  "_from": "sp-dashboard@>=0.1"
+}
