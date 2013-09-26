@@ -1,6 +1,6 @@
 {
   "version":"0.1",
-  "cacheDir":"/var/www/cache/uploads/spdashboard/",
+  "cacheDir":"/var/www/cache/uploads/spapi/",
   "session": {
     "key": "SECRET-KEY",
     "port": "",

@@ -15,7 +15,7 @@ var App = require('../lib/')
 	,	subcommand = process.argv.splice(2, 1)[0]
 	, sass = require('node-sass')
 	, pkg = require("../package.json")
-  , PORT = '5555';
+  , PORT = '3001';
 
 
 function playSound () {
