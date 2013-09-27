@@ -1,0 +1,133 @@
+.modal {
+	width:400px;
+	background: #FFF;
+	border-radius: 5px;
+	box-shadow: 0px 0px 7px rgba(0,0,0,0.8);
+	padding: 10px;
+	display: none;
+}
+.modal p {
+	margin-top: 0;
+	text-align: center;
+}
+.modal .header {
+	border-bottom: 1px solid #CCCCCC;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	padding: 18px 18px 14px;
+}
+.modal .header h3, .modal .header h4 {
+	margin: 0;
+	padding: 0;
+	text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+	text-align: center;
+}
+.modal .content {
+	min-height:200px;
+	margin:20px auto auto;
+}
+.modal .content:after {
+  content: "";
+}
+.modal form {
+	padding: 10px 0;
+}
+.modal .txt {
+	padding: 10px 20px;
+}
+.modal .txt input {
+	width: 220px;
+	height: 16px;
+	padding: 3px;
+	border: 1px solid;
+	border-color: #8C8C8C #CCCCCC #CCCCCC #8C8C8C;
+}
+.modal .txt label {
+	float: left;
+	width: 130px;
+	line-height: 24px;
+}
+.modal .btn {
+	padding: 10px 20px 10px 150px;
+}
+
+.modal.c0 {
+	width: auto;
+}
+
+
+.modal.c1 {}
+.modal.c1 .btn a {
+	float: left;
+	padding: 0 20px;
+	line-height: 26px;
+	border: 1px solid;
+	border-color: #00729F;
+	border-radius: 3px;
+	background: -moz-linear-gradient(center top , #049CDB, #0064CD);
+	text-align: center;
+	font-family: sans-serif;
+	font-size: 14px;
+	text-shadow: 0 1px 0 rgba(0,0,0,0.5);
+	color: #FFF;
+	margin: 0 10px 0 0;
+}
+.modal.c1 .btn a.cancel {
+	border-color: #AAAAAA #AAAAAA #888888;
+	background: -moz-linear-gradient(center top , #EEEEEE, #CCCCCC);
+	box-shadow: none;
+	color: #333;
+	text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+
+
+
+
+.modal.c2 {
+	width:550px;
+	height:565px;
+}
+.modal.c2 h4 {
+	font-size:24px;
+	text-align:center;
+	margin-top: 5px;
+	width: 90%;
+	margin: auto;
+}
+.modal.c2 .dropbox .logo {
+	background-image: url("/img/logo.connect.dropbox.png");
+  background-position: center top;
+  height: 65px;
+  margin: auto;
+  width: 250px;
+	margin-bottom: 5px;
+}
+.modal.c2 .dropbox .screen1 {
+	background-image:url("/img/dropbox.screen1.png");
+	background-repeat:no-repeat;
+	background-position:top center;
+	width:454px;
+	height:272px;
+	margin: auto;
+}
+.modal.c2 .dropbox .loading {
+  display: block;
+  height: 40px;
+  margin: auto;
+  width: 80%;
+}
+
+
+
+
+.modal.c3 {
+	width:350px;
+	height:170px;
+}
+.modal.c3 h4 {
+	font-size:24px;
+	text-align:center;
+	margin-top: 5px;
+	width: 90%;
+	margin: -20px auto auto;
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{{app_name}}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+        <meta http-equiv="cleartype" content="on">
+        <meta name="description" content="" />
+      	<meta name='keywords' content=''/>
+
+        <link rel="author" href="/humans.txt">
+        
+        <link href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css" rel="stylesheet">
+        <link href="/css/main.css" rel="stylesheet">
+
+        <meta property="og:title" content="SparkDash Mobile Analytics.">
+        <meta property="og:type" content="company">
+        <meta property="og:image" content="http://semanticpress.com/assets/img/logos/sparkdash.png">
+        <meta property="og:site_name" content="SemanticPress.com">
+        <meta property="og:url" content="http://SemanticPress.com/">
+        <meta property="og:description" content="">   
+
+        <link rel="shortcut icon" href="/favicon.ico">
+        <link rel="icon" href="/img/logos/favicon.png" type="image/png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/img/logos/apple-touch-icon-144.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/img/logos/apple-touch-icon-114.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/img/logos/apple-touch-icon-72.png">
+        <link rel="apple-touch-icon" href="/img/logos/apple-touch-icon-57.png">
+    </head>
+
+    <body controller="data">
+        
+        <div id="layout" class="pure-g-r">
+
+          <div id="main" class="pure-u-1">
+            <div id="main-menu-container" class="pure-g">
+              <div id="main-menu-tabs" class="pure-u-1">
+                <nav>
+                  <ul>
+                    <li action="tab.launchpad">LaunchPad</li>
+                    <li action="tab.apps">Apps</li>
+                    <li class="active" action="tab.data">Data</li>
+                  </ul>
+                </nav>
+              </div>
+              <div id="main-menu-login" class="pure-u-1">
+                <nav>
+                  <ul>
+                    <li class="active" action="user.logout">sign out</li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+
+            <div id="main-container" class="pure-g-r">
+              
+            </div>
+          </div>
+        </div>
+        
+        <div id="modals"></div>
+        
+        <script data-main="/js/app.min" src="/js/require.js"></script>
+    </body>
+</html>

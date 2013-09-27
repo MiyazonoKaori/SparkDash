@@ -1,0 +1,71 @@
+@media only screen and (min-width:320px) {
+
+}
+@media only screen and (min-width:480px) {
+
+}
+@media only screen and (min-width:768px) {
+
+}
+@media only screen and (min-width:1024px) {
+
+}
+@media only screen and (min-width:1140px) {
+
+}
+@media only screen and (min-width:1280px) {
+
+}
+@media print, (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) {
+
+}
+
+@media (max-width: 870px) {
+
+    /* Navigation Push Styles */
+    #layout {
+        position: relative;
+        padding-left: 0px;
+    }
+        #layout.active {
+            position: relative;
+            left: 260px;
+        }
+            #layout.active #menu {
+                left: 260px;
+                width: 260px;
+            }
+
+    #menu {
+        left: 0;
+    }
+    #main-menu-header {
+      margin-left:0px;
+    }
+    #main-menu-left {
+      margin-left: 53px;
+    }
+
+    #main-menu-right {
+      margin-right: 0px;
+      width:75px;
+    }
+    
+    #main-container .left-panel {
+      margin-left: -260px;
+    }
+    
+    .map-container {
+      left:0px;
+    }
+    
+    .pure-menu-link {
+        position: fixed;
+        left: 0;
+        display: block;
+    }
+
+    #layout.active .pure-menu-link {
+        left: 260px;
+    }
+}

@@ -1,0 +1,276 @@
+#layout {
+  padding: 0;
+  left: 0;
+}
+
+#menu {
+  margin-left: -75px;
+  width: 75px;
+  position: fixed;
+  top: 0;
+  left: 75px;
+  bottom: 0;
+  z-index: 1000;
+  background: #333333;
+  overflow-y: auto;
+  -webkit-overflow-scroll: touch;
+}
+
+#menu-logo {
+  height: 65px;
+  background: #1773B1;
+}
+
+#menu nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#menu nav ul li {
+  height: 50px;
+  margin-bottom: 1px;
+  background: #5d5d5d;
+}
+
+#menu nav header {
+  height: 75px;
+  color:#FFF;
+}
+#menu nav header a {
+  cursor:pointer;
+  text-decoration:none;
+  text-align: center;
+  line-height: 130px;
+  font-size:10px;
+  color:#FFF;
+}
+#menu nav header.active, #menu nav header.active a {
+  background: #F5F5F5;
+  color:#333;
+}
+#menu nav header a div {
+  width:100%;
+  height:100%;
+  background-image:url('/img/nav.icon.maps.png');
+  background-repeat:no-repeat;
+  background-position:center 8px;
+}
+#menu nav header.devices a div {
+  background-image:url('/img/nav.icon.devices.png');
+}
+#menu nav header.fsm a div {
+  background-image:url('/img/nav.icon.fsm.png');
+}
+#menu nav header.tasks a div {
+  background-image:url('/img/nav.icon.tasks.png');
+}
+
+#menu-bottom {
+  padding: 16px 10px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: #4d4d4d;
+  color: #fff;
+  font-size: 14px;
+}
+
+#menu-bottom.alert{
+  background-image:url('/img/nav.icon.alert.png');
+  background-repeat:no-repeat;
+  background-position:center 11px;
+  cursor:pointer;
+}
+#menu-bottom.alert div {
+  height: 30px;
+  line-height: 71px; 
+  text-align: center; 
+  font-size: 10px;
+}
+#menu-bottom.alert:hover {
+  background-color: #3F3F3F;
+}
+
+#main-menu-container {
+  background: #1773B1;
+  height: 25px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+
+/* 
+
+  Login Menu 
+  
+*/
+#main-menu-container #main-menu-login  {
+  height: 100%;
+  width: auto;
+  font-size: 16px;
+  font-weight:bold;
+  color:#fff;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+#main-menu-container #main-menu-tabs  {
+  height: 100%;
+  width: auto;
+  font-size: 16px;
+  font-weight:normal;
+  color:#fff;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+#main-menu-container nav ul {
+  margin: 0;
+  padding: 0;
+}
+
+#main-menu-container nav ul li {
+  min-width: 20px;
+  margin: 0 1px 0 0;
+  padding: 4px 20px;
+  float: left;
+  text-align: left;
+  opacity: 0.7;
+}
+#main-menu-container nav ul li.active {
+  font-weight:bold;
+  background: #458FC1;
+  opacity:1;
+}
+
+.main-menu-title {
+  font-weight: bold;
+}
+
+#main-menu-login nav {
+  margin-right:0px;
+  float: right;
+  cursor:pointer;
+}
+#main-menu-tabs nav {
+  margin-right:0px;
+  float: left;
+  cursor:pointer;
+}
+#main-menu-login nav ul, #main-menu-tabs nav ul {
+  list-style-type: none;
+}
+#main-menu-login nav ul li:last-child, #main-menu-tabs nav ul li:last-child {
+  margin-right: 0;
+}
+
+
+#main-container {
+  height: 100%;
+  position: relative;
+  top: 25px;
+  letter-spacing: 0;
+}
+
+#main-container .left-panel {
+  float:left;
+  width:245px;
+  height:100%;
+  background-color:#efefef;
+  z-index:10;
+  margin-left:-1px;
+  
+}
+
+
+/* Add transition to containers so they can push in and out */
+#layout,
+#menu,
+#main,
+#main-menu-container,
+.pure-menu-link {
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+}
+#layout,
+#menu,
+#main,
+.pure-menu-link {
+  height: 100%;
+  overflow: hidden;
+}
+
+.pure-menu-link {
+    display: none; /* show this only on small screens */
+    top: 0;
+    left: 150px; /* "#menu width" */
+    background: #000;
+    background: rgba(0,0,0,0.7);
+    font-size: 10px; /* change this value to increase/decrease button size */
+    z-index: 10;
+    width: 2em;
+    height: 6px;
+    padding: 2.1em 1.6em;
+}
+
+    .pure-menu-link:hover,
+    .pure-menu-link:focus {
+        background: #000;
+    }
+
+    .pure-menu-link span {
+        position: relative;
+        display: block;
+    }
+
+    .pure-menu-link span,
+    .pure-menu-link span:before,
+    .pure-menu-link span:after {
+        background-color: #fff;
+        width: 100%;
+        height: .2em;
+        /*-webkit-transition: all 0.8s;
+           -moz-transition: all 0.8s;
+            -ms-transition: all 0.8s;
+             -o-transition: all 0.8s;
+                transition: all 0.8s;*/
+    }
+
+        .pure-menu-link span:before,
+        .pure-menu-link span:after {
+            position: absolute;
+            margin-top: -.6em;
+            content: " ";
+        }
+
+        .pure-menu-link span:after {
+            margin-top: .6em;
+        }
+
+    .pure-menu-link.active span {
+        background: transparent;
+    }
+
+        .pure-menu-link.active span:before {
+            -webkit-transform: rotate(45deg) translate(.5em, .4em);
+               -moz-transform: rotate(45deg) translate(.5em, .4em);
+                -ms-transform: rotate(45deg) translate(.5em, .4em);
+                 -o-transform: rotate(45deg) translate(.5em, .4em);
+                    transform: rotate(45deg) translate(.5em, .4em);
+        }
+
+        .pure-menu-link.active span:after {
+            -webkit-transform: rotate(-45deg) translate(.45em, -.35em);
+               -moz-transform: rotate(-45deg) translate(.45em, -.35em);
+                -ms-transform: rotate(-45deg) translate(.45em, -.35em);
+                 -o-transform: rotate(-45deg) translate(.45em, -.35em);
+                    transform: rotate(-45deg) translate(.45em, -.35em);
+        }

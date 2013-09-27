@@ -15,7 +15,7 @@ var App = require('../lib/')
 	,	subcommand = process.argv.splice(2, 1)[0]
 	, sass = require('node-sass')
 	, pkg = require("../package.json")
-  , PORT = '3001';
+  , PORT = '4001';
 
 
 function playSound () {
@@ -141,7 +141,6 @@ switch(subcommand) {
 							tpl:'../tpl',
 			        jquery: 'jquery.1.8.2.min',
 							underscore: 'underscore.min',
-							avgrund: "avgrund",
 							text: 'requirejs-text/text',
 							sammy: 'sammy-latest.min',
 							handlebars: 'handlebars.runtime',
@@ -155,9 +154,6 @@ switch(subcommand) {
 			        'jquery.mustache'					: ['jquery'],
 							'jquery.easyModal'				: ['jquery'],
 							'jquery.ui.widget'				: ['jquery'],
-							'faye-browser-min': {
-								exports: 'Faye'
-							},
 							'handlebars': {
 								exports: 'Handlebars'
 							},
@@ -177,12 +173,7 @@ switch(subcommand) {
 				console.log('..done');
 				
 				fs.createReadStream(srcAssets+'/js/vendor/require.js').pipe(fs.createWriteStream(compiledAssets+'/js/require.js'));
-				fs.createReadStream(srcAssets+'/js/vendor/leaflet.bouncemarker.js').pipe(fs.createWriteStream(compiledAssets+'/js/leaflet.bouncemarker.js'));
-				fs.createReadStream(srcAssets+'/js/vendor/leaflet.animatedmarker.js').pipe(fs.createWriteStream(compiledAssets+'/js/leaflet.animatedmarker.js'));
-				fs.createReadStream(srcAssets+'/js/vendor/leaflet.usermarker.js').pipe(fs.createWriteStream(compiledAssets+'/js/leaflet.usermarker.js'));
-				fs.createReadStream(srcAssets+'/js/vendor/leaflet.contextmenu.js').pipe(fs.createWriteStream(compiledAssets+'/js/leaflet.contextmenu.js'));
-				fs.createReadStream(srcAssets+'/js/vendor/lvector.js').pipe(fs.createWriteStream(compiledAssets+'/js/lvector.js'));
-				
+			
 				/**
 				*
 				* Step 3: Compile CSS
@@ -249,7 +240,7 @@ switch(subcommand) {
 		* @param {function} callback callback
 		* @return true Returns true
 		*/
-		App.server.api.start({
+		App.server.www.start({
 				port:PORT
 			},
 			function(e){
@@ -258,6 +249,10 @@ switch(subcommand) {
 				} else {
 					App.showBanner(e);
 				}
+		});
+		
+		App.server.api.start({port:3001},function(){
+			console.log('API is running on port 3001');
 		});
 		
 		// using pusher instead

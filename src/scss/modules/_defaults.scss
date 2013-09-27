@@ -1,0 +1,26 @@
+* {
+  -webkit-font-smoothing:antialiased;
+  font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  @include vendor(box-sizing, border-box);
+}
+html {
+  font-size:62.5%;
+  height: 100%;
+  letter-spacing: 0;
+}
+body {
+  font:300 13px/1.6 'Helvetica Neue', Helvetica, Arial;
+  background-color: #d9dee2;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#ebeef2), to(#d9dee2));
+  background-image: -webkit-linear-gradient(top, #ebeef2, #d9dee2);
+  background-image: -moz-linear-gradient(top, #ebeef2, #d9dee2);
+  background-image: -ms-linear-gradient(top, #ebeef2, #d9dee2);
+  background-image: -o-linear-gradient(top, #ebeef2, #d9dee2);
+  background-image: linear-gradient(top, #ebeef2, #d9dee2);
+  color:#444;
+  margin:0;
+  padding:0;
+  height: 100%;
+  letter-spacing: 0;
+}
