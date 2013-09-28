@@ -126,19 +126,17 @@ require([
   $(function($) {
 		console.log('Starting app');
 		
-		App.Pace.start();
-		
 		// Init controller based on the HTML view that is rendered from the server.
 		App.Controller = $('body').attr('controller');
 				
 		switch(App.Controller){
 			case 'launchpad': 
-			
+				
 				launchpad.start(); 
 				break;
 
 			case 'apps': 
-
+				
 				apps.start(); 
 				break;
 				

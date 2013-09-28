@@ -184,7 +184,12 @@
   background-color:#efefef;
   z-index:10;
   margin-left:-1px;
-  
+}
+
+#main-container div.content {
+    margin: 0 auto 50px;
+    max-width: 800px;
+    padding: 0 2em;
 }
 
 
@@ -274,3 +279,6 @@
                  -o-transform: rotate(-45deg) translate(.45em, -.35em);
                     transform: rotate(-45deg) translate(.45em, -.35em);
         }
+
+
+

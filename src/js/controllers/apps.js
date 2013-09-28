@@ -22,6 +22,8 @@ define([
   return {
     start: function() {
       console.log("starting apps");
+
+			App.Pace.start();
 			
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));

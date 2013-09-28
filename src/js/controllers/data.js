@@ -23,6 +23,8 @@ define([
     start: function() {
       console.log("starting data");
 			
+			App.Pace.start();
+			
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));
 
