@@ -36,7 +36,8 @@
     "vague-time": "~0.5.5",
     "moment": "~2.2.1",
     "bcrypt": "~0.7.7",
-    "mongojs": "~0.9.6"
+    "mongojs": "~0.9.6",
+    "geohash": "0.0.1"
   },
   "devDependencies": {},
   "optionalDependencies": {},
