@@ -28,7 +28,6 @@ define([
 
 			// Init modal logic
 			$('.modal.c0').easyModal({top:200,overlay:0.2});
-			$('.modal.c2').easyModal({top:200,overlay:0.2});
 
 			// SammyJS
 			var app = sammy(function(){ 
@@ -53,6 +52,9 @@ define([
 							window.location.href='/data';
 							break;
 							
+						case 'download':
+							$('.modal.c0').trigger('openModal');
+							break;
 					}
 				});
 				
@@ -84,67 +86,7 @@ define([
 				 * Routes
 				 *
 				*/
-		    this.get('#/:appid/devices', function(){
-			 		updateNavLinks(this.params['appid']);
-					$('header').each(function(){ $(this).removeClass('active'); });
-					$('header.devices').toggleClass("active");
-					$('div.app_dropdown').hide();
-					DEVICES.render();
-		    }); 
-		
-		    this.get('#/:appid/fsm', function(){ 
-					updateNavLinks(this.params['appid']);
-					$('header').each(function(){ $(this).removeClass('active'); });
-					$('header.fsm').toggleClass("active");
-					$('div.app_dropdown').hide();
-					FSM.render();
-		    });
-
-				this.get('#/:appid/tasks', function(){ 
-					console.log('Sammy says: tasks');
-					updateNavLinks(this.params['appid']);
-					$('header').each(function(){ $(this).removeClass('active'); });
-					$('header.tasks').toggleClass("active");
-					$('div.app_dropdown').hide();
-					TASKS.render({foo:'bar'});
-		    });
-			
-				
-				this.get('#/account',function(){
-				});
-				
-				this.get('#/logout',function(){
-					$("#layout #main").animate({opacity:0},200,'linear',function(){
-						
-						$('#main-menu-container').css({top:"-75px"});
-						$('#menu').css({left:0});
-						// Clear session
-
-						window.location.href='/logout';
-						
-					});
-				});
-				
-				this.get('#/login',function(){
-					$('#main-menu-container').css({top:0});
-					$('#menu').css({left:"75px"});
-				});
-				
-				this.get('#/:appid',function(){
-					console.log('initalizing app '+this.params['appid']);
-					
-					// renders Tabs, dropdowns, etc
-					
-					if (this.params['appid'] == '182379837498298rh938') {
-						// Load Devices view
-						
-						updateNavLinks(this.params['appid']);
-						app.setLocation('#/'+this.params['appid']+'/devices');
-					} else {
-						alert('Inavalid App ID. Contact the administrator.');
-					}
-					
-				});
+		    
 				
 		  });
 			app.run();

@@ -28,7 +28,7 @@
 
 				var o = options;
 
-				var $overlay = $('<div class="lean-overlay"></div>');
+				var $overlay = $('<div class="lean-overlay" action="clearform"></div>');
 
 				$overlay.css({
 					'display': 'none',
@@ -39,7 +39,12 @@
 					'height': 100 + '%',
 					'width': 100+ '%',
 					'background': o.overlayColor,
-					'opacity': o.overlayOpacity
+					'opacity': o.overlayOpacity,
+					'-webkit-filter': 'blur(3px)',
+					'-moz-filter': 'blur(3px)',
+					'-o-filter': 'blur(3px)',
+					'-ms-filter': 'blur(3px)', 
+					'filter': 'blur(3px);'
 				}).appendTo('body');
 
 				var $modal = $(this);

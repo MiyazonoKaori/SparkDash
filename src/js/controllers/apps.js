@@ -1,15 +1,21 @@
 define([
 	'jquery',
+	'underscore',
 	'sammy',
+	'form2js',
 	'hbs!tpl/modals/alerts.html', 
+	'hbs!tpl/modals/app.new.html', 
+	'hbs!tpl/modals/app.key.html', 
 	'jquery.easyModal',
 	'jquery.ui.widget'], 
-	function($, sammy, tpl_0) {
+	function($, _, sammy, form2js, tpl_0, tpl_1, tpl_2) {
 		
 	console.log("Loaded dash");
 	
 	var $ = $||$(function($) {$=$;});
-	
+
+
+
 	
 	function updateNavLinks(appid) {
 		$("#menu nav a").each(function(){
@@ -27,10 +33,12 @@ define([
 			
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));
+			$("#modals:first").append(tpl_1({},{partials:{}}));
+			$("#modals:first").append(tpl_2({},{partials:{}}));
 
 			// Init modal logic
-			$('.modal.c0').easyModal({top:200,overlay:0.2});
-			$('.modal.c2').easyModal({top:200,overlay:0.2});
+			$('.modal.c1').easyModal({top:200,overlay:0.2});
+			$('.modal.appkey').easyModal({top:200,overlay:0.2});
 
 			// SammyJS
 			var app = sammy(function(){ 
@@ -43,6 +51,17 @@ define([
 					var el_action = $(e.target).attr('action');
 					switch(el_action) {
 						
+						case 'clearform':
+							// clear data
+							$('.modal input').each(function(el){
+								$(this).css({border:'1px solid #CCCCCC'});
+								$(this).val('');
+							});
+							$('.modal fieldset').each(function(el){
+								$(this).removeAttr('data-tip');
+							});
+							break;
+							
 						case 'user.logout':
 							app.setLocation('#/logout');
 							break;
@@ -57,6 +76,17 @@ define([
 											
 						case 'tab.data':
 							window.location.href='/data';
+							break;
+						
+						case 'app.new':
+							$('.modal.c1').trigger('openModal');
+							break;
+							
+						case 'showAppKey':
+							$('.modal.appkey').trigger('openModal');
+							var obj = JSON.parse($(e.target).attr('data'));
+							$(".modal.appkey textarea.appkey").val(obj.key);
+							$(".modal.appkey div.secret").text(obj.seed);
 							break;
 							
 					}
@@ -73,9 +103,39 @@ define([
 					
 				*/
 				$('button').on('click',function(){
+					
+					// clear data
+					$('.modal.c1 input').each(function(el){
+						$(this).css({border:'1px solid #CCCCCC'});
+					});
+					$('.modal.c1 fieldset').each(function(el){
+						$(this).removeAttr('data-tip');
+					});
+					
+					
 					// Handle Form Submissions
 					if ($(this).attr('data') == 'submit-c1') {
-						$('.modal.c1').trigger('closeModal');	
+						
+						var formData = form2js('form-c1', '.', true,function(node){});
+						console.log(formData);
+												
+						// Save form data				
+						App.Network.http({
+							url:'/_apps',
+							type:'POST',
+							dataType:'json',
+							data:formData
+						}).done(function(response) {
+							console.log(response);	
+							if (response.status==200) {
+								$('.modal.c1').trigger('closeModal');
+								window.location.href='/apps';
+							}
+							if (response.status==301) {
+								$('.modal.c1 input#package').css({border:'2px solid #ff0000'});
+								$('.modal.c1 fieldset.field1').attr('data-tip',response.message);
+							}
+						});
 					}
 				});
 				// Stop forms from submitting
@@ -90,9 +150,6 @@ define([
 				 * Routes
 				 *
 				*/
-				
-				this.get('#/account',function(){
-				});
 				
 				this.get('#/logout',function(){
 					$("#layout #main").animate({opacity:0},200,'linear',function(){

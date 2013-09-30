@@ -43,17 +43,23 @@
                   </ul>
                 </nav>
               </div>
+              <div class="pure-u-1" style="text-align:center;padding:4px;font-size:18px;opacity:0.9;color:#fff;width:200px;margin:auto;">{{#domain}}{{title}}{{/domain}}</div>
               <div id="main-menu-login" class="pure-u-1">
                 <nav>
                   <ul>
+                    <li action="user.settings" style="padding:6px;margin-right:20px;font-size:14px;opacity:0.5;font-weight: lighter;">{{#user}}{{username}}{{/user}}</li>
                     <li class="active" action="user.logout">sign out</li>
                   </ul>
                 </nav>
               </div>
             </div>
 
-            <div id="main-container" class="pure-g-r">
+            <div id="main-container">
               
+              <div style="padding-top:60px;font-size:66px;margin:0;text-align:center;font-weight: 100;font-family:'Helvetica'">Welcome</div>
+              <div style="width:33%;margin:auto;font-size:35px;line-height: 44px;font-weight: 100;font-family: Helvetica;text-align: justify;">
+                <p>To get started <a href="#/download" style="background-color:#ffffaa;color:#333;text-decoration:none;padding:5px;font-size:90%;" action="download">download Spark</a> and then create an <a href="/apps" style="background-color:#ffffaa;color:#333;text-decoration:none;padding:5px;font-size:90%;">app key</a>. After that, read the <a href="http://docs.semanticpress.com" style="background-color:#ffffaa;color:#333;text-decoration:none;padding:5px;font-size:90%;">docs</a>   and check the <a href="http://support.semanticpress.com" style="background-color:#ffffaa;color:#333;text-decoration:none;padding:5px;font-size:90%;">help desk</a>.</p>
+              </div>
             </div>
           </div>
         </div>
