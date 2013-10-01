@@ -56,7 +56,7 @@
               
               <div class="content">
                 
-                {{#ifCond apps.length '>' 0}}
+                {{#ifCond apps.length '==' 0}}
                     <h1 class="splash-head">You don't have any apps yet.</h1>
                     <p>
                         <a class="pure-button pure-button-primary" href="#/new-app" action="app.new">Create one</a>
@@ -70,11 +70,16 @@
                 <div class="">
                 {{#apps}}
                   {{#.}}
-                  <div class="pure-u-1-1">
-                    <div class="l-box" style="border:1px solid #999;border-radius:5px;margin:10px;background-color:#FFF;padding:5px;letter-spacing:0px;">
-                      <p style="font-size:32px;font-weight:bold;">{{title}}</p>
-                      <p>Package: {{pkg}}</p>
-                      <p>Key: <button class="pure-button pure-button-xsmall" action="showAppKey" data='{{#json .}}{{/json}}'>Show</button></p>
+                  <div class="pure-u-1-1" style="clear:both;">
+                    <div class="l-box" style="border:1px solid #999;border-radius:5px;margin-top:10px;background-color:#FFF;padding:10px;letter-spacing:0px;">
+                      <div>
+                        <div style="float:right;height:50px;padding-top: 8px;">
+                          <button class="pure-button pure-button-xsmall" action="showAppKey" data='{{#json .}}{{/json}}'>View License</button>
+                          <button class="pure-button pure-button-xsmall" action="launchSparkDash" data='{{#json .}}{{/json}}'>Launch SparkDash</button>
+                        </div>
+                      </div>
+                      <div style="font-size:26px;font-weight:bold;">{{title}}</div>
+                      <div style="font-size:16px;">Package: {{pkg}}</div>
                     </div>
                   </div>
                   {{/.}}

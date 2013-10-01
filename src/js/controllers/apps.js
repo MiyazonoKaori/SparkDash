@@ -5,7 +5,7 @@ define([
 	'form2js',
 	'hbs!tpl/modals/alerts.html', 
 	'hbs!tpl/modals/app.new.html', 
-	'hbs!tpl/modals/app.key.html', 
+	'hbs!tpl/modals/app.license.html', 
 	'jquery.easyModal',
 	'jquery.ui.widget'], 
 	function($, _, sammy, form2js, tpl_0, tpl_1, tpl_2) {
@@ -30,7 +30,7 @@ define([
       console.log("starting apps");
 
 			App.Pace.start();
-			
+						
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));
 			$("#modals:first").append(tpl_1({},{partials:{}}));
@@ -87,6 +87,12 @@ define([
 							var obj = JSON.parse($(e.target).attr('data'));
 							$(".modal.appkey textarea.appkey").val(obj.key);
 							$(".modal.appkey div.secret").text(obj.seed);
+							$(".modal.appkey div.package").text(obj.pkg);
+							break;
+						
+						case 'launchSparkDash':
+							var obj = JSON.parse($(e.target).attr('data'));
+							window.location.href='/sparkdash/#/'+obj._id+'/devices';
 							break;
 							
 					}

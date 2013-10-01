@@ -148,7 +148,8 @@ switch(subcommand) {
 							pace: 'pace.min',
 							moment: "moment.min",
 							form2js: "form2js",
-							js2form: "js2form"
+							js2form: "js2form",
+							shortlink: "shortlink"
 			    },
 					shim: {
 			        'jquery.mustache'					: ['jquery'],
