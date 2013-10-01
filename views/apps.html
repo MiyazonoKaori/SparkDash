@@ -73,13 +73,18 @@
                   <div class="pure-u-1-1" style="clear:both;">
                     <div class="l-box" style="border:1px solid #999;border-radius:5px;margin-top:10px;background-color:#FFF;padding:10px;letter-spacing:0px;">
                       <div>
-                        <div style="float:right;height:50px;padding-top: 8px;">
-                          <button class="pure-button pure-button-xsmall" action="showAppKey" data='{{#json .}}{{/json}}'>View License</button>
-                          <button class="pure-button pure-button-xsmall" action="launchSparkDash" data='{{#json .}}{{/json}}'>Launch SparkDash</button>
+                        <div style="float:right;height:50px;padding-top: 20px;">
+                          <button class="pure-button" action="showAppKey" data='{{#json .}}{{/json}}'>View License</button>
+                          <button class="pure-button pure-button-success" action="launchSparkDash" data='{{#json .}}{{/json}}'>Launch SparkDash</button>
                         </div>
                       </div>
-                      <div style="font-size:26px;font-weight:bold;">{{title}}</div>
-                      <div style="font-size:16px;">Package: {{pkg}}</div>
+                      <div style="width:350px;height:72px;">
+                        <div style="float: left;width:72px;height:72px;background-image:url('/img/icon.android.png');background-repeat:no-repeat;margin-right:10px;"></div>
+                        <div style="padding: 15px;">
+                          <div style="font-size:26px;font-weight:bold;"><a href="#" action="launchLog" style="text-decoration:none;color:#0078E7;">{{title}}</a></div>
+                          <div style="font-size:16px;">Package: {{pkg}}</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   {{/.}}

@@ -116,7 +116,7 @@ var compileStaticFiles = function(_cb){
 switch(subcommand) {
 	case 'build':
 	
-	
+		console.log('Building server...');
 		var srcAssets = path.join(__dirname, '../src');
 		var compiledAssets = path.join(__dirname, '../public');
 		
@@ -208,7 +208,22 @@ switch(subcommand) {
 							*/
 							wrench.copyDirSyncRecursive(srcAssets+'/img', compiledAssets+'/img');
 							console.log("Successfully copied images");
+							
+							/**
+							*
+							* Step 4: Copy SparkDash
+							*
+							*/
+							
+							console.log('Copying Sparkdash..');
+							var compiledSparkdash = path.join(__dirname, '../public/sparkdash');
+							var sparkdash_public = path.join(__dirname, '../../sparkdash-dist/public');
+							console.log('from: '+sparkdash_public);
+							console.log('to: '+compiledSparkdash);
+							wrench.copyDirSyncRecursive(sparkdash_public, compiledSparkdash);
+							console.log("Successfully SparkDash project: "+compiledSparkdash);
 							process.exit(0);
+							
 						},
 						error: function(error) {
 						 	console.error(error);

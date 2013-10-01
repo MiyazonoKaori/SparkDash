@@ -94,6 +94,11 @@ define([
 							var obj = JSON.parse($(e.target).attr('data'));
 							window.location.href='/sparkdash/#/'+obj._id+'/devices';
 							break;
+						
+						case 'launchLog':
+							alert('Future home of Remote Device Logs');
+							return;
+							break;
 							
 					}
 				});
