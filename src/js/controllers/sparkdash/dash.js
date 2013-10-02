@@ -2,12 +2,12 @@ define([
 	'jquery',
 	'sammy',
 	'faye',
-	'views/sparkdash/devices', 
-	'views/sparkdash/fsm', 
-	'views/sparkdash/tasks', 
-	'hbs!tpl/sparkdash/user.menu.html', 
-	'hbs!tpl/sparkdash/modals/alerts.html', 
-	'hbs!tpl/sparkdash/tabs.html', 
+	'views/devices', 
+	'views/fsm', 
+	'views/tasks', 
+	'hbs!tpl/user.menu.html', 
+	'hbs!tpl/modals/alerts.html', 
+	'hbs!tpl/tabs.html', 
 	'jquery.easyModal',
 	'jquery.ui.widget'], 
 	function($, sammy, Faye, DEVICES, FSM, TASKS, tpl_User, tpl_0, tpl_Tabs) {
@@ -27,7 +27,7 @@ define([
 
   return {
     start: function() {
-      console.log("starting dash");
+      console.log("starting dash on channel: "+App.WS.channel);
 			
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));
@@ -116,7 +116,7 @@ define([
 				 * Routes
 				 *
 				*/
-		    this.get('#/:appid/devices', function(){
+		    this.get('#/devices', function(){
 			 		updateNavLinks(this.params['appid']);
 					$('header').each(function(){ $(this).removeClass('active'); });
 					$('header.devices').toggleClass("active");
@@ -124,7 +124,7 @@ define([
 					DEVICES.render();
 		    }); 
 		
-		    this.get('#/:appid/fsm', function(){ 
+		    this.get('#/fsm', function(){ 
 					updateNavLinks(this.params['appid']);
 					$('header').each(function(){ $(this).removeClass('active'); });
 					$('header.fsm').toggleClass("active");
@@ -132,7 +132,7 @@ define([
 					FSM.render();
 		    });
 
-				this.get('#/:appid/tasks', function(){ 
+				this.get('#/tasks', function(){ 
 					console.log('Sammy says: tasks');
 					updateNavLinks(this.params['appid']);
 					$('header').each(function(){ $(this).removeClass('active'); });

@@ -108,10 +108,10 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 		  //     window.console.log(message);
 		  //   }
 		  // };
-			var WSClient = new Pusher('212c3181292b80f4e1a9');
-		  var WSChannel = WSClient.subscribe('sparkdash-dash');
+			var WSClient = new Pusher(App.WS.key);
+		  var WSChannel = WSClient.subscribe(App.WS.channel);
 		
-			WSChannel.bind('update_client', function(data) {
+			WSChannel.bind('update_client@beacon', function(data) {
 				
 				// Find the existing marker to update..			
 				_.each(markers,function(_el,i){
@@ -124,7 +124,7 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 						var pline = new L.Polyline(pList);
 
 						var pMarker = L.icon({
-				      iconUrl: '/img/bluedot.path.png',
+				      iconUrl: '/img/sparkdash/bluedot.path.png',
 				      iconSize: [18, 18],
 				      iconAnchor: [9, 9],
 				      shadowUrl: null
@@ -164,12 +164,11 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 				});
 		  });
 
-		  WSChannel.bind('new_client', function(data) {
-		    console.log(data);
+		  WSChannel.bind('new_client@beacon', function(data) {
 		
 				// Add client to markers
 				var marker = new L.userMarker([
-					data.latitude, 
+					data.latitude,
 					data.longitude
 				],{
 					bounceOnAdd: true,

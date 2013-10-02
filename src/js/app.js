@@ -46,6 +46,10 @@ var App = {
 	    return dfd.promise();
 	  }
 	},
+	WS:{
+		key: '212c3181292b80f4e1a9',
+		channel:(typeof CHANNEL != undefined) ? CHANNEL : false
+	},
 	Tab:{},
 };
 

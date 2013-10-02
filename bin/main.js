@@ -214,15 +214,19 @@ switch(subcommand) {
 							* Step 4: Copy SparkDash
 							*
 							*/
-							
-							console.log('Copying Sparkdash..');
-							var compiledSparkdash = path.join(__dirname, '../public/sparkdash');
-							var sparkdash_public = path.join(__dirname, '../../sparkdash-dist/public');
-							console.log('from: '+sparkdash_public);
-							console.log('to: '+compiledSparkdash);
-							wrench.copyDirSyncRecursive(sparkdash_public, compiledSparkdash);
-							console.log("Successfully SparkDash project: "+compiledSparkdash);
+														
+							var sparkdashSource = path.join(__dirname, '../../sparkdash-dist');
+							wrench.copyDirSyncRecursive(sparkdashSource+'/public/css/sparkdash', path.join(__dirname, '../public/css/sparkdash'));
+							wrench.copyDirSyncRecursive(sparkdashSource+'/public/img/sparkdash', path.join(__dirname, '../public/img/sparkdash'));
+							wrench.copyDirSyncRecursive(sparkdashSource+'/public/js/sparkdash', path.join(__dirname, '../public/js/sparkdash'));
+							wrench.copyDirSyncRecursive(sparkdashSource+'/src/js/tpl', path.join(__dirname, '../src/js/tpl/sparkdash'),{forceDelete: true});
+							wrench.copyDirSyncRecursive(sparkdashSource+'/src/js/views', path.join(__dirname, '../src/js/views/sparkdash'),{forceDelete: true});							
+							fs.writeFileSync(path.join(__dirname, '../src/js/controllers/sparkdash/dash.js'),fs.readFileSync(sparkdashSource+'/src/js/controllers/dash.js','utf8'));
+							fs.writeFileSync(path.join(__dirname, '../views/sparkdash/dash.html'),fs.readFileSync(sparkdashSource+'/views/dash.html','utf8'));
+														
+							console.log('Done building server');
 							process.exit(0);
+							
 							
 						},
 						error: function(error) {
@@ -270,6 +274,22 @@ switch(subcommand) {
 		App.server.api.start({port:3001},function(){
 			console.log('API is running on port 3001');
 		});
+		
+		
+		// heartbeat
+		var Pusher = require('pusher');
+		var pusher = new Pusher({
+		  appId: '54725',
+		  key: '212c3181292b80f4e1a9',
+		  secret: '4857bb6a46e81f7e29c1'
+		});
+
+
+		setInterval(function(){
+		  pusher.trigger('empire_com.mobiltal.service', 'heartbeat@main', {
+				"foo": "bar"
+			});
+		},5000);
 		
 		// using pusher instead
 		// App.server.ws.start({port:5001},function(){

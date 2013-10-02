@@ -11,21 +11,21 @@
         <link rel="author" href="/humans.txt">
         
         <link href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css" rel="stylesheet">
-        <link href="/css/main.css" rel="stylesheet">
+        <link href="/css/sparkdash/main.css" rel="stylesheet">
 
         <meta property="og:title" content="SparkDash Mobile Analytics.">
         <meta property="og:type" content="company">
-        <meta property="og:image" content="http://semanticpress.com/assets/img/logos/sparkdash.png">
+        <meta property="og:image" content="http://semanticpress.com/assets/img/sparkdash/logos/sparkdash.png">
         <meta property="og:site_name" content="SemanticPress.com">
         <meta property="og:url" content="http://SemanticPress.com/">
         <meta property="og:description" content="">   
 
         <link rel="shortcut icon" href="/favicon.ico">
-        <link rel="icon" href="/img/logos/favicon.png" type="image/png">
-        <link rel="apple-touch-icon" sizes="144x144" href="/img/logos/apple-touch-icon-144.png">
-        <link rel="apple-touch-icon" sizes="114x114" href="/img/logos/apple-touch-icon-114.png">
-        <link rel="apple-touch-icon" sizes="72x72" href="/img/logos/apple-touch-icon-72.png">
-        <link rel="apple-touch-icon" href="/img/logos/apple-touch-icon-57.png">
+        <link rel="icon" href="/img/sparkdash/logos/favicon.png" type="image/png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/img/sparkdash/logos/apple-touch-icon-144.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/img/sparkdash/logos/apple-touch-icon-114.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/img/sparkdash/logos/apple-touch-icon-72.png">
+        <link rel="apple-touch-icon" href="/img/sparkdash/logos/apple-touch-icon-57.png">
     </head>
 
     <body controller="dash">
@@ -78,14 +78,17 @@
         
         <div id="modals"></div>
         
-        <script>L_PREFER_CANVAS = true;</script>
+        <script>
+        L_PREFER_CANVAS = true;
+        var CHANNEL = '{{#ws}}{{channel}}{{/ws}}';
+        </script>
         <script src="http://js.pusher.com/2.1/pusher.min.js" type="text/javascript"></script>
         <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"type="text/javascript"></script>
-        <script src="/js/leaflet.bouncemarker.js" type="text/javascript"></script>
-        <script src="/js/leaflet.AnimatedMarker.js" type="text/javascript"></script>
-        <script src="/js/leaflet.usermarker.js" type="text/javascript"></script>
-        <script src="/js/leaflet.contextmenu.js" type="text/javascript"></script>
-        <script src="/js/lvector.js" type="text/javascript"></script>
-        <script data-main="/js/sparkdash.min" src="/js/require.js"></script>
+        <script src="/js/sparkdash/leaflet.bouncemarker.js" type="text/javascript"></script>
+        <script src="/js/sparkdash/leaflet.AnimatedMarker.js" type="text/javascript"></script>
+        <script src="/js/sparkdash/leaflet.usermarker.js" type="text/javascript"></script>
+        <script src="/js/sparkdash/leaflet.contextmenu.js" type="text/javascript"></script>
+        <script src="/js/sparkdash/lvector.js" type="text/javascript"></script>
+        <script data-main="/js/sparkdash/sparkdash.min" src="/js/sparkdash/require.js"></script>
     </body>
 </html>

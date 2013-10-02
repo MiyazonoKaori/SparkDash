@@ -1,0 +1,25 @@
+<div class="left-panel">
+  <div class="device-list">
+    <ul>
+      {{#devices}}
+      <li>
+        <div class="main-item device" data="{{json this}}">
+          <div style="font-size:24px;letter-spacing:1px;margin-left: 8px;">{{userID}}</div>
+          <div style="font-size:9px;letter-spacing:1px;margin-left: 8px;">ClientID: {{clientID}}</div>
+        </div>
+      </li>
+      {{/devices}}
+    </ul>
+  </div>
+</div>
+
+<div class="map-container">
+  <div id="map-container-1" class="map" style="height:100%;display: block;z-index: 1;"></div>
+  <i class="map-top"></i>
+  <i class="map-right"></i>
+  <i class="map-bottom"></i>
+  <i class="map-left"></i>
+</div>
+<div class="layer-buttons" style="position:relative;bottom:30;">
+    <div class="row layer-button-row"><a href="javascript:cartodb_sewer_line.setMap(map1);" class="btn success">Sewer Line On</a> <a href="javascript:cartodb_sewer_line.setMap(null);" class="btn danger">Sewer Line Off</a></div>
+</div>
