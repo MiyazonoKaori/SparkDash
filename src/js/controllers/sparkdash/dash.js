@@ -44,17 +44,17 @@ define([
 				// Hide element on doc click
 				$(document).click(function(e) {
 					console.log($(e.target));
-					console.log($(e.target).attr('data'));
+					console.log('Action : '+$(e.target).attr('action'));
 					
-					var el_data = $(e.target).attr('data');
+					var el_action = $(e.target).attr('action');
 					if (!$(e.target).is('#main-menu-login ul li')) {
 						$('div.account_dropdown').hide();
 					}
 					if (!$(e.target).is('#main-menu-header ul li')) {
 						$('div.app_dropdown').hide();
 					}
-					switch(el_data) {
-						case 'new-app':
+					switch(el_action) {
+						case 'showNewApp':
 							$('.modal.c1').trigger('openModal');
 							$('div.app_dropdown').hide();
 							break;
@@ -83,13 +83,8 @@ define([
 				});
 				
 				$('#menu-bottom.alert').on('click',function(){
+					$('.modal.c0 div.appPackage').text(App.WS.channel);
 					$('.modal.c0').trigger('openModal');
-					
-					App.Avgrund.show( "#options" );
-			    $('#options #list li:not(#options .active)').each(function(index){
-			      $(this).css("-webkit-animation-delay",80 * index +"ms").addClass('animated fadeInLeft');
-			    });
-					
 				});
 				
 				
@@ -117,15 +112,18 @@ define([
 				 *
 				*/
 		    this.get('#/devices', function(){
-			 		updateNavLinks(this.params['appid']);
+			 		
 					$('header').each(function(){ $(this).removeClass('active'); });
 					$('header.devices').toggleClass("active");
 					$('div.app_dropdown').hide();
-					DEVICES.render();
+					
+					if (!App.Tab.Devices.MAP) {
+						DEVICES.render();
+					}
 		    }); 
 		
 		    this.get('#/fsm', function(){ 
-					updateNavLinks(this.params['appid']);
+					console.log('Sammy says: fsm');
 					$('header').each(function(){ $(this).removeClass('active'); });
 					$('header.fsm').toggleClass("active");
 					$('div.app_dropdown').hide();
@@ -134,7 +132,6 @@ define([
 
 				this.get('#/tasks', function(){ 
 					console.log('Sammy says: tasks');
-					updateNavLinks(this.params['appid']);
 					$('header').each(function(){ $(this).removeClass('active'); });
 					$('header.tasks').toggleClass("active");
 					$('div.app_dropdown').hide();

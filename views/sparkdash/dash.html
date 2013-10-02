@@ -59,7 +59,7 @@
                     <li class="app" data="182379837498298rh938">
                       <a href="/#/182379837498298rh938">Service Mobile 1.0</a>
                     </li>   
-                    <li class="app new" data="new-app">New App</a></li>
+                    <li class="app new" action="showNewApp">New App</a></li>
                   </ul>
               	</div>
                 
@@ -80,7 +80,9 @@
         
         <script>
         L_PREFER_CANVAS = true;
-        var CHANNEL = '{{#ws}}{{channel}}{{/ws}}';
+        var DOMAIN = '{{#domain}}{{.}}{{/domain}}';
+        var PKG = '{{#app}}{{pkg}}{{/app}}';
+        var ID = '{{#app}}{{_id}}{{/app}}';
         </script>
         <script src="http://js.pusher.com/2.1/pusher.min.js" type="text/javascript"></script>
         <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"type="text/javascript"></script>

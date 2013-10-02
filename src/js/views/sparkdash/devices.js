@@ -192,7 +192,7 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 				
 			
 			// get devices 
-      App.Network.http({url:'/_devices'}).done(function(response) {				
+      App.Network.http({url:'/'+ID+'/_devices'}).done(function(response) {				
 				
 				// Populate device list
 				App.Tab.Devices.render('#main-container', {devices:response});
