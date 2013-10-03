@@ -96,7 +96,7 @@ define([
 							break;
 						
 						case 'launchLog':
-							alert('Future home of Remote Device Logs');
+							alert('Future home of Application Manager. \n- Set app version to enforce auto-upgrade\n- View device logs\n- Application Settings');
 							return;
 							break;
 							
