@@ -19,12 +19,12 @@ define([
 	
 
 	window.addEventListener('online', function(e) {
-	  alert("And we're back :)");
+	  console.log("And we're back :)");
 	  // Get updates from server.
 	}, false);
 
 	window.addEventListener('offline', function(e) {
-	  alert("Connection is flaky.");
+	  console.log("Connection is flaky.");
 	  // Use offine mode.
 	}, false);
 	
