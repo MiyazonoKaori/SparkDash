@@ -3,9 +3,21 @@
     <ul>
       {{#devices}}
       <li>
-        <div class="main-item device" data="{{json this}}">
-          <div style="font-size:24px;letter-spacing:1px;margin-left: 8px;">{{userID}}</div>
-          <div style="font-size:9px;letter-spacing:1px;margin-left: 8px;">ClientID: {{clientID}}</div>
+        <div class="main-item device" data="{{json this}}" style="letter-spacing:1px;padding:6px;height: auto;">
+          <div style="background-image:url('/img/sparkdash/beacon.led.green.png');background-repeat:no-repeat;background-position:center;display: block;float: right;height: 22px;width:22px;position: relative;right: 0;"></div>
+          <div style="font-size:18px;letter-spacing:1px;">
+              <div style="float:left;width:16px;height:16px;margin-right:5px;background-image:url('/img/sparkdash/icon.device.small.png');background-repeat:no-repeat;background-position:center;"></div>
+              <div style="float:left;">{{userID}}</div>
+            </div>
+          <div style="font-size:13px;clear: both;">
+            {{device}}
+          </div>
+          <div style="font-size:9px;">
+            <div style="font-size:9px;padding:5px;text-shadow: 0px -1px 1px rgba(0, 0, 0, .4);background-color:#009900;color:#fff;border-radius:5px;margin-top:3px;margin-bottom:3px;display: inline-block;">Checked In</div>
+          </div>
+          <div style="font-size:10px;color:#999;">
+            Last updated: 3 hours ago
+          </div>
         </div>
       </li>
       {{/devices}}

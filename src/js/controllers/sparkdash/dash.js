@@ -5,7 +5,7 @@ define([
 	'views/devices', 
 	'views/fsm', 
 	'views/tasks', 
-	'hbs!tpl/user.menu.html', 
+	'hbs!tpl/main.menu.right.html', 
 	'hbs!tpl/modals/alerts.html', 
 	'hbs!tpl/tabs.html', 
 	'jquery.easyModal',
@@ -16,6 +16,17 @@ define([
 	
 	var $ = $||$(function($) {$=$;});
 	
+	
+
+	window.addEventListener('online', function(e) {
+	  alert("And we're back :)");
+	  // Get updates from server.
+	}, false);
+
+	window.addEventListener('offline', function(e) {
+	  alert("Connection is flaky.");
+	  // Use offine mode.
+	}, false);
 	
 	function updateNavLinks(appid) {
 		$("#menu nav a").each(function(){
@@ -29,9 +40,15 @@ define([
     start: function() {
       console.log("starting dash on channel: "+App.WS.channel);
 			
+			if (navigator.onLine) {
+		    console.log('Online');
+		  } else {
+		    console.log('Offline');
+		  }
+		
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));
-			$("#main-menu-login:first").append(tpl_User({},{partials:{}}));
+			$("#menu-right:first").append(tpl_User({},{partials:{}}));
 			$("#menu #app_tabs:first").append(tpl_Tabs({},{partials:{}}));
 
 			// Init modal logic
