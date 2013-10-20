@@ -10,7 +10,6 @@
 
         <link rel="author" href="/humans.txt">
         
-        <link href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css" rel="stylesheet">
         <link href="/css/sparkdash/main.css" rel="stylesheet">
 
         <meta property="og:title" content="SparkDash Mobile Analytics.">
@@ -28,38 +27,37 @@
         <link rel="apple-touch-icon" href="/img/sparkdash/logos/apple-touch-icon-57.png">
     </head>
 
-    <body controller="dash">
+    <body controller="dash" class="unselectable">
+        
+        <div id="header" action="showAppHandlers">
+          <div class="title" action="showAppHandlers">Field Service</div>
+          <div class="subtitle" action="hideAppHandlers">com.test.app</div>
+        </div>
         
         <div id="layout" class="pure-g-r">
+          
           <a href="#menu" id="menuLink" class="pure-menu-link">
             <span></span>
           </a>
-
+                    
           <div id="menu" class="pure-u">
             <div id="menu-logo" action="openDashboard"></div>
             <div id="app_tabs"></div>
-            <div id="menu-bottom" class="alert">
-              <div>Alerts</div>
+            <div id="menu-bottom" class="console" action="openConsole">
+              <div action="openConsole">Console</div>
             </div>
           </div>
 
           <div id="main" class="pure-u-1">
+            
             <div id="main-menu-container" class="pure-g">
-              
-              <div id="header">
-                <div class="title">Field Service</div>
-                <div class="subtitle">com.test.app</div>
-              </div>
-              
-              <div id="menu-right" class="pure-u-1">
-                
-              </div>
+              <div id="menu-right" class="pure-u-1"></div>
             </div>
 
-            <div id="main-container" class="pure-g-r">
-              
-            </div>
+            <div id="main-container" class="pure-g-r"></div>
+            
           </div>
+          
         </div>
         
         <div id="modals"></div>

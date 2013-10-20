@@ -152,9 +152,10 @@ switch(subcommand) {
 							shortlink: "shortlink"
 			    },
 					shim: {
-			        'jquery.mustache'					: ['jquery'],
-							'jquery.easyModal'				: ['jquery'],
-							'jquery.ui.widget'				: ['jquery'],
+			        'jquery.mustache'				: ['jquery'],
+							'jquery.easyModal'			: ['jquery'],
+							'jquery.ui.widget'			: ['jquery'],
+							'jquery.terminal'				: ['jquery'],
 							'handlebars': {
 								exports: 'Handlebars'
 							},
@@ -286,10 +287,8 @@ switch(subcommand) {
 
 
 		setInterval(function(){
-		  pusher.trigger('empire_com.mobiltal.service', 'heartbeat@main', {
-				"foo": "bar"
-			});
-		},5000);
+		  pusher.trigger('empire_com.mobiltal.service', 'heartbeat@main', {"ping": "pong"});
+		},20000);
 		
 		// using pusher instead
 		// App.server.ws.start({port:5001},function(){

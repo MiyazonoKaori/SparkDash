@@ -66,18 +66,6 @@ define([
 							app.setLocation('#/logout');
 							break;
 							
-						case 'tab.launchpad':
-							window.location.href='/';
-							break;
-
-						case 'tab.apps':
-							window.location.href='/apps';
-							break;
-
-						case 'tab.data':
-							window.location.href='/data';
-							break;
-							
 					}
 				});
 				

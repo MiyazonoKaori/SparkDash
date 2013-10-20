@@ -28,8 +28,6 @@ define([
   return {
     start: function() {
       console.log("starting apps");
-
-			App.Pace.start();
 						
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));
@@ -66,18 +64,6 @@ define([
 							app.setLocation('#/logout');
 							break;
 
-						case 'tab.launchpad':
-							window.location.href='/';
-							break;
-
-						case 'tab.apps':
-							window.location.href='/apps';
-							break;
-											
-						case 'tab.data':
-							window.location.href='/data';
-							break;
-						
 						case 'app.new':
 							$('.modal.c1').trigger('openModal');
 							break;
@@ -92,7 +78,7 @@ define([
 						
 						case 'launchSparkDash':
 							var obj = JSON.parse($(e.target).attr('data'));
-							window.location.href='/sparkdash/'+obj._id+'/#/devices';
+							window.location.href='/'+obj._id+'/sparkdash/#/devices';
 							break;
 						
 						case 'launchLog':

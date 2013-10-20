@@ -43,14 +43,6 @@ define([
 						case 'user.logout':
 							app.setLocation('#/logout');
 							break;
-
-						case 'tab.apps':
-							window.location.href='/apps';
-							break;
-
-						case 'tab.data':
-							window.location.href='/data';
-							break;
 							
 						case 'download':
 							$('.modal.c0').trigger('openModal');
@@ -86,7 +78,17 @@ define([
 				 * Routes
 				 *
 				*/
-		    
+		    this.get('#/logout',function(){
+					$("#layout #main").animate({opacity:0},200,'linear',function(){
+						
+						$('#main-menu-container').css({top:"-75px"});
+						$('#menu').css({left:0});
+						// Clear session
+
+						window.location.href='/logout';
+						
+					});
+				});
 				
 		  });
 			app.run();

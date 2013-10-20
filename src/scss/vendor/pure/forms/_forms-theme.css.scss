@@ -49,7 +49,6 @@ Forms Core
  * 3. Improves appearance and consistency in all browsers.
  */
 
-.pure-form button,
 .pure-form input,
 .pure-form select,
 .pure-form textarea {
@@ -64,7 +63,6 @@ Forms Core
  * the UA stylesheet.
  */
 
-.pure-form button,
 .pure-form input {
     line-height: normal;
 }
@@ -79,7 +77,6 @@ Forms Core
  *    Known issue: inner spacing remains in IE 6.
  */
 
-.pure-form button,
 .pure-form input[type="button"], /* 1 */
 .pure-form input[type="reset"],
 .pure-form input[type="submit"] {
@@ -92,7 +89,6 @@ Forms Core
  * Re-set default cursor for disabled elements.
  */
 
-.pure-form button[disabled],
 .pure-form input[disabled] {
     cursor: default;
 }
@@ -254,8 +250,8 @@ Forms Core
 }
 .pure-form label {
   margin: 0.5em 0 0.2em;
-  color: $label;
-  font-size:90%;
+  color: $label-color;
+  font-size:$label-size;
 }
 .pure-form fieldset {
   margin: 0;
@@ -267,7 +263,7 @@ Forms Core
   width: 100%;
   padding: 0.3em 0;
   margin-bottom: 0.3em;
-  font-size: 125%;
+  font-size: $legend-size;
   color: $legend-text;
   border-bottom: 1px solid $legend-rule;
 }

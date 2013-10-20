@@ -10,7 +10,6 @@
 
         <link rel="author" href="/humans.txt">
         
-        <link href="http://yui.yahooapis.com/pure/0.3.0/pure-min.css" rel="stylesheet">
         <link href="/css/main.css" rel="stylesheet">
 
         <meta property="og:title" content="SparkDash Mobile Analytics.">
@@ -37,9 +36,9 @@
               <div id="main-menu-tabs" class="pure-u-1">
                 <nav>
                   <ul>
-                    <li action="tab.launchpad">LaunchPad</li>
-                    <li class="active" action="tab.apps">Apps</li>
-                    <li action="tab.data">Data</li>
+                    <li action="tab.launchpad"><a href="/">LaunchPad</a></li>
+                    <li class="active" action="tab.apps"><a href="/apps">Apps</a></li>
+                    <li action="tab.data"><a href="/data">Data</a></li>
                   </ul>
                 </nav>
               </div>
@@ -81,7 +80,7 @@
                       <div style="width:350px;height:72px;">
                         <div style="float: left;width:72px;height:72px;background-image:url('/img/icon.android.png');background-repeat:no-repeat;margin-right:10px;"></div>
                         <div style="padding: 10px;">
-                          <div style="font-size:26px;font-weight:bold;"><a href="#" action="launchLog" style="text-decoration:none;color:#0078E7;">{{title}}</a></div>
+                          <div style="font-size:26px;font-weight:bold;"><a href="/{{_id}}" style="text-decoration:none;color:#0078E7;">{{title}}</a></div>
                           <div style="font-size:16px;">Package: {{pkg}}</div>
                         </div>
                       </div>

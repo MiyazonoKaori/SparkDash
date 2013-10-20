@@ -1,4 +1,13 @@
-define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!tpl/tabs/devices.html','hbs!tpl/modals/app.new.html','hbs!tpl/modals/devices.map.settings.html'],function($,_,Handlebars, moment, form2js, js2form, tmpl_DT, tpl_1, tpl_2) {
+define([
+	'jquery',
+	'underscore',
+	'handlebars',
+	'moment',
+	'form2js',
+	'js2form', 
+	'hbs!tpl/tabs/devices.html',
+	'hbs!tpl/modals/app.new.html',
+	'hbs!tpl/modals/devices.map.settings.html'],function($,_,Handlebars, moment, form2js, js2form, tmpl_DT, tpl_1, tpl_2) {
 	console.log('initializing app::devices');
 	
 	var $ = $||$(function($) {$=$;});
@@ -39,15 +48,27 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 
 		},
 		setMarkerIdleState: function(marker) {
+			var state = 1; // default active
 			var curtime = Math.round(new Date().getTime() / 1000);
 			
 			console.log('elapsed: '+(curtime - marker._timestamp));
 			console.log('idleTimeout is set to '+(App.Tab.Devices.Settings.idleTimeout * 60)+' seconds');
 			
 			if ((curtime - marker._timestamp) >= (App.Tab.Devices.Settings.idleTimeout * 60) ) {
-				marker.setPulsing(false);
-				$(marker._icon).toggleClass('idle');
+				state = 2; // idle
 			}
+			return state;
+		},
+		
+		// state: 1 active, 2 idle
+		setDeviceIdleState: function(clientID,state) {
+			$(".device-list ul li.device").each(function(i){
+				var data = JSON.parse($(this).attr('data'));
+				if (data.clientID == clientID) {
+					console.log('Changing state to '+state+' for index: '+i);
+					$(".device-list ul li.device").eq(i).find('div.led').first().removeClass( "state state1 state2" ).addClass('state'+state);
+				}
+			});
 		}
 	};
 
@@ -74,6 +95,11 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 	});
 
 
+	
+	showOfflineBanner = function(){
+		$("#main-container").append('<p style="text-align:center;margin-top:100px;"><h1 style="text-align:center;">You are offline.</h1><h3 style="text-align:center;">Refresh to try again</h3></p>');
+	};
+	
 	/*
 	 *
 	 * Return Public Methods
@@ -111,7 +137,7 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 			var WSClient = new Pusher(App.WS.key);
 		  var WSChannel = WSClient.subscribe(App.WS.channel);
 		
-			WSChannel.bind('update_client@beacon', function(data) {
+			WSChannel.bind('update_client_geo@beacon', function(data) {
 				
 				// Find the existing marker to update..			
 				_.each(markers,function(_el,i){
@@ -150,6 +176,9 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 						// Update marker icon
 						markers[i].setPulsing(true);
 						
+						// Update Device status
+						App.Tab.Devices.setDeviceIdleState(markers[i].options.clientID,1);
+						
 						// Update final marker location
 						markers[i].setLatLng(new L.LatLng(data.latitude, data.longitude));
 						
@@ -157,7 +186,9 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 						markers[i]._timestamp = data.timestamp;
 						
 						setTimeout(function() {
-							App.Tab.Devices.setMarkerIdleState(markers[i]);
+							markers[i].setPulsing(false);
+							$(markers[i]._icon).toggleClass('idle');
+							App.Tab.Devices.setDeviceIdleState(markers[i].options.clientID,2);
 						}, (App.Tab.Devices.Settings.idleTimeout * 60) * 1000);
 						
 					}
@@ -195,12 +226,17 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
       App.Network.http({url:'/'+ID+'/_devices'}).done(function(response) {				
 				
 				// Populate device list
-				App.Tab.Devices.render('#main-container', {devices:response});
-								
+				App.Tab.Devices.render('#main-container', {
+					devices:response,
+					height:$(document).height() - $('body').offset().top-65+'px'
+				});
+				
+				
 				// Create map
-				App.Tab.Devices.MAP = new L.Map("map-container-1", {
+				App.Tab.Devices.MAP = new L.Map("devices-map", {
 				    center: new L.LatLng(37.11, -94.48),
 				    zoom: 14,
+						scrollWheelZoom:false,
 				    layers: [
 				        new L.TileLayer("http://{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png", {
 				            maxZoom: 18,
@@ -215,7 +251,6 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 				        callback: function(){alert('hi')}
 				    }]
 				});
-				
 				
 				L.Control.Command = L.Control.extend({
 				    options: {
@@ -237,15 +272,13 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 				L.control.command = function (options) {
 				    return new L.Control.Command(options);
 				};
-				
+
 				var commandControl = new L.Control.Command({});
 				App.Tab.Devices.MAP.addControl(commandControl);
-				
-				
-				
+
 				// Store markers
 				for(key in response) {
-					
+
 					var marker = new L.userMarker([
 						response[key].latitude, 
 						response[key].longitude
@@ -264,38 +297,71 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 			        index: 1
 						}]
 					});
-					
+
 					// Set for marker timestamp
 					marker._timestamp = response[key].timestamp;
-					
+
 					// Add to map
 					marker.addTo(App.Tab.Devices.MAP);
-					
+
 					// Check if marker is idle
-					App.Tab.Devices.setMarkerIdleState(marker);
+					var idleState = App.Tab.Devices.setMarkerIdleState(marker);
+					App.Tab.Devices.setDeviceIdleState(marker.options.clientID,idleState);
+
+					if (idleState == 2) {
+						marker.setPulsing(false);
+						$(marker._icon).toggleClass('idle');
+					}
 					
 					var last_active = moment.unix(response[key].timestamp).format('MMM-Do hh:mm');
-					console.log(last_active);
 					marker.bindPopup('<div style="font-size:22px;">'+response[key].userID+'</div><div style="font-size:12px;">Device: '+response[key].device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
 					markers.push(marker);
-					
 				}
 				
+				App.Tab.Devices.MAP.on('popupopen', function(e) {
+				  var marker = e.popup._source;
+					// loop through device list to find the target
+					$(".device-list ul li.device").each(function(){
+						$(this).removeClass('selected');
+						var data = JSON.parse($(this).attr('data'));
+						if (data.clientID == marker.options.clientID) {
+							$(this).addClass('selected');
+							$('html,body').animate({scrollTop: $(this).position().top-10}, 500);
+						}
+					});
+				});
 				
 				
-				// Handle Clicks
-				$('div.main-item.device').on('click',function() {
+				
+				// Hide element on doc click
+				$(document).on("click",function(e) {
+					var el_action = $(e.target).attr('action');
+					switch(el_action) {
+						
+						case 'alert':
+							alert($(e.target).attr('data'));
+							break;
+						
+						case 'sendMessageToDevice':
+							alert('Not implemented. Use the /api/messages endpoint instead');
+							break;
+					}
+				});
+				
+				// Device click handler
+				$('.device-list ul li.device').on('click',function(){
 					// update UI
-					$("div.main-item.device").each(function(){
+					$(".device-list ul li.device").each(function(){
 						$(this).removeClass('selected');
 					});
 					$(this).addClass('selected');
-					
+
 					// show marker
 					var data = JSON.parse($(this).attr('data'));
-					markers[$("div.device").index(this)].openPopup();
-					App.Tab.Devices.MAP.panTo(new L.LatLng(data.latitude, data.longitude),{animate:true}); 
+					markers[$(".device-list ul li.device").index(this)].openPopup();
+					App.Tab.Devices.MAP.panTo(new L.LatLng(data.latitude, data.longitude),{animate:true});
 				});
+				
 				
 				$('button').on('click',function(){
 					
@@ -322,6 +388,7 @@ define(['jquery','underscore','handlebars','moment', 'form2js', 'js2form', 'hbs!
 						
 					}
 				});
+				
 				
 			});
 		}

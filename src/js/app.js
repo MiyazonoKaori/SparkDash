@@ -58,11 +58,12 @@ var App = {
 require([
 	'jquery', 
 	'controllers/launchpad', 
+	'controllers/app', 
 	'controllers/apps', 
 	'controllers/data', 
 	'controllers/login', 
 	'controllers/register', 
-	'pace'], function($, launchpad, apps, data, login, register, pace) {
+	'pace'], function($, launchpad, app, apps, data, login, register, pace) {
 	
 	/**
 	 * MicroEvent - to make any js object an event emitter (server or browser)
@@ -139,6 +140,11 @@ require([
 				launchpad.start(); 
 				break;
 
+			case 'app': 
+
+				app.start(); 
+				break;
+					
 			case 'apps': 
 				
 				apps.start(); 

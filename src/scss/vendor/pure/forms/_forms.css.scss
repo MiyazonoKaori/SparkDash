@@ -53,6 +53,15 @@
 .pure-form select {
   border: 1px solid #ccc;
   background-color: white;
+  font-size:120%;
+  padding-top: 5px;
+  padding-bottom: 3px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.pure-form option {
+  padding:3px;
+  font-size:95%;
 }
 .pure-form select[multiple] {
   height: auto;
@@ -60,7 +69,7 @@
 .pure-form label {
   margin: 0.5em 0 0.2em;
   color: #999;
-  font-size:140%;
+  font-size:125%;
 }
 .pure-form fieldset {
   margin: 0;
@@ -72,7 +81,7 @@
   width: 100%;
   padding: 0.3em 0;
   margin-bottom: 0.3em;
-  font-size: 125%;
+  font-size: 140%;
   color: #333;
   border-bottom: 1px solid #e5e5e5;
 }
@@ -172,12 +181,13 @@
   margin: 0 0 10px 0;
   width: 100%;
   border: 1px solid #ccc;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  -moz-box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
-  -webkit-box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
-  box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  background-color: #FFFFAA;
   font-size: 23px;
 }
 

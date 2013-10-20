@@ -35,16 +35,34 @@ define([
 			}
 		});
 	}
+	
+	function incrementTabIcon(cur) {
+		if (!cur) {
+			$('.beacon .tabbadge').hide();
+			$('.beacon .tabbadge').text(0);
+			$('.beacon .tabbadge').toggleClass('bounceIn');
+		} else {
+			val = parseInt($('.beacon .tabbadge').text());
+			$('.beacon .tabbadge').text(cur+val);
+			$('.beacon .tabbadge').show();
+			$('.beacon .tabbadge').toggleClass('bounceIn');
+		}
+	}
+	
+	showOfflineBanner = function(){
+		$("#main-container").append('<p style="text-align:center;margin-top:100px;"><h1 style="text-align:center;">You are offline.</h1><h3 style="text-align:center;">Refresh to try again</h3></p>');
+	};
 
   return {
     start: function() {
       console.log("starting dash on channel: "+App.WS.channel);
 			
-			if (navigator.onLine) {
-		    console.log('Online');
-		  } else {
-		    console.log('Offline');
+			// Check internet connection
+			if (!navigator.onLine) {
+		    showOfflineBanner();
+				return;
 		  }
+		
 		
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));
@@ -59,7 +77,7 @@ define([
 			var app = sammy(function(){ 
 				
 				// Hide element on doc click
-				$(document).click(function(e) {
+				$(document).on("click",function(e) {
 					console.log($(e.target));
 					console.log('Action : '+$(e.target).attr('action'));
 					
@@ -69,6 +87,9 @@ define([
 					}
 					if (!$(e.target).is('#main-menu-header ul li')) {
 						$('div.app_dropdown').hide();
+					}
+					if (!$(e.target).is('#menu-right li.beacon')) {
+						$('#menu-right div.beacon.dropdown').hide();
 					}
 					switch(el_action) {
 						case 'showNewApp':
@@ -80,29 +101,31 @@ define([
 							$('div.account_dropdown').hide();
 							app.setLocation('#/logout');
 							break;
-							
-						case 'user.account':
-							alert('account');
+						
+						case 'openDashboard':
+							window.location.href='/apps';
 							break;
+
+						case 'openConsole':
+							$('.modal.c0 div.appPackage').text(App.WS.channel);
+							$('.modal.c0').trigger('openModal');
+							break;
+								
+						case 'showAppHandlers':
+							incrementTabIcon(1);
+							break;
+							
+						case 'hideAppHandlers':
+							incrementTabIcon(false);
+							break;
+								
+						case 'showBeaconTabbadgeMenu':
+							$('#menu-right div.beacon.dropdown').css({'display':'inline-block'});
+							break;
+						
 					}
 				});
-				
-				// Click events
-				$('#main-menu-header ul:first').on('click',function(){
-					$("div.app_dropdown").css("display","inline-block");
-				});
 
-				$('#main-menu-login ul:first').on('click',function(){
-					$("div.account_dropdown").css("display","inline-block");
-				});
-				$('li.app').on('click',function(){
-					$('div.app_dropdown').hide();
-				});
-				
-				$('#menu-bottom.alert').on('click',function(){
-					$('.modal.c0 div.appPackage').text(App.WS.channel);
-					$('.modal.c0').trigger('openModal');
-				});
 				
 				
 				/*
