@@ -80,13 +80,13 @@
                             <legend>App Version</legend>
                             <p>
                               
-                              {{#ifCond current_version.length '>' 0}}
-                              <label id="current_version" style="color:#333;padding:10px;background-color:#ffffaa;"> Current Version: <i style="color:#ff0000;">{{current_version}}</i></label>
+                              {{#ifCond current_appBuild.length '>' 0}}
+                              <label id="current_appBuild" style="color:#333;padding:10px;background-color:#ffffaa;"> Current Version: <i style="color:#ff0000;">{{current_appBuild}}</i></label>
                               <button id="forceUpdateButton" class="pure-button pure-button-xlarge pure-button-disabled" action="runForceUpdate" data-tip="This will force devices to automatically update to this version." style="opacity:0.1;">Force Update</button>
                               
                               <button class="pure-button pure-button-xsmall pure-button-success" action="addNewAppVersion" style="float:right;">New</button>
                               {{else}}
-                              <label id="current_version" style="color:#333;padding:10px;background-color:#ffffaa;" data-tip="You need to add a version number to enable auto updating.">Current Version: <b>None</b></label>
+                              <label id="current_appBuild" style="color:#333;padding:10px;background-color:#ffffaa;" data-tip="You need to add a version number to enable auto updating.">Current Version: <b>None</b></label>
                               {{/ifCond}}
                               
                             </p>
