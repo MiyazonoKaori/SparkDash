@@ -10,7 +10,7 @@
     margin: -150px 0 0 -230px;
     padding: 30px;
     position: absolute;
-    top: 40%;
+    top: 35%;
     left: 50%;
     z-index: 0;
     -moz-border-radius: 3px;
@@ -53,8 +53,7 @@
 }
 
 
-#login h1
-{
+#login h1 {
     text-align: center;
     color: #666;
     margin: 0 0 30px 0;
@@ -64,8 +63,7 @@
 
 /*--------------------*/
 
-fieldset
-{
+fieldset {
     border: 0;
     padding: 0;
     margin: 0;
@@ -73,31 +71,26 @@ fieldset
 
 /*--------------------*/
 
-#login #inputs input
-{
-    background: #f1f1f1 url(http://www.red-team-design.com/wp-content/uploads/2011/09/login-sprite.png) no-repeat;
+#login #inputs input {
+    background: #f1f1f1 url(/img/login-sprite.png) no-repeat;
     padding: 15px 15px 15px 30px;
     margin: 0 0 10px 0;
 }
 
-#login #username
-{
+#login #username {
     background-position: 5px -2px !important;
 }
 
-#login #password
-{
+#login #password {
     background-position: 5px -52px !important;
 }
 
 /*--------------------*/
-#login #actions
-{
+#login #actions {
     margin: 25px 0 0 0;
 }
 
-#login #actions a
-{
+#login #actions a {
     color: #3151A2;    
     float: right;
     line-height: 35px;
@@ -107,8 +100,7 @@ fieldset
 
 /*--------------------*/
 
-#login #back
-{
+#login #back {
     display: block;
     text-align: center;
     position: relative;
