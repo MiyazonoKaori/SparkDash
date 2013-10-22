@@ -177,5 +177,5 @@ define([
 			
       return true;
     }
-  }
+  };
 });

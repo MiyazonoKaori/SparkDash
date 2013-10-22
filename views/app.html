@@ -80,21 +80,22 @@
                             <legend>App Version</legend>
                             <p>
                               
-                              {{#ifCond current_appBuild.length '>' 0}}
-                              <label id="current_appBuild" style="color:#333;padding:10px;background-color:#ffffaa;"> Current Version: <i style="color:#ff0000;">{{current_appBuild}}</i></label>
-                              <button id="forceUpdateButton" class="pure-button pure-button-xlarge pure-button-disabled" action="runForceUpdate" data-tip="This will force devices to automatically update to this version." style="opacity:0.1;">Force Update</button>
-                              
-                              <button class="pure-button pure-button-xsmall pure-button-success" action="addNewAppVersion" style="float:right;">New</button>
+                              {{#ifCond current_build.length '>' 0}}
+                              <label id="current_build" style="color:#333;padding:10px;background-color:#ffffaa;"> Current Build: <i style="color:#ff0000;">{{current_build}}</i></label>
                               {{else}}
-                              <label id="current_appBuild" style="color:#333;padding:10px;background-color:#ffffaa;" data-tip="You need to add a version number to enable auto updating.">Current Version: <b>None</b></label>
+                              <label id="current_build" style="color:#333;padding:10px;background-color:#ffffaa;" data-tip="You need to add a build number to enable auto updating.">Current Build: <i style="color:#ff0000;">None</i></label>
                               {{/ifCond}}
                               
+                              <button id="forceUpdateButton" class="pure-button pure-button-xlarge pure-button-disabled" action="runForceUpdate" data-tip="This will force devices to automatically update to this version." style="opacity:0.1;" disabled="true">Force Update</button>
+                              
+                              <button class="pure-button pure-button-xsmall pure-button-success" action="addNewAppBuild" style="float:right;">New</button>
                             </p>
                             
                             <table id="versionTable" class="pure-table pure-table-horizontal" style="width:100%;">
                                 <thead>
                                     <tr>
-                                        <th style="width:80px;">Version</th>
+                                        <th style="width:80px;">Build</th>
+                                        <th style="width:150px;">Name</th>
                                         <th style="">URL</th>
                                         <th style="width:75px;"></th>
                                         <th style="width:100px;"></th>
@@ -103,24 +104,37 @@
                                 </thead>
                                 <tbody>
                                     
-                                    {{#ifCond versions.length '==' 0}}
-                                    <tr class="empty" style="height:100px;">
-                                      <td colspan="5" style="vertical-align: middle;text-align:center;">
-                                        <button class="pure-button pure-button-success" action="addNewAppVersion" style="text-align:center;">Add Version</button>
-                                      </td>
-                                    </tr>
+                                    {{#ifCond builds 'not exists' 0}}
+                                      <tr class="empty" style="height:100px;">
+                                        <td colspan="5" style="vertical-align: middle;text-align:center;">
+                                          <h1>App data model is missing builds array</h1>
+                                        </td>
+                                      </tr>
                                     {{else}}
                                     
-                                      {{#versions}}
-                                        <tr id="{{version}}">
-                                          <td>{{version}}</td>
-                                          <td>{{url}}</td>
-                                          <td class="edit"><button class="pure-button pure-button-xsmall" action="">Edit</button></td>
-                                          <td class="activate"><button class="pure-button pure-button-xsmall pure-button-primary" action="setAppVersion">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppVersion">X</button></td>
-                                        </tr>
-                                      {{/versions}}
+                                      {{#ifCond builds.length '==' 0}}
+                                      <tr class="empty" style="height:100px;">
+                                        <td colspan="5" style="vertical-align: middle;text-align:center;">
+                                          <button class="pure-button pure-button-success" action="addNewAppBuild" style="text-align:center;">Add Build</button>
+                                        </td>
+                                      </tr>
+                                      {{else}}
+
+                                        {{#builds}}
+                                          <tr id="{{build}}">
+                                            <td>{{build}}</td>
+                                            <td>{{name}}</td>
+                                            <td>{{url}}</td>
+                                            <td class="edit"><button class="pure-button pure-button-xsmall" action="">Edit</button></td>
+                                            <td class="activate"><button class="pure-button pure-button-xsmall pure-button-primary" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppVersion">X</button></td>
+                                          </tr>
+                                        {{/builds}}
+
+                                      {{/ifCond}}
                                       
                                     {{/ifCond}}
+                                    
+                                    
                                     
                                 </tbody>
                             </table>

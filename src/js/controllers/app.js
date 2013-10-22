@@ -3,7 +3,7 @@ define([
 	'underscore',
 	'sammy',
 	'form2js',
-	'hbs!tpl/modals/app.version.html', 
+	'hbs!tpl/modals/app.createbuild.html', 
 	'jquery.terminal',
 	'jquery.easyModal',
 	'jquery.ui.widget'], 
@@ -16,9 +16,9 @@ define([
   return {
     start: function() {
       console.log("starting app");
-
+						
 			// Create Modals
-			$("#modals:first").append(tpl_0({versionNum:'',versionURL:''},{partials:{}}));
+			$("#modals:first").append(tpl_0({build:'',name:'',url:''},{partials:{}}));
 			$('.modal.c0').easyModal({top:200,overlay:0.2});
 			
 			// Create Terminal
@@ -48,7 +48,7 @@ define([
 			});
 			WSClient.connection.bind('connecting_in', function(delay) {
 			  alert("I haven't been able to establish a connection for the console.  " +
-			        "I will try again in " + delay + " seconds.")
+			        "I will try again in " + delay + " seconds.");
 			});
 			WSClient.connection.bind('subscription_error', function(delay) {
 			  alert("Error connecting to SparkDash network");
@@ -89,29 +89,47 @@ define([
 							});
 							break;
 						
-						case 'addNewAppVersion':
+						case 'addNewAppBuild':
 							$('.modal.c0').trigger('openModal');
 							break;
 						
-						case 'setAppVersion':
-							console.log('setAppVersion');
+						case 'deleteAppBuild':
+							break;
+						
+						case 'editAppBuild':
+							break;
+							
+						case 'setAppBuild':
+							console.log('setAppBuild');
 							var trid = $(e.target).closest('tr').attr('id');
-							
-							$('fieldset#version label#current_version i').text(trid);
-							$("fieldset#version label#current_version").highlight();
-							
-							// Remove all disabled states
-							$('fieldset#version #versionTable td.activate button').each(function(el){
-								$(this).removeClass('pure-button-disabled').addClass('pure-button-primary');
+														
+							$(".modal.appkey textarea.accesstoken").val('Loading..');
+							App.Network.http({
+								url:window.location.pathname+'/_setCurrentBuild',
+								type:'POST',
+								dataType:'json',
+								data:{current_build:trid}
+							}).done(function(response) {
+								
+								$('fieldset#version label#current_build i').text(trid);
+								$("fieldset#version label#current_build").highlight();
+
+								// Remove all disabled states
+								$('fieldset#version #versionTable td.activate button').each(function(el){
+									$(this).removeClass('pure-button-disabled').addClass('pure-button-primary').attr('disabled',false);
+								});
+								
+								// Add disabled state
+								$(e.target).removeClass('pure-button-primary').addClass('pure-button-disabled');
+								$("#forceUpdateButton").removeClass('pure-button-disabled').addClass('pure-button-warning').attr('disabled',false).css({opacity:1});
+
 							});
-							// Add disabled state
-							$(e.target).removeClass('pure-button-primary').addClass('pure-button-disabled');
-							$("#forceUpdateButton").removeClass('pure-button-disabled').addClass('pure-button-warning').css({opacity:1});
+							
 							break;
 							
 						case 'runForceUpdate':
 							
-							$("#forceUpdateButton").removeClass('pure-button-warning').addClass('pure-button-disabled').css({opacity:0.1});
+							$("#forceUpdateButton").removeClass('pure-button-warning').addClass('pure-button-disabled').attr('disabled',true).css({opacity:0.1});
 							
 							// Set App Settings
 							App.Network.http({
@@ -129,16 +147,18 @@ define([
 					}
 				});
 				
-				// Events
-
-				$("#versionList").on('change',function(e){
-					var val = $(this).val();
-					var curVersion = $(this).attr('data');
-					console.log(val+" = "+curVersion);
-					if (val == 'false' || val == curVersion) {
-						$("#versionButton").removeClass('pure-button-primary').addClass('pure-button-disabled');
+				// Form Validation
+				$(".modal.c0 input").on('blur',function(e){					
+					// check each input for validation
+					var done = false;
+					$(".modal.c0 input").each(function(){
+						done = ($(this).val().length > 0) ? true : false;
+					});
+					if (done) {
+						var formData = form2js('form-c0', '.', true,function(node){console.log(node);});
+						$(".modal.c0 #versionButton").removeClass('pure-button-disabled').addClass('pure-button-primary').attr('disabled',false);
 					} else {
-						$("#versionButton").removeClass('pure-button-disabled').addClass('pure-button-primary');
+						$(".modal.c0 #versionButton").removeClass('pure-button-primary').addClass('pure-button-disabled').attr('disabled',true);
 					}
 				});
 				
@@ -164,11 +184,29 @@ define([
 												
 						// Save version number and update UI
 						var formData = form2js('form-c0', '.', true,function(node){console.log(node);});
-						$('#versionTable tr:last').after('<tr id="'+formData.versionNum+'"><td>'+formData.versionNum+'</td><td>'+formData.versionURL+'</td><td class="edit"><button class="pure-button pure-button-xsmall" action="">Edit</button></td><td class="activate"><button class="pure-button pure-button-xsmall" action="setAppVersion">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppVersion">X</button></td></tr>');
-						$('#versionTable tr.empty').remove();
 						
-						$(".modal.c0 #versionButton").removeClass('pure-button-primary').addClass('pure-button-disabled');
-						$('.modal.c0').trigger('closeModal');
+						App.Network.http({
+							url:window.location.pathname+'/_createBuild',
+							type:'POST',
+							dataType:'json',
+							data:{data:formData}
+						}).done(function(response) {
+							
+							// Update table
+							$('#versionTable tr:last').after('<tr id="'+formData.build+'"><td>'+formData.build+'</td><td>'+formData.name+'</td><td>'+formData.url+'</td><td class="edit"><button class="pure-button pure-button-xsmall" action="editAppBuild">Edit</button></td><td class="activate"><button class="pure-button pure-button-xsmall" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppBuild">X</button></td></tr>');
+							$('#versionTable tr.empty').remove();
+							
+							// Disable button
+							$(".modal.c0 #versionButton").removeClass('pure-button-primary').addClass('pure-button-disabled').attr('disabled',true);
+							
+							// Close modal
+							$('.modal.c0').trigger('closeModal');
+							
+							// Highlight
+							$("#versionTable tr:last").highlight();
+						});
+						
+						
 												
 					}
 				});
@@ -191,5 +229,5 @@ define([
 			
       return true;
     }
-  }
+  };
 });
