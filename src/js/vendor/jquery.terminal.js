@@ -2484,8 +2484,7 @@
             } catch (e) {
                 output_buffer = [];
                 // don't display exception if exception throw in terminal
-                alert('Internal Exception(draw_line):' + exception_message(e) + '\n' +
-                      e.stack);
+                console.log('Internal Exception(draw_line):' + exception_message(e) + '\n' + e.stack);
             }
         }
         // -----------------------------------------------------------------------

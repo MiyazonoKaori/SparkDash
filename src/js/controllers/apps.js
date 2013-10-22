@@ -14,16 +14,7 @@ define([
 	
 	var $ = $||$(function($) {$=$;});
 
-
-
-	
-	function updateNavLinks(appid) {
-		$("#menu nav a").each(function(){
-			if ($(this).attr('data')) {
-				this.href = "/#/"+appid+"/"+$(this).attr('data');
-			}
-		});
-	}
+	var SEL = false;
 
   return {
     start: function() {
@@ -69,11 +60,12 @@ define([
 							break;
 							
 						case 'showAppKey':
+							SEL = JSON.parse($(e.target).attr('data'));
 							$('.modal.appkey').trigger('openModal');
-							var obj = JSON.parse($(e.target).attr('data'));
-							$(".modal.appkey textarea.appkey").val(obj.key);
-							$(".modal.appkey div.secret").text(obj.seed);
-							$(".modal.appkey div.package").text(obj.pkg);
+							$(".modal.appkey textarea.appkey").val(SEL.key);
+							$(".modal.appkey textarea.accesstoken").val(SEL.access_token||'Auth Missing');
+							$(".modal.appkey div.secret").text(SEL.seed);
+							$(".modal.appkey div.package").text(SEL.pkg);
 							break;
 						
 						case 'launchSparkDash':
@@ -84,6 +76,19 @@ define([
 						case 'launchLog':
 							alert('Future home of Application Manager. \n- Set app version to enforce auto-upgrade\n- View device logs\n- Application Settings');
 							return;
+							break;
+						
+						case 'generateAuthToken':
+							$(".modal.appkey textarea.accesstoken").val('Loading..');
+							App.Network.http({
+								url:window.location.pathname+'/_newSession',
+								type:'POST',
+								dataType:'json',
+								data:{"_id":SEL._id}
+							}).done(function(response) {	
+								$(".modal.appkey textarea.accesstoken").val(response.access_token||'Auth Missing');
+								$(".modal.appkey #token").highlight();
+							});
 							break;
 							
 					}
