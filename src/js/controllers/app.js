@@ -136,7 +136,7 @@ define([
 								url:window.location.pathname+'/_update',
 								type:'POST',
 								dataType:'json',
-								data:{"type":"current_appBuild"}
+								data:{"type":"current_build"}
 							}).done(function(response) {	
 								App.Terminal.echo(JSON.stringify(response), {
 					          finalize: function(el) {el.css("color", "green");}

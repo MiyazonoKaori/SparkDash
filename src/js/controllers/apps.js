@@ -86,7 +86,7 @@ define([
 								dataType:'json',
 								data:{"_id":SEL._id}
 							}).done(function(response) {	
-								$(".modal.appkey textarea.accesstoken").val(response.access_token||'Auth Missing');
+								$(".modal.appkey textarea.accesstoken").val(response.access_token||response.message);
 								$(".modal.appkey #token").highlight();
 							});
 							break;
@@ -104,6 +104,22 @@ define([
 					Form Events
 					
 				*/
+				
+				// Form Validation
+				$(".modal.c1 input").on('blur',function(e){					
+					// check each input for validation
+					var done = false;
+					$(".modal.c1 input").each(function(){
+						done = ($(this).val().length > 0) ? true : false;
+					});
+					if (done) {
+						var formData = form2js('form-c1', '.', true,function(node){console.log(node);});
+						$(".modal.c1 #newappButton").removeClass('pure-button-disabled').addClass('pure-button-primary').attr('disabled',false);
+					} else {
+						$(".modal.c1 #newappButton").removeClass('pure-button-primary').addClass('pure-button-disabled').attr('disabled',true);
+					}
+				});
+				
 				$('button').on('click',function(){
 					
 					// clear data
@@ -119,7 +135,6 @@ define([
 					if ($(this).attr('data') == 'submit-c1') {
 						
 						var formData = form2js('form-c1', '.', true,function(node){});
-						console.log(formData);
 												
 						// Save form data				
 						App.Network.http({
