@@ -134,9 +134,16 @@ define([
 		  //     window.console.log(message);
 		  //   }
 		  // };
+			// Create terminal log
+			Pusher.log = function(message) {
+				console.log('PUSHER LOGGG!!!!');
+				App.Terminal.echo(message, {
+	          finalize: function(el) {el.css("color", "white");}
+	      });
+			};
 			var WSClient = new Pusher(App.WS.key);
 		  var WSChannel = WSClient.subscribe(App.WS.channel);
-		
+			
 			WSChannel.bind('update_client_geo@beacon', function(data) {
 				
 				// Find the existing marker to update..			

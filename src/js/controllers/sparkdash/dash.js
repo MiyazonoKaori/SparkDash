@@ -9,6 +9,7 @@ define([
 	'hbs!tpl/modals/alerts.html', 
 	'hbs!tpl/tabs.html', 
 	'jquery.easyModal',
+	'jquery.terminal',
 	'jquery.ui.widget'], 
 	function($, sammy, Faye, DEVICES, FSM, TASKS, tpl_User, tpl_0, tpl_Tabs) {
 		
@@ -63,7 +64,19 @@ define([
 				return;
 		  }
 		
+			// Create Terminal
+			App.Terminal = $('#terminal').terminal({}, {
+	      enabled:false,
+				greetings:'Ready.',
+	      onFocus: function(){
+	        return false;
+	      },
+	      onBlur: function() {
+	        return true;
+	      }
+	    });
 		
+			
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));
 			$("#menu-right:first").append(tpl_User({},{partials:{}}));
@@ -107,8 +120,7 @@ define([
 							break;
 
 						case 'openConsole':
-							$('.modal.c0 div.appPackage').text(App.WS.channel);
-							$('.modal.c0').trigger('openModal');
+							$('#terminal').toggle();
 							break;
 								
 						case 'showAppHandlers':
