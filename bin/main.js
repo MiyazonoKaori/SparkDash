@@ -286,9 +286,9 @@ switch(subcommand) {
 		});
 
 
-		setInterval(function(){
-		  pusher.trigger('empire_com.mobiltal.service', 'heartbeat@main', {"ping": "pong"});
-		},20000);
+		// setInterval(function(){
+		//   pusher.trigger('empire_com.mobiltal.service', 'heartbeat@main', {"ping": "pong"});
+		// },20000);
 		
 		// using pusher instead
 		// App.server.ws.start({port:5001},function(){
