@@ -2,6 +2,7 @@ define([
 	'jquery',
 	'sammy',
 	'faye',
+	'jspdf',
 	'views/devices', 
 	'views/fsm', 
 	'views/tasks', 
@@ -11,7 +12,7 @@ define([
 	'jquery.easyModal',
 	'jquery.terminal',
 	'jquery.ui.widget'], 
-	function($, sammy, Faye, DEVICES, FSM, TASKS, tpl_User, tpl_0, tpl_Tabs) {
+	function($, sammy, jspdf, Faye, DEVICES, FSM, TASKS, tpl_User, tpl_0, tpl_Tabs) {
 		
 	console.log("Loaded dash");
 	
@@ -75,6 +76,8 @@ define([
 	        return true;
 	      }
 	    });
+	
+			$('#terminal .terminal-header').html('<div style="float:right;"><a href="#" style="color:#fff;" action="log2PDF">Download</a></div>');
 		
 			
 			// Create modal templates for this view
@@ -121,6 +124,21 @@ define([
 
 						case 'openConsole':
 							$('#terminal').toggle();
+							break;
+						
+						case 'log2PDF':
+							
+							var doc = new jsPDF();
+					    var specialElementHandlers = {
+					        '#editor': function (element, renderer) {
+					            return true;
+					        }
+					    };
+							doc.fromHTML($('#terminal .terminal-output').html(), 15, 15, {
+			            'width': 800,
+			                'elementHandlers': specialElementHandlers
+			        });
+			        doc.save('log.pdf');
 							break;
 								
 						case 'showAppHandlers':
