@@ -144,7 +144,7 @@ define([
 			var WSClient = new Pusher(App.WS.key);
 		  var WSChannel = WSClient.subscribe(App.WS.channel);
 			
-			WSChannel.bind('update_client_geo@beacon', function(data) {
+			WSChannel.bind('update_client@beacon', function(data) {
 				
 				// Find the existing marker to update..			
 				_.each(markers,function(_el,i){
