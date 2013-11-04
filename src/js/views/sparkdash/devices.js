@@ -49,12 +49,13 @@ define([
 		},
 		setMarkerIdleState: function(marker) {
 			var state = 1; // default active
-			var curtime = Math.round(new Date().getTime() / 1000);
+			var curtimesecs = Math.round(new Date().getTime() / 1000);
 			
-			console.log('elapsed: '+(curtime - marker._timestamp));
+			console.log(new Date().getTime());
+			console.log('elapsed: '+(curtimesecs - marker._timestamp));
 			console.log('idleTimeout is set to '+(App.Tab.Devices.Settings.idleTimeout * 60)+' seconds');
 			
-			if ((curtime - marker._timestamp) >= (App.Tab.Devices.Settings.idleTimeout * 60) ) {
+			if ((curtimesecs - marker._timestamp) >= (App.Tab.Devices.Settings.idleTimeout * 60) ) {
 				state = 2; // idle
 			}
 			return state;
@@ -63,9 +64,8 @@ define([
 		// state: 1 active, 2 idle
 		setDeviceIdleState: function(clientID,state) {
 			$(".device-list ul li.device").each(function(i){
-				var data = JSON.parse($(this).attr('data'));
-				if (data.clientID == clientID) {
-					console.log('Changing state to '+state+' for index: '+i);
+				if ($(this).attr('data') == clientID) {
+					console.log('Changing idlestate to '+state+' for index: '+i);
 					$(".device-list ul li.device").eq(i).find('div.led').first().removeClass( "state state1 state2" ).addClass('state'+state);
 				}
 			});
@@ -110,7 +110,7 @@ define([
 		render: function() {
 			console.log('Rendering map..');	
 			
-			var markers = [];
+			var Markers = [];
 			
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_1({},{partials:{}}));
@@ -125,7 +125,10 @@ define([
 				type:'GET',
 				dataType:'json'
 			}).done(function(response) {	
-				App.Tab.Devices.Settings = response;
+				App.Tab.Devices.Settings = {
+				  "id": "map",
+				  "idleTimeout": "0.1"
+				};
 			});
 			
 			// Enable pusher logging - don't include this in production
@@ -136,7 +139,6 @@ define([
 		  // };
 			// Create terminal log
 			Pusher.log = function(message) {
-				console.log('PUSHER LOGGG!!!!');
 				App.Terminal.echo(message, {
 	          finalize: function(el) {el.css("color", "white");}
 	      });
@@ -144,25 +146,30 @@ define([
 			var WSClient = new Pusher(App.WS.key);
 		  var WSChannel = WSClient.subscribe(App.WS.channel);
 			
-			WSChannel.bind('update_client@beacon', function(data) {
+			WSChannel.bind('update_client@beacon', function(_data) {
 				
 				// Find the existing marker to update..			
-				_.each(markers,function(_el,i){
-					if (_el.options.clientID === data.clientID) {				
+				_.each(Markers,function(_marker,i) {
+
+					// Ensure clientID matches event clientID
+					if (Markers[i].options.clientID === _data.clientID) {				
 						
-						var pA = new L.LatLng(markers[i]._latlng.lat, markers[i]._latlng.lng);
-						var pB = new L.LatLng(data.latitude, data.longitude);
-						var pList = [pA, pB];
-
+						var pFrom = new L.LatLng(Markers[i]._latlng.lat, Markers[i]._latlng.lng);
+						var pTo = new L.LatLng(_data.latitude, _data.longitude);
+						var pList = [pFrom, pTo];
+						
+						// Create path to animate on
 						var pline = new L.Polyline(pList);
-
+						
+						// Create temp marker to animate
 						var pMarker = L.icon({
 				      iconUrl: '/img/sparkdash/bluedot.path.png',
 				      iconSize: [18, 18],
 				      iconAnchor: [9, 9],
 				      shadowUrl: null
 						});
-
+						
+						// Create marker animation path
 						var path = 	new L.animatedMarker(pline.getLatLngs(), {
 				      icon: pMarker,
 				      autoStart: false,
@@ -175,27 +182,41 @@ define([
 							
 							}
 					  });
+					
+						// Add marker animation path to map
 						App.Tab.Devices.MAP.addLayer(path);
+						
+						// Hide marker then start
 						$(path._icon).hide().fadeIn(300, function(){
 							path.start();
 						});
 						
-						// Update marker icon
-						markers[i].setPulsing(true);
+						// Set marker to pulsate
+						_marker.setPulsing(true);
 						
-						// Update Device status
-						App.Tab.Devices.setDeviceIdleState(markers[i].options.clientID,1);
+						// Update Device idlestatus to active (1=active, 2=idle)
+						App.Tab.Devices.setDeviceIdleState(_marker.options.clientID,1);
 						
-						// Update final marker location
-						markers[i].setLatLng(new L.LatLng(data.latitude, data.longitude));
+						// Set final marker location from request
+						_marker.setLatLng(new L.LatLng(_data.latitude, _data.longitude));
 						
 						// Update timestamp with latest data
-						markers[i]._timestamp = data.timestamp;
+						_marker._timestamp = _data.timestamp;
 						
+						// Set idle expiration date
+						_marker.options._idletimestamp = new Date().getTime() + (App.Tab.Devices.Settings.idleTimeout * 60) * 1000;
+						
+						// Set active/idle state based on settings
 						setTimeout(function() {
-							markers[i].setPulsing(false);
-							$(markers[i]._icon).toggleClass('idle');
-							App.Tab.Devices.setDeviceIdleState(markers[i].options.clientID,2);
+							
+							console.log(Markers[i].options._idletimestamp + ' - ' + new Date().getTime());
+							
+							if (Markers[i].options._idletimestamp - new Date().getTime() <= 0 ) {
+								console.log('SHOULD IDLE');
+								Markers[i].setPulsing(false);
+								$(Markers[i]._icon).toggleClass('idle');
+								App.Tab.Devices.setDeviceIdleState(Markers[i].options.clientID,2);
+							}
 						}, (App.Tab.Devices.Settings.idleTimeout * 60) * 1000);
 						
 					}
@@ -219,7 +240,7 @@ define([
 				// Add marker to map
 				marker.addTo(App.Tab.Devices.MAP);
 				marker.bindPopup('<div style="font-size:22px;">'+data.userID+'</div><div style="font-size:12px;">Device: '+data.device+'</div>');
-				markers.push(marker);
+				Markers.push(marker);
 				
 				// Add device to left panel
 				
@@ -322,16 +343,17 @@ define([
 					
 					var last_active = moment.unix(response[key].timestamp).format('MMM-Do hh:mm');
 					marker.bindPopup('<div style="font-size:22px;">'+response[key].userID+'</div><div style="font-size:12px;">Device: '+response[key].device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
-					markers.push(marker);
+					Markers.push(marker);
 				}
 				
+								
 				App.Tab.Devices.MAP.on('popupopen', function(e) {
 				  var marker = e.popup._source;
 					// loop through device list to find the target
 					$(".device-list ul li.device").each(function(){
 						$(this).removeClass('selected');
-						var data = JSON.parse($(this).attr('data'));
-						if (data.clientID == marker.options.clientID) {
+						var clientID = $(this).attr('data')
+						if (clientID == marker.options.clientID) {
 							$(this).addClass('selected');
 							$('html,body').animate({scrollTop: $(this).position().top-10}, 500);
 						}
@@ -364,9 +386,9 @@ define([
 					$(this).addClass('selected');
 
 					// show marker
-					var data = JSON.parse($(this).attr('data'));
-					markers[$(".device-list ul li.device").index(this)].openPopup();
-					App.Tab.Devices.MAP.panTo(new L.LatLng(data.latitude, data.longitude),{animate:true});
+					var marker = Markers[$(".device-list ul li.device").index(this)];
+					marker.openPopup();
+					App.Tab.Devices.MAP.panTo(new L.LatLng(marker._latlng.lat, marker._latlng.lng),{animate:true});
 				});
 				
 				
