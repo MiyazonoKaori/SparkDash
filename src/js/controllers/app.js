@@ -35,7 +35,7 @@ define([
 			
 			// Create Websocket
 			Pusher.log = function(message) {
-				App.Terminal.echo(message, {
+				App.Terminal.echo("  rec'd -> "+message+"\n", {
 	          finalize: function(el) {el.css("color", "white");}
 	      });
 			};

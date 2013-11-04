@@ -76,6 +76,7 @@
 
 .terminal .terminal-output {
   padding:10px;
+  overflow-y: scroll;
 }
 
 .terminal .terminal-output div div::-moz-selection,
