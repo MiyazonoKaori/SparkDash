@@ -214,7 +214,7 @@ define([
 							
 							if (res.response == "ok") {
 								// Update table
-								$('#versionTable tr:last').after('<tr id="'+formData.build+'" data="'+JSON.stringify(formData)+'"><td>'+formData.build+'</td><td>'+formData.name+'</td><td>'+formData.url+'</td><td class="edit"><button class="pure-button pure-button-xsmall" action="editAppBuild">Edit</button></td><td class="activate"><button class="pure-button pure-button-xsmall" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppBuild">X</button></td></tr>');
+								$('#versionTable tr:last').after('<tr id="'+formData.build+'" data=\''+JSON.stringify(formData)+'\'><td>'+formData.build+'</td><td>'+formData.url+'</td><td class="edit"><button class="pure-button pure-button-xsmall" action="editAppBuild">Edit</button></td><td class="activate"><button class="pure-button pure-button-xsmall" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppBuild">X</button></td></tr>');
 								$('#versionTable tr.empty').remove();
 
 								// Disable button

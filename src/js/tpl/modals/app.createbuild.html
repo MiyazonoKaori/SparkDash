@@ -7,19 +7,13 @@
 	    <fieldset class="field1">
         <div class="pure-control-group">
             <label for="appBuild" data-tip="Found in android:versionCode. ie, 1.0.0">Version Code (appBuild):</label>
-            <input type="text" name="build" id="appBuild" value="{{#build}}{{.}}{{/build}}">
-        </div>
-      </fieldset>
-      <fieldset class="field2">
-        <div class="pure-control-group">
-            <label for="appPackage" data-tip="Found in android:versionName. ie, TestApp1">Version Name (appVersion):</label>
-            <input type="text" name="name" id="appPackage" value="{{#name}}{{.}}{{/name}}">
+            <input type="text" name="build" id="appBuild" value="{{#build}}{{.}}{{/build}}" />
         </div>
       </fieldset>
       <fieldset class="field3">
   	    <div class="pure-control-group">
             <label for="buildURL" data-tip="This is the download URL for the build.">Enter a Package URL</label>
-            <input type="text"name="url" id="buildURL" placeholder="http://" value="{{#url}}{{.}}{{/url}}">
+            <input type="text"name="url" id="buildURL" placeholder="http://" value="{{#url}}{{.}}{{/url}}" style="width:400px;" />
         </div>
       </fieldset>
       <div class="clearfix" style="text-align: center;">

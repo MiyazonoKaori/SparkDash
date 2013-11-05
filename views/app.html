@@ -91,12 +91,11 @@
                               <button class="pure-button pure-button-xsmall pure-button-success" action="addNewAppBuild" style="float:right;margin-right:10px;">New</button>
                             </p>
                             
-                            <table id="versionTable" class="pure-table pure-table-horizontal" style="width:100%;">
+                            <table id="versionTable" class="pure-table pure-table-horizontal" style="width:100%;max-width: 800px;">
                                 <thead>
                                     <tr>
                                         <th style="width:80px;">Build</th>
-                                        <th style="width:150px;">Name</th>
-                                        <th style="">URL</th>
+                                        <th style="width:600px;">URL</th>
                                         <th style="width:75px;"></th>
                                         <th style="width:100px;"></th>
                                         <th style="width:30px;"></th>
@@ -123,7 +122,6 @@
                                         {{#builds}}
                                           <tr id="{{build}}" data="{{json this}}">
                                             <td>{{build}}</td>
-                                            <td>{{name}}</td>
                                             <td>{{url}}</td>
                                             <td class="edit"><button class="pure-button pure-button-xsmall" action="editAppBuild">Edit</button></td>
                                             <td class="activate"><button class="pure-button pure-button-xsmall pure-button-primary" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppBuild">X</button></td>
