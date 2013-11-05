@@ -29,11 +29,18 @@
 
     <body controller="register" style="background-color: #111;">
         
-        <div class="header">
-          {{#error}}
-            {{.}}
-          {{/error}}
-      	</div>
+        {{#error}}
+        <aside style="background: #1f8dd6;
+        padding: 0.3em 1em;
+        border-radius: 3px;
+        color: #fff;
+        line-height: 1.6em;
+        font-size: 1.125em;
+        text-align:center;">
+          <p>{{.}}</p>
+        </aside>
+        {{/error}}
+        
       	<form id="login" method="post" action=""  class="pure-form pure-form-aligned">
       	  
       	  <h1 style="color:#cc0000;text-align:center;">Register for {{#domain}}{{title}}{{/domain}}.</h1>
@@ -56,6 +63,10 @@
           
       	</form>
         
+        <script>
+        var DOMAIN = false;
+        var PKG = false;
+        </script>
         <script data-main="/js/app.min" src="/js/require.js"></script>
     </body>
 </html>
