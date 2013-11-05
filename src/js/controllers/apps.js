@@ -135,7 +135,7 @@ define([
 					if ($(this).attr('data') == 'submit-c1') {
 						
 						var formData = form2js('form-c1', '.', true,function(node){});
-												
+						
 						// Save form data				
 						App.Network.http({
 							url:'/_apps',
