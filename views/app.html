@@ -121,12 +121,12 @@
                                       {{else}}
 
                                         {{#builds}}
-                                          <tr id="{{build}}">
+                                          <tr id="{{build}}" data="{{json this}}">
                                             <td>{{build}}</td>
                                             <td>{{name}}</td>
                                             <td>{{url}}</td>
-                                            <td class="edit"><button class="pure-button pure-button-xsmall" action="">Edit</button></td>
-                                            <td class="activate"><button class="pure-button pure-button-xsmall pure-button-primary" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppVersion">X</button></td>
+                                            <td class="edit"><button class="pure-button pure-button-xsmall" action="editAppBuild">Edit</button></td>
+                                            <td class="activate"><button class="pure-button pure-button-xsmall pure-button-primary" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppBuild">X</button></td>
                                           </tr>
                                         {{/builds}}
 

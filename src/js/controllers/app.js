@@ -3,11 +3,12 @@ define([
 	'underscore',
 	'sammy',
 	'form2js',
+	'js2form',
 	'hbs!tpl/modals/app.createbuild.html', 
 	'jquery.terminal',
 	'jquery.easyModal',
 	'jquery.ui.widget'], 
-	function($, _, sammy, form2js, tpl_0) {
+	function($, _, sammy, form2js, js2form, tpl_0) {
 		
 	console.log("Loaded app");
 	
@@ -94,9 +95,28 @@ define([
 							break;
 						
 						case 'deleteAppBuild':
+							var trid = $(e.target).closest('tr').attr('id');
+							App.Network.http({
+								url:window.location.pathname+'/_deleteBuild',
+								type:'POST',
+								dataType:'json',
+								data:{appBuild:trid}
+							}).done(function(res) {
+								
+								if (res.response == "ok") {
+									// Update table
+									$(e.target).closest('tr').remove();
+								} else {
+									alert(res.response);
+								}
+
+							});
+							
 							break;
 						
 						case 'editAppBuild':
+							js2form(document.getElementById('form-c0'), JSON.parse($(e.target).closest('tr').attr('data')));
+							$('.modal.c0').trigger('openModal');
 							break;
 							
 						case 'setAppBuild':
@@ -190,20 +210,25 @@ define([
 							type:'POST',
 							dataType:'json',
 							data:{data:formData}
-						}).done(function(response) {
+						}).done(function(res) {
 							
-							// Update table
-							$('#versionTable tr:last').after('<tr id="'+formData.build+'"><td>'+formData.build+'</td><td>'+formData.name+'</td><td>'+formData.url+'</td><td class="edit"><button class="pure-button pure-button-xsmall" action="editAppBuild">Edit</button></td><td class="activate"><button class="pure-button pure-button-xsmall" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppBuild">X</button></td></tr>');
-							$('#versionTable tr.empty').remove();
+							if (res.response == "ok") {
+								// Update table
+								$('#versionTable tr:last').after('<tr id="'+formData.build+'" data="'+JSON.stringify(formData)+'"><td>'+formData.build+'</td><td>'+formData.name+'</td><td>'+formData.url+'</td><td class="edit"><button class="pure-button pure-button-xsmall" action="editAppBuild">Edit</button></td><td class="activate"><button class="pure-button pure-button-xsmall" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppBuild">X</button></td></tr>');
+								$('#versionTable tr.empty').remove();
+
+								// Disable button
+								$(".modal.c0 #versionButton").removeClass('pure-button-primary').addClass('pure-button-disabled').attr('disabled',true);
+
+								// Close modal
+								$('.modal.c0').trigger('closeModal');
+								
+								// Highlight
+								$("#versionTable tr:last").highlight();
+							} else {
+								alert(res.response);
+							}
 							
-							// Disable button
-							$(".modal.c0 #versionButton").removeClass('pure-button-primary').addClass('pure-button-disabled').attr('disabled',true);
-							
-							// Close modal
-							$('.modal.c0').trigger('closeModal');
-							
-							// Highlight
-							$("#versionTable tr:last").highlight();
 						});
 						
 						
