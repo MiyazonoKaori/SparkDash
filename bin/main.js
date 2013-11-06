@@ -149,7 +149,8 @@ switch(subcommand) {
 							moment: "moment.min",
 							form2js: "form2js",
 							js2form: "js2form",
-							shortlink: "shortlink"
+							shortlink: "shortlink",
+							jsmodel: "js-model-0.11.0.min"
 			    },
 					shim: {
 			        'jquery.mustache'				: ['jquery'],
