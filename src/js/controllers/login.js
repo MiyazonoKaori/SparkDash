@@ -11,8 +11,7 @@ define(['jquery'], function($) {
 			// Create modal templates for this view
 			
 			// Create Sammy
-			
-			
+						
 			
 			/*
 			 *

@@ -23,7 +23,7 @@ define([
 			$('.modal.c0').easyModal({top:200,overlay:0.2});
 			
 			// Create Terminal
-			App.Terminal = $('fieldset#logs #terminal').terminal({}, {
+			SP.Terminal = $('fieldset#logs #terminal').terminal({}, {
 	      enabled:false,
 				greetings:'Ready.',
 	      onFocus: function(){
@@ -36,13 +36,13 @@ define([
 			
 			// Create Websocket
 			Pusher.log = function(message) {
-				App.Terminal.echo("  rec'd -> "+message+"\n", {
+				SP.Terminal.echo("  rec'd -> "+message+"\n", {
 	          finalize: function(el) {el.css("color", "white");}
 	      });
 			};
 			
-			var WSClient = new Pusher(App.WS.key);
-			var WSChannel = WSClient.subscribe(App.WS.channel);
+			var WSClient = new Pusher(SP.WS.key);
+			var WSChannel = WSClient.subscribe(SP.WS.channel);
 			WSClient.connection.bind('state_change', function(states) {
 			  // states = {previous: 'oldState', current: 'newState'}
 				$("fieldset#logs #terminal-header").text(states.current);
@@ -56,13 +56,13 @@ define([
 			});
 			WSClient.connection.bind( 'error', function( err ) { 
 			  if( err.data.code === 4004 ) {
-					App.Terminal.echo('>>> detected Pusher limit error. Upgrade your account.', {
+					SP.Terminal.echo('>>> detected Pusher limit error. Upgrade your account.', {
 		          finalize: function(el) {el.css("color", "red");}
 		      });
 			  }
 			});
 			WSChannel.bind('log@main', function(data) {
-				App.Terminal.echo(JSON.stringify(data), {
+				SP.Terminal.echo(JSON.stringify(data), {
 	          finalize: function(el) {el.css("color", "yellow");}
 	      });
 			});
@@ -96,7 +96,7 @@ define([
 						
 						case 'deleteAppBuild':
 							var trid = $(e.target).closest('tr').attr('id');
-							App.Network.http({
+							SP.Network.http({
 								url:window.location.pathname+'/_deleteBuild',
 								type:'POST',
 								dataType:'json',
@@ -124,7 +124,7 @@ define([
 							var trid = $(e.target).closest('tr').attr('id');
 														
 							$(".modal.appkey textarea.accesstoken").val('Loading..');
-							App.Network.http({
+							SP.Network.http({
 								url:window.location.pathname+'/_setCurrentBuild',
 								type:'POST',
 								dataType:'json',
@@ -152,13 +152,13 @@ define([
 							$("#forceUpdateButton").removeClass('pure-button-warning').addClass('pure-button-disabled').attr('disabled',true).css({opacity:0.1});
 							
 							// Set App Settings
-							App.Network.http({
+							SP.Network.http({
 								url:window.location.pathname+'/_update',
 								type:'POST',
 								dataType:'json',
 								data:{"type":"current_build"}
 							}).done(function(response) {	
-								App.Terminal.echo(JSON.stringify(response), {
+								SP.Terminal.echo(JSON.stringify(response), {
 					          finalize: function(el) {el.css("color", "green");}
 					      });
 							});
@@ -205,7 +205,7 @@ define([
 						// Save version number and update UI
 						var formData = form2js('form-c0', '.', true,function(node){console.log(node);});
 						
-						App.Network.http({
+						SP.Network.http({
 							url:window.location.pathname+'/_createBuild',
 							type:'POST',
 							dataType:'json',

@@ -5,12 +5,16 @@ define([
 	'form2js',
 	'hbs!tpl/modals/alerts.html', 
 	'hbs!tpl/modals/app.new.html', 
-	'hbs!tpl/modals/app.license.html', 
+	'hbs!tpl/modals/app.license.html',
+	'hbs!tpl/rows/row.applist.html', 
 	'jquery.easyModal',
-	'jquery.ui.widget'], 
-	function($, _, sammy, form2js, tpl_0, tpl_1, tpl_2) {
+	'jquery.ui.widget',
+	'jsmodel'], 
+	function($, _, sammy, form2js, tpl_0, tpl_1, tpl_2, tpl_3) {
 		
-	console.log("Loaded dash");
+	console.log("Loaded apps");
+	
+	console.log(this);
 	
 	var $ = $||$(function($) {$=$;});
 
@@ -20,6 +24,39 @@ define([
     start: function() {
       console.log("starting apps");
 						
+			// Create model 
+			// http://benpickles.github.io/js-model/#model
+			
+			SP.Apps = Model("apps",function(){
+				this.extend({
+				    find_by_ID: function(id) {
+				      return this.detect(function() {
+				        return this.attr("_id") == id
+				      })
+				    }
+				  })
+			});
+			
+			SP.Apps.bind("add", function(obj) {
+				$('.modal.c1').trigger('closeModal');
+				// Update UI
+				$("#applist:first").append(tpl_3(obj.asJSON(),{partials:{}}));
+				//window.location.href='/apps';
+			});
+		
+			// Fetch Apps
+			SP.Network.http({
+				url:window.location.pathname,
+				type:'GET',
+				cache: false
+			}).done(function(res) {	
+				$('#applist .loading_dots').remove();
+				_.each(res.data,function(doc){
+					var app = new SP.Apps(doc);
+					app.save();
+				});
+			});
+			
 			// Create modal templates for this view
 			$("#modals:first").append(tpl_0({},{partials:{}}));
 			$("#modals:first").append(tpl_1({},{partials:{}}));
@@ -28,7 +65,7 @@ define([
 			// Init modal logic
 			$('.modal.c1').easyModal({top:200,overlay:0.2});
 			$('.modal.appkey').easyModal({top:200,overlay:0.2});
-
+			
 			// SammyJS
 			var app = sammy(function(){ 
 				
@@ -60,17 +97,12 @@ define([
 							break;
 							
 						case 'showAppKey':
-							SEL = JSON.parse($(e.target).attr('data'));
+							var obj = SP.Apps.find_by_ID($(e.target).attr('data')).asJSON();
 							$('.modal.appkey').trigger('openModal');
-							$(".modal.appkey textarea.appkey").val(SEL.key);
-							$(".modal.appkey textarea.accesstoken").val(SEL.access_token||'Auth Missing');
-							$(".modal.appkey div.secret").text(SEL.seed);
-							$(".modal.appkey div.package").text(SEL.pkg);
-							break;
-						
-						case 'launchSparkDash':
-							var obj = JSON.parse($(e.target).attr('data'));
-							window.location.href='/'+obj._id+'/sparkdash/#/devices';
+							$(".modal.appkey textarea.appkey").val(obj.key);
+							$(".modal.appkey textarea.accesstoken").val(obj.access_token||'Auth Missing');
+							$(".modal.appkey div.secret").text(obj.seed);
+							$(".modal.appkey div.package").text(obj.pkg);
 							break;
 						
 						case 'launchLog':
@@ -80,7 +112,7 @@ define([
 						
 						case 'generateAuthToken':
 							$(".modal.appkey textarea.accesstoken").val('Loading..');
-							App.Network.http({
+							SP.Network.http({
 								url:window.location.pathname+'/_newSession',
 								type:'POST',
 								dataType:'json',
@@ -137,7 +169,7 @@ define([
 						var formData = form2js('form-c1', '.', true,function(node){});
 						
 						// Save form data				
-						App.Network.http({
+						SP.Network.http({
 							url:'/_apps',
 							type:'POST',
 							dataType:'json',
@@ -145,8 +177,11 @@ define([
 						}).done(function(response) {
 							console.log(response);	
 							if (response.status==200) {
-								$('.modal.c1').trigger('closeModal');
-								window.location.href='/apps';
+								
+								// Add new
+								var app = new SP.Apps(response.data);
+								app.save();
+
 							}
 							if (response.status==301) {
 								$('.modal.c1 input#package').css({border:'2px solid #ff0000'});
@@ -160,35 +195,11 @@ define([
 					event.preventDefault();
 					return false;
 				});
-				
-				
-				/*
-				 *
-				 * Routes
-				 *
-				*/
-				
-				this.get('#/logout',function(){
-					$("#layout #main").animate({opacity:0},200,'linear',function(){
-						
-						$('#main-menu-container').css({top:"-75px"});
-						$('#menu').css({left:0});
-						// Clear session
 
-						window.location.href='/logout';
-						
-					});
-				});
+				
 				
 		  });
 			app.run();
-			
-			/*
-			 *
-			 * Default Route
-			 *
-			*/
-			//app.setLocation('#/devices');
 			
       return true;
     }

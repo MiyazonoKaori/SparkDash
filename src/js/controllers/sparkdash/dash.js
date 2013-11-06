@@ -57,7 +57,7 @@ define([
 
   return {
     start: function() {
-      console.log("starting dash on channel: "+App.WS.channel);
+      console.log("starting dash on channel: "+SP.WS.channel);
 			
 			// Check internet connection
 			if (!navigator.onLine) {
@@ -66,7 +66,7 @@ define([
 		  }
 		
 			// Create Terminal
-			App.Terminal = $('#terminal').terminal({}, {
+			SP.Terminal = $('#terminal').terminal({}, {
 	      enabled:false,
 				greetings:'Ready.',
 	      onFocus: function(){
@@ -187,7 +187,7 @@ define([
 					$('header.devices').toggleClass("active");
 					$('div.app_dropdown').hide();
 					
-					if (!App.Tab.Devices.MAP) {
+					if (!SP.Tab.Devices.MAP) {
 						DEVICES.render();
 					}
 		    }); 

@@ -4,7 +4,8 @@
 	
 */
 // Set Globals
-var App = {
+
+var SP = {
 	Controller: 'init',
 	Network:{
 		http: function(opts) {
@@ -125,46 +126,18 @@ require([
 	var Emitter = registerEmitter();
 	
 	
-	App.Pace = pace;
+	SP.Pace = pace;
 	
 	
   $(function($) {
 		console.log('Starting app');
 		
-		// Init controller based on the HTML view that is rendered from the server.
-		App.Controller = $('body').attr('controller');
-				
-		switch(App.Controller){
-			case 'launchpad': 
-				
-				launchpad.start(); 
-				break;
-
-			case 'app': 
-
-				app.start(); 
-				break;
-					
-			case 'apps': 
-				
-				apps.start(); 
-				break;
-				
-			case 'data': 
-
-				data.start(); 
-				break;
-				
-			case 'login': 
-				login.start(); 
-				break;
-
-			case 'register': 
-				register.start(App); 
-				break;
-				
-			default: 
-				console.log('no controller available');
+		// Init controller based on the HTML controller property
+		SP.Controller = eval($('body').attr('controller'));
+		if (typeof SP.Controller === 'object') {
+				SP.Controller.start();
+		} else {
+			alert('No controller available');
 		}
 		
   });
