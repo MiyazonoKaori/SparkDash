@@ -181,18 +181,17 @@ define([
 				 * Routes
 				 *
 				*/
-		    this.get('#/devices', function(){
-			 		
+		    this.get('/:appid/sparkdash/#/devices', function(){
 					$('header').each(function(){ $(this).removeClass('active'); });
 					$('header.devices').toggleClass("active");
 					$('div.app_dropdown').hide();
-					
+
 					if (!SP.Tab.Devices.MAP) {
 						DEVICES.render();
 					}
 		    }); 
 		
-		    this.get('#/fsm', function(){ 
+		    this.get('/:appid/sparkdash/#/fsm', function(){ 
 					console.log('Sammy says: fsm');
 					$('header').each(function(){ $(this).removeClass('active'); });
 					$('header.fsm').toggleClass("active");
@@ -200,7 +199,7 @@ define([
 					FSM.render();
 		    });
 
-				this.get('#/tasks', function(){ 
+				this.get('/:appid/sparkdash/#/tasks', function(){ 
 					console.log('Sammy says: tasks');
 					$('header').each(function(){ $(this).removeClass('active'); });
 					$('header.tasks').toggleClass("active");
@@ -229,19 +228,13 @@ define([
 					$('#menu').css({left:"75px"});
 				});
 				
-				this.get('#/:appid',function(){
+				this.get('/:appid/sparkdash',function(){
 					console.log('initalizing app '+this.params['appid']);
 					
 					// renders Tabs, dropdowns, etc
-					
-					if (this.params['appid'] == '182379837498298rh938') {
-						// Load Devices view
-						
-						updateNavLinks(this.params['appid']);
-						app.setLocation('#/'+this.params['appid']+'/devices');
-					} else {
-						alert('Inavalid App ID. Contact the administrator.');
-					}
+					// Load Devices view
+					updateNavLinks(this.params['appid']);
+					app.setLocation('/'+this.params['appid']+'/sparkdash/#/devices');
 					
 				});
 				

@@ -148,9 +148,7 @@ require([
 	
 	SP.Pace = pace;
 	
-	
-	// Create SP DB models
-	
+		
   $(function($) {
 		console.log('Starting app');
 		
