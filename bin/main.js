@@ -157,6 +157,7 @@ switch(subcommand) {
 							'jquery.easyModal'			: ['jquery'],
 							'jquery.ui.widget'			: ['jquery'],
 							'jquery.terminal'				: ['jquery'],
+							'jquery.cookie'					: ['jquery'],
 							'handlebars': {
 								exports: 'Handlebars'
 							},
