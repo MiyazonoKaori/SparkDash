@@ -26,18 +26,8 @@ define([
 						
 			// Create model 
 			// http://benpickles.github.io/js-model/#model
-			
-			SP.Apps = Model("apps",function(){
-				this.extend({
-				    find_by_ID: function(id) {
-				      return this.detect(function() {
-				        return this.attr("_id") == id
-				      })
-				    }
-				  })
-			});
-			
-			SP.Apps.bind("add", function(obj) {
+						
+			SP.DB.apps.bind("add", function(obj) {
 				$('.modal.c1').trigger('closeModal');
 				// Update UI
 				$("#applist:first").append(tpl_3(obj.asJSON(),{partials:{}}));
@@ -52,7 +42,7 @@ define([
 			}).done(function(res) {	
 				$('#applist .loading_dots').remove();
 				_.each(res.data,function(doc){
-					var app = new SP.Apps(doc);
+					var app = new SP.DB.apps(doc);
 					app.save();
 				});
 			});
@@ -97,7 +87,7 @@ define([
 							break;
 							
 						case 'showAppKey':
-							var obj = SP.Apps.find_by_ID($(e.target).attr('data')).asJSON();
+							var obj = SP.DB.apps.find_by_ID($(e.target).attr('data')).asJSON();
 							$('.modal.appkey').trigger('openModal');
 							$(".modal.appkey textarea.appkey").val(obj.key);
 							$(".modal.appkey textarea.accesstoken").val(obj.access_token||'Auth Missing');
@@ -179,7 +169,7 @@ define([
 							if (response.status==200) {
 								
 								// Add new
-								var app = new SP.Apps(response.data);
+								var app = new SP.DB.apps(response.data);
 								app.save();
 
 							}

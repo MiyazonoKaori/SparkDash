@@ -60,6 +60,17 @@ var SP = {
 				window.location.href='/logout';
 			});
 		}
+	},
+	DB:{
+		apps:Model("apps",function(){
+			this.extend({
+			    find_by_ID: function(id) {
+			      return this.detect(function() {
+			        return this.attr("_id") == id
+			      })
+			    }
+			  })
+		})
 	}
 };
 
@@ -137,6 +148,8 @@ require([
 	
 	SP.Pace = pace;
 	
+	
+	// Create SP DB models
 	
   $(function($) {
 		console.log('Starting app');
