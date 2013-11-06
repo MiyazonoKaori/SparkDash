@@ -1,0 +1,94 @@
+.loading_dots
+  {
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 5px;
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.3),
+               0 1px 0 rgba(255,255,255,0.3);
+    font-size: 1.8em; /* set size here */
+    line-height: 1;
+    padding: 0.125em 0 0.175em 0.55em;
+    width: 3.4em;
+    margin: 10% auto;
+  }
+
+  .loading_dots span
+  {
+    background: transparent;
+    border-radius: 50%;
+    box-shadow: inset 0 0 1px rgba(0,0,0,0.3);
+    display: inline-block;
+    height: 0.6em;
+    width:  0.6em;
+
+      -webkit-animation:  loading_dots 0.8s linear infinite;
+      -moz-animation:     loading_dots 0.8s linear infinite;
+      -ms-animation:      loading_dots 0.8s linear infinite;
+    animation:            loading_dots 0.8s linear infinite;
+  }
+    .loading_dots span:nth-child(2)
+    {
+        -webkit-animation-delay:  0.2s;
+        -moz-animation-delay:     0.2s;
+        -ms-animation-delay:      0.2s;
+      animation-delay:            0.2s;
+    }
+    .loading_dots span:nth-child(1)
+    {
+  	-webkit-animation-delay:  0.4s;
+        -moz-animation-delay:     0.4s;
+        -ms-animation-delay:      0.4s;
+      animation-delay:            0.4s;
+    }
+
+/*
+  Define the animation for every efing vendor prefix
+*/
+  @-webkit-keyframes loading_dots
+  {
+    0% {
+      background: transparent;
+    }
+    50% {
+      background: #E4E4E4;
+    }
+    100% {
+      background: transparent;
+    }
+  }
+  
+  @-moz-keyframes loading_dots
+  {
+    0% {
+      background: transparent;
+    }
+    50% {
+      background: #E4E4E4;
+    }
+    100% {
+      background: transparent;
+    }
+  }
+  @-ms-keyframes loading_dots
+  {
+    0% {
+      background: transparent;
+    }
+    50% {
+      background: #E4E4E4;
+    }
+    100% {
+      background: transparent;
+    }
+  }
+  @keyframes loading_dots
+  {
+    0% {
+      background: transparent;
+    }
+    50% {
+      background: #E4E4E4;
+    }
+    100% {
+      background: transparent;
+    }
+  }
