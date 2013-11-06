@@ -90,6 +90,10 @@ define([
 							});
 							break;
 						
+						case 'user.logout':
+							SP.App.logout();
+							break;
+								
 						case 'addNewAppBuild':
 							$('.modal.c0').trigger('openModal');
 							break;

@@ -41,7 +41,7 @@ define([
 					switch(el_action) {
 						
 						case 'user.logout':
-							app.setLocation('#/logout');
+							SP.App.logout();
 							break;
 							
 						case 'download':
@@ -72,23 +72,6 @@ define([
 					return false;
 				});
 				
-				
-				/*
-				 *
-				 * Routes
-				 *
-				*/
-		    this.get('#/logout',function(){
-					$("#layout #main").animate({opacity:0},200,'linear',function(){
-						
-						$('#main-menu-container').css({top:"-75px"});
-						$('#menu').css({left:0});
-						// Clear session
-
-						window.location.href='/logout';
-						
-					});
-				});
 				
 		  });
 			app.run();

@@ -51,7 +51,16 @@ var SP = {
 		key: '212c3181292b80f4e1a9',
 		channel:(typeof DOMAIN != undefined) ? DOMAIN+'_'+PKG : false
 	},
-	Tab:{}
+	Tab:{},
+	App:{
+		logout: function(){
+			$("#layout #main").animate({opacity:0},200,'linear',function(){
+				$('#main-menu-container').css({top:"-75px"});
+				$('#menu').css({left:0});
+				window.location.href='/logout';
+			});
+		}
+	}
 };
 
 

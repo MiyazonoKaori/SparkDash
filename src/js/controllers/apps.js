@@ -89,7 +89,7 @@ define([
 							break;
 							
 						case 'user.logout':
-							app.setLocation('#/logout');
+							SP.App.logout();
 							break;
 
 						case 'app.new':
@@ -195,8 +195,6 @@ define([
 					event.preventDefault();
 					return false;
 				});
-
-				
 				
 		  });
 			app.run();
