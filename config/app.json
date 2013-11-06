@@ -9,6 +9,14 @@
     "prefix": "chs-sess"
   },
   "databases": {
+    "mongo":"mongodb://node:N2eaM2Bx@paulo.mongohq.com:10055/sparkdash-dev",
+    "sp": {
+      "engine":"redis",
+      "name":14,
+      "port":6379,
+      "host":"127.0.0.1",
+      "pass":"blahblahblah"
+    },
     "users": {
       "engine":"redis",
       "name":14,
