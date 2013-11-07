@@ -79,7 +79,7 @@ define([
 							break;
 							
 						case 'user.logout':
-							SP.App.logout();
+							SP.logout();
 							break;
 
 						case 'app.new':

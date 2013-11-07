@@ -52,15 +52,14 @@ var SP = {
 		channel:(typeof DOMAIN != undefined) ? DOMAIN+'_'+PKG : false
 	},
 	Tab:{},
-	App:{
-		logout: function(){
-			$("#layout #main").animate({opacity:0},200,'linear',function(){
-				$('#main-menu-container').css({top:"-75px"});
-				$('#menu').css({left:0});
-				window.location.href='/logout';
-			});
-		}
+	logout: function(){
+		$("#layout #main").animate({opacity:0},200,'linear',function(){
+			$('#main-menu-container').css({top:"-75px"});
+			$('#menu').css({left:0});
+			window.location.href='/logout';
+		});
 	},
+	Terminal:false,
 	DB:{
 		apps:Model("apps",function(){
 			this.extend({
