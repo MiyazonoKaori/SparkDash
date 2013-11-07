@@ -7,6 +7,20 @@
 </div>
 
 <div class="left-panel">
+  <div id="device-header">
+      
+      <div class="suggestionGrouping">
+        
+      </div>
+      <div class="filterControls">
+        <h5 class="headerVisible">Select:</h5>
+        <ul class="chips">
+          <li class="chip"><span class="pure-button" action="selectAll">All</span></li>
+          <li class="chip"><span class="pure-button" action="selectNone">None</span></li>
+          <li class="chip"><span class="pure-button" action="selectAction">Take Action</span></li>
+        </ul>
+      </div>
+  </div>
   <div class="device-list">
     <ul>
       {{#devices}}
@@ -24,10 +38,7 @@
             <div class="label green">Checked In</div>
           </div>
           <div style="float:right;margin-top:-30px;">
-            <button class="pure-button pure-button-small" action="sendMessageToDevice">
-              <i class="icon-cog"></i>
-              Send
-            </button>
+            
           </div>
         </div>
         <div class="footer">

@@ -126,6 +126,15 @@ define([
 							$('#terminal').toggle();
 							break;
 						
+						case 'selectAll':
+							alert('Select All');
+							break;
+						case 'selectNone':
+							alert('Select None');
+							break;
+						case 'selectAction':
+							alert('Select Action');
+							break;
 						case 'log2PDF':
 							
 							var doc = new jsPDF();
