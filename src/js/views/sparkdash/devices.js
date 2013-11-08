@@ -31,25 +31,6 @@ define([
 			$('.modal.c3').trigger('openModal');
 			console.log(SP.Tab.Devices.Settings);
 		},
-		render: function(target, data) {
-
-			var html = tmpl_DT(data, {partials: {}});
-
-			// Get the target to append template HTML
-	    if (target instanceof jQuery) {
-	      var targetDom = target;
-	    } else {
-	      var targetDom = $(target + ":first");      
-	    }
-
-			// Append or replace
-	    if( data.append ) {
-	      targetDom.append( html );
-	    } else {
-	      targetDom.html( html );
-	    }
-
-		},
 		setMarkerIdleState: function(marker) {
 			var state = 1; // default active
 			var curtimesecs = Math.round(new Date().getTime() / 1000);
@@ -102,7 +83,10 @@ define([
 		$("#main-container").append('<p style="text-align:center;margin-top:100px;"><h1 style="text-align:center;">You are offline.</h1><h3 style="text-align:center;">Refresh to try again</h3></p>');
 	};
 	openModal_SendMessage = function(view){
-		$(view).find('#title').html('<i style="background-color:#ffff33;padding:3px;border-radius:3px;">'+SP.DB.devices.countMarked()+'</i> devices selected');		
+		$('.modal.c4 form').show();
+		$('.modal.c4 .header').show();
+		$('.modal.c4 .loader').hide().text('Please wait while we confirm receipt.');
+		$(view).find('#title').html('<i style="background-color:#ffff33;padding:3px;border-radius:3px;">'+SP.DB.devices.countMarked()+'</i> devices selected');	
 	};
 	closeModal_SendMessage = function(view){
 		$(view).find('#title').text('');
@@ -214,6 +198,13 @@ define([
 			}
 		});
   };
+	listen_message = function(_data) {
+		$('.modal.c4 .loader').text('Message successfully sent');
+		setTimeout(function(){
+			$('.modal.c4').trigger('closeModal');
+		},2000);
+		SP.incrementTabIcon(1);
+	};
 	doDocClick = function(e) {
 		var el_action = $(e.target).attr('action');
 		switch(el_action) {
@@ -249,7 +240,11 @@ define([
 				break;
 				
 			case 'selectAction':
-				$('.modal.c4').trigger('openModal',{"foo":"bar"});
+				if(SP.DB.devices.countMarked()) {
+					$('.modal.c4').trigger('openModal',{"foo":"bar"});
+				} else {
+					alert('Mark a device before taking action.');
+				}
 				break;
 					
 			case 'sendMessageToDevice':
@@ -311,7 +306,12 @@ define([
 			}).done(function(res) {
 				console.log(res);
 				if (res.status == 200) {
-					$('.modal.c4').trigger('closeModal');
+					// Update modal and wait for confirmation
+					$('.modal.c4 form').hide();
+					$('.modal.c4 .header').hide();
+					$('.modal.c4 .loader').show();
+				} else {
+					alert('There was an error. Your message was not sent. Try again.');
 				}
 			});
 						
@@ -487,9 +487,9 @@ define([
 			$('.modal.c4').easyModal({top:200,overlay:0.2, onOpen: openModal_SendMessage, onClose: closeModal_SendMessage});
 
 			// Create Main Container
-			SP.Tab.Devices.render('#main-container', {
+			SP.render('#main-container', tmpl_DT({
 				height:$(document).height() - $('body').offset().top-65+'px'
-			});
+			}, {partials: {}}));
 			
 			
 			// Set App Settings
@@ -510,6 +510,7 @@ define([
 		  var WSChannel = WSClient.subscribe(SP.WS.channel);
 			WSChannel.bind('update_client@beacon', listen_updateClient);
 			WSChannel.bind('new_client@beacon', listen_newClient);
+			WSChannel.bind('message@main', listen_message);
 								
 			// get devices 
       SP.Network.http({url:'/'+ID+'/_devices'}).done(setupMap);

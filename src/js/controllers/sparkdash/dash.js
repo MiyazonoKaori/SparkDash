@@ -39,19 +39,6 @@ define([
 		});
 	}
 	
-	function incrementTabIcon(cur) {
-		if (!cur) {
-			$('.beacon .tabbadge').hide();
-			$('.beacon .tabbadge').text(0);
-			$('.beacon .tabbadge').toggleClass('bounceIn');
-		} else {
-			val = parseInt($('.beacon .tabbadge').text());
-			$('.beacon .tabbadge').text(cur+val);
-			$('.beacon .tabbadge').show();
-			$('.beacon .tabbadge').toggleClass('bounceIn');
-		}
-	}
-	
 	showOfflineBanner = function(){
 		$("#main-container").append('<p style="text-align:center;margin-top:100px;"><h1 style="text-align:center;">You are offline.</h1><h3 style="text-align:center;">Refresh to try again</h3></p>');
 	};
@@ -141,16 +128,9 @@ define([
 			        });
 			        doc.save('log.pdf');
 							break;
-								
-						case 'showAppHandlers':
-							incrementTabIcon(1);
-							break;
-							
-						case 'hideAppHandlers':
-							incrementTabIcon(false);
-							break;
-								
+
 						case 'showBeaconTabbadgeMenu':
+							SP.incrementTabIcon();
 							$('#menu-right div.beacon.dropdown').css({'display':'inline-block'});
 							break;
 						
