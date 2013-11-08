@@ -293,6 +293,12 @@ define([
 				return str;
 			});
 			
+			// Build list of SocketIDs to target
+			formData.devices = [];
+			SP.DB.devices.getMarked().each(function() {
+			  formData.devices.push(this.attr("socketID"));
+			});
+			
 			// Set App Settings
 			SP.Network.http({
 				url:'/'+ID+'/messages',
