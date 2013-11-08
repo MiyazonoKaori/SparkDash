@@ -311,7 +311,7 @@ define([
 					$('.modal.c4 .header').hide();
 					$('.modal.c4 .loader').show();
 				} else {
-					alert('There was an error. Your message was not sent. Try again.');
+					alert('['+res.status+'] '+res.message);
 				}
 			});
 						
