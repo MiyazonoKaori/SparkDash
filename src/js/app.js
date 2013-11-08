@@ -69,7 +69,31 @@ var SP = {
 			      })
 			    }
 			  })
-		})
+		}),
+		devices:Model("devices",function(){
+			
+			this.extend({
+			    find_by_ID: function(id) {
+			      return this.detect(function() {
+			        return this.attr("clientID") == id
+			      })
+			    }
+			});
+			
+			this.extend({
+			    countMarked: function() {
+						var c=0;
+			      this.each(function(){
+							console.log("marked: "+this.attr("marked"));
+							if (this.attr("marked")) {
+								c++;
+							}
+						});
+						return c;
+			    }
+			});
+			
+		}),
 	}
 };
 
