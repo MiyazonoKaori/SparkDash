@@ -300,7 +300,7 @@ define([
 			
 			// Set App Settings
 			SP.Network.http({
-				url:'/'+ID+'/api/send',
+				url:'/'+ID+'/api/messages',
 				type:'POST',
 				headers:{
 					'Authorization':'test',
