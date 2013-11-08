@@ -11,7 +11,8 @@ define([
 	'hbs!tpl/tabs.html', 
 	'jquery.easyModal',
 	'jquery.terminal',
-	'jquery.ui.widget'], 
+	'jquery.ui.widget',
+	'jsmodel'], 
 	function($, sammy, jspdf, Faye, DEVICES, FSM, TASKS, tpl_User, tpl_0, tpl_Tabs) {
 		
 	console.log("Loaded dash");
@@ -126,15 +127,6 @@ define([
 							$('#terminal').toggle();
 							break;
 						
-						case 'selectAll':
-							alert('Select All');
-							break;
-						case 'selectNone':
-							alert('Select None');
-							break;
-						case 'selectAction':
-							alert('Select Action');
-							break;
 						case 'log2PDF':
 							
 							var doc = new jsPDF();

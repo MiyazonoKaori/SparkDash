@@ -1,0 +1,31 @@
+<ul>
+  <li class="device unselectable" data="{{clientID}}">
+    <div class="header">
+      <div class="deviceIcon" />
+      <div class="deviceTitle">{{userID}}</div>
+      <div class="deviceCheckBox">
+        <label class="styled-checkbox">
+          <input type="checkbox" id="check-{{clientID}}" action="toggleDeviceMark">
+          <span></span>
+        </label>
+      </div>
+    </div>
+    <div class="content">
+      <div class="row1">
+        {{device}}
+      </div>
+      <div class="row2">
+        <div class="label green">Checked In</div>
+      </div>
+      <div style="float:right;margin-top:-30px;">
+        
+      </div>
+    </div>
+    <div class="footer">
+      <div>
+        <div class="led"></div>
+        <div class="timestamp">Last updated: 3 hours ago</div>
+      </div>
+    </div>
+  </li>
+</ul>
