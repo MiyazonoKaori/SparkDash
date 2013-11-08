@@ -93,6 +93,28 @@ var SP = {
 			    }
 			});
 			
+			this.extend({
+			    getMarked: function() {
+						return this.select(function() {
+							if (this.attr("marked")) {
+								return this.attr("socketID");
+							}
+						})
+			    }
+			});
+			
+			this.extend({
+			    getMarkedSocketIDs: function() {
+						return this.select(function() {
+							if (this.attr("marked")) {
+								if (this.attr("socketID")) {
+									return this.attr("socketID");
+								}
+							}
+						})
+			    }
+			});
+			
 		}),
 	}
 };
