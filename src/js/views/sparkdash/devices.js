@@ -205,6 +205,22 @@ define([
 		},2000);
 		SP.incrementTabIcon(1);
 	};
+	listen_status = function(_data) {
+		var d  = SP.DB.devices.find_by_ID(_data.clientID);
+		if(d){
+			_data.data.data = JSON.parse(_data.data.data);
+			d.attr({status: _data.data});
+			d.trigger("update:status");	
+			SP.incrementTabIcon(1);
+		}
+	};
+	listen_updateDeviceStatus = function(){
+		console.log('Updating device object');
+		console.log(this.attr("status"));
+		
+		$(".device-list li[data='"+this.attr("clientID")+"']").find('.content').text('YES');
+		
+	};
 	doDocClick = function(e) {
 		var el_action = $(e.target).attr('action');
 		switch(el_action) {
@@ -339,6 +355,7 @@ define([
 			// Save device to SP.DB.devices
 			_.each(response,function(doc){
 				var d = new SP.DB.devices(doc);
+				d.bind("update:status", listen_updateDeviceStatus);
 				d.save();
 			});
 			
@@ -473,7 +490,6 @@ define([
 			// Create Device List Item
 			SP.DB.devices.bind("add", addDeviceItem);
 			
-			
 			/*
 			 *
 			 *
@@ -517,6 +533,7 @@ define([
 			WSChannel.bind('update_client@beacon', listen_updateClient);
 			WSChannel.bind('new_client@beacon', listen_newClient);
 			WSChannel.bind('message@main', listen_message);
+			WSChannel.bind('status@main', listen_status);
 								
 			// get devices 
       SP.Network.http({url:'/'+ID+'/_devices'}).done(setupMap);
