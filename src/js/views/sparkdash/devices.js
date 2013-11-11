@@ -8,8 +8,9 @@ define([
 	'hbs!tpl/tabs/devices.html',
 	'hbs!tpl/modals/app.new.html',
 	'hbs!tpl/modals/devices.map.settings.html',
+	'hbs!tpl/modals/device.settings.html',
 	'hbs!tpl/modals/action.sendmessage.html',
-	'hbs!tpl/rows/device.html'],function($,_,Handlebars, moment, form2js, js2form, tmpl_DT, tpl_1, tpl_2, tpl_3, tpl_RowDevice) {
+	'hbs!tpl/rows/device.html'],function($,_,Handlebars, moment, form2js, js2form, tmpl_DT, tpl_1, tpl_2, tpl_5, tpl_3, tpl_RowDevice) {
 	console.log('initializing app::devices');
 	
 	var $ = $||$(function($) {$=$;});
@@ -79,6 +80,7 @@ define([
 	});
 
 	
+		
 	showOfflineBanner = function(){
 		$("#main-container").append('<p style="text-align:center;margin-top:100px;"><h1 style="text-align:center;">You are offline.</h1><h3 style="text-align:center;">Refresh to try again</h3></p>');
 	};
@@ -206,25 +208,31 @@ define([
 		SP.incrementTabIcon(1);
 	};
 	listen_status = function(_data) {
+		console.log('Status received for '+_data.clientID);
 		var d  = SP.DB.devices.find_by_ID(_data.clientID);
 		if(d){
-			_data.data.data = JSON.parse(_data.data.data);
+			//_data.data = JSON.parse(_data.data.data);
 			d.attr({status: _data.data});
 			d.trigger("update:status");	
 			SP.incrementTabIcon(1);
 		}
 	};
 	listen_updateDeviceStatus = function(){
-		console.log('Updating device object');
-		console.log(this.attr("status"));
+		console.log('Updating device object.. status: '+this.attr("status"));
 		
-		$(".device-list li[data='"+this.attr("clientID")+"']").find('.content').text('YES');
+		var html = '<i>Unknown status filter</i>';
+		var status = this.attr("status");
+		if(typeof SP.UI.filter[status.id] == "function") {
+			 html = SP.UI.filter[status.id].call(this, this.asJSON());
+		}
+		
+		$(".device-list li[data='"+this.attr("clientID")+"']").find('.content').html(html);
 		
 	};
 	doDocClick = function(e) {
 		var el_action = $(e.target).attr('action');
 		switch(el_action) {
-			
+				
 			case 'toggleDeviceMark':
 				
 				var row = $(e.target).closest('li');
@@ -265,6 +273,10 @@ define([
 					
 			case 'sendMessageToDevice':
 				alert('Not implemented. Use the /api/messages endpoint instead');
+				break;
+
+			case 'openSettings':
+				$('.modal.c5').trigger('openModal',{"foo":"bar"});
 				break;
 		}
 	};
@@ -344,16 +356,37 @@ define([
 		event.preventDefault();
 		return false;
 	};
-	addDeviceItem = function(obj) {
+	addDeviceItem = function(d) {
+		console.log('Adding device');
+		console.log(d);
+		
 		// Update UI
-		$(".left-panel .device-list").append(tpl_RowDevice(obj.asJSON(),{partials:{}}));	
+		$(".left-panel .device-list").append(tpl_RowDevice(d.asJSON(),{partials:{}}));
+		
+		// Update status
+		if (d.attr("status")) {
+			d.trigger("update:status");	
+			
+			// console.log('Updating status for clientID: '+d.attr('clientID'));
+			// 			SP.Network.http({url:'/'+ID+'/'+d.attr('clientID')+'/status'}).done(function(_res){
+			// 				if (_res.status == 200) {
+			// 					listen_status(_res.message);
+			// 				} else {
+			// 					alert(_res.message);
+			// 				}
+			// 			});
+		}
 	};
 	setupMap = function(response) {			
 			
+			if (response.status != 200) {
+				alert(response.message);
+				return;
+			}
 			//$('#applist .loading_dots').remove();
 			
 			// Save device to SP.DB.devices
-			_.each(response,function(doc){
+			_.each(response.message,function(doc){
 				var d = new SP.DB.devices(doc);
 				d.bind("update:status", listen_updateDeviceStatus);
 				d.save();
@@ -404,13 +437,13 @@ define([
 			SP.Tab.Devices.MAP.addControl(commandControl);
 
 			// Store markers
-			for(key in response) {
+			for(key in response.message) {
 
 				var marker = new L.userMarker([
-					response[key].latitude, 
-					response[key].longitude
+					response.message[key].latitude, 
+					response.message[key].longitude
 				],{
-					clientID:response[key].clientID,
+					clientID:response.message[key].clientID,
 					pulsing:true, 
 					accuracy:10, 
 					smallIcon:true,
@@ -426,7 +459,7 @@ define([
 				});
 
 				// Set for marker timestamp
-				marker._timestamp = response[key].timestamp;
+				marker._timestamp = response.message[key].timestamp;
 
 				// Add to map
 				marker.addTo(SP.Tab.Devices.MAP);
@@ -440,8 +473,8 @@ define([
 					$(marker._icon).toggleClass('idle');
 				}
 				
-				var last_active = moment.unix(response[key].timestamp).format('MMM-Do hh:mm');
-				marker.bindPopup('<div style="font-size:22px;">'+response[key].userID+'</div><div style="font-size:12px;">Device: '+response[key].device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
+				var last_active = moment.unix(response.message[key].timestamp).format('MMM-Do hh:mm');
+				marker.bindPopup('<div style="font-size:22px;">'+response.message[key].userID+'</div><div style="font-size:12px;">Device: '+response.message[key].device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
 				Markers.push(marker);
 			}
 			
@@ -502,11 +535,13 @@ define([
 			$("#modals:first").append(tpl_1({},{partials:{}}));
 			$("#modals:first").append(tpl_2({},{partials:{}}));
 			$("#modals:first").append(tpl_3({},{partials:{}}));
+			$("#modals:first").append(tpl_5({},{partials:{}}));
 			
 			// Init modal logic
 			$('.modal.c1').easyModal({top:200,overlay:0.2});
 			$('.modal.c3').easyModal({top:200,overlay:0.2});
 			$('.modal.c4').easyModal({top:200,overlay:0.2, onOpen: openModal_SendMessage, onClose: closeModal_SendMessage});
+			$('.modal.c5').easyModal({top:200,overlay:0.2, onOpen: openModal_SendMessage, onClose: closeModal_SendMessage});
 
 			// Create Main Container
 			SP.render('#main-container', tmpl_DT({
