@@ -226,6 +226,9 @@ switch(subcommand) {
 							wrench.copyDirSyncRecursive(sparkdashSource+'/src/js/views', path.join(__dirname, '../src/js/views/sparkdash'),{forceDelete: true});							
 							fs.writeFileSync(path.join(__dirname, '../src/js/controllers/sparkdash/dash.js'),fs.readFileSync(sparkdashSource+'/src/js/controllers/dash.js','utf8'));
 							fs.writeFileSync(path.join(__dirname, '../views/sparkdash/dash.html'),fs.readFileSync(sparkdashSource+'/views/dash.html','utf8'));
+
+							// Copy Error pages
+							fs.writeFileSync(path.join(compiledAssets, '/error503.html'),fs.readFileSync(srcAssets+'/error503.html','utf8'));
 														
 							console.log('Done building server');
 							process.exit(0);
