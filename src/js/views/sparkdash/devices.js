@@ -220,10 +220,14 @@ define([
 	listen_updateDeviceStatus = function(){
 		console.log('Updating device object.. status: '+this.attr("status"));
 		
-		var html = '<i>Unknown status filter</i>';
-		var status = this.attr("status");
-		if(typeof SP.UI.filter[status.id] == "function") {
-			 html = SP.UI.filter[status.id].call(this, this.asJSON());
+		var html = 'Status is empty';
+		
+		if (d.attr("status")) {
+			html = '<i>Unknown status filter</i>';
+			var status = this.attr("status");
+			if(typeof SP.UI.filter[status.id] == "function") {
+				 html = SP.UI.filter[status.id].call(this, this.asJSON());
+			}
 		}
 		
 		$(".device-list li[data='"+this.attr("clientID")+"']").find('.content').html(html);
@@ -364,18 +368,17 @@ define([
 		$(".left-panel .device-list").append(tpl_RowDevice(d.asJSON(),{partials:{}}));
 		
 		// Update status
-		if (d.attr("status")) {
-			d.trigger("update:status");	
-			
-			// console.log('Updating status for clientID: '+d.attr('clientID'));
-			// 			SP.Network.http({url:'/'+ID+'/'+d.attr('clientID')+'/status'}).done(function(_res){
-			// 				if (_res.status == 200) {
-			// 					listen_status(_res.message);
-			// 				} else {
-			// 					alert(_res.message);
-			// 				}
-			// 			});
-		}
+		d.trigger("update:status");	
+		
+		// console.log('Updating status for clientID: '+d.attr('clientID'));
+		// SP.Network.http({url:'/'+ID+'/'+d.attr('clientID')+'/status'}).done(function(_res){
+		// 	if (_res.status == 200) {
+		// 		listen_status(_res.message);
+		// 	} else {
+		// 		alert(_res.message);
+		// 	}
+		// });
+		
 	};
 	setupMap = function(response) {			
 			
