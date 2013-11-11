@@ -222,7 +222,7 @@ define([
 		
 		var html = 'Status is empty';
 		
-		if (d.attr("status")) {
+		if (this.attr("status")) {
 			html = '<i>Unknown status filter</i>';
 			var status = this.attr("status");
 			if(typeof SP.UI.filter[status.id] == "function") {
