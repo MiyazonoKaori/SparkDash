@@ -66,6 +66,11 @@ define([
 	          finalize: function(el) {el.css("color", "yellow");}
 	      });
 			});
+			WSChannel.bind('message@main', function(data) {
+				SP.Terminal.echo(JSON.stringify(data), {
+	          finalize: function(el) {el.css("color", "blue");}
+	      });
+			});
 	
 			
 			// SammyJS

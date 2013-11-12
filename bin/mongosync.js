@@ -52,8 +52,13 @@ function getDomains(err, domain) {
 			if (e) { console.log(e); return; }
 			
 			// Run search for all domains on MongoHQ
+			console.log('Searching for apps on domain: '+domain.id);
 			db.apps.find({"domain":domain.id}).forEach(function(err, app){
-				getApps(err,app,domain);
+				if (app) {
+					getApps(err,app,domain);
+				} else {
+					console.log(' ..no apps found for '+domain.id);
+				}
 			});
 			
 		});
@@ -85,6 +90,13 @@ function getApps(err, app, domain) {
 				if (e) { console.log(e); return; }
 				console.log(o);
 			});
+			
+			// Save apps to domain db
+			Redis2.HMSET(o.domain+'-'+o.appPackage, o, function(e,o) {
+				if (e) { console.log(e); return; }
+				console.log(o);
+			});
+			
 		});
 	}
 	
