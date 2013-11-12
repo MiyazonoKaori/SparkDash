@@ -103,12 +103,12 @@ define([
 		var tmpDevice = new mdl({
 		      "longitude": "-94.486894",
 		      "enabled": "true",
-		      "userID": "Keverage",
-		      "clientID": "ef12155c-a286-3253-bfb1-24dbe403a1fa",
+		      "userID": "TZMartin",
+		      "clientID": "TZ-ef12155c-a286-3253-bfb1-24dbe403a1fa",
 		      "latitude": "37.1122284",
 		      "appPackage": "com.test.app",
 		      "geohash": "9ysg1uhdruc3",
-		      "device": "Nexus+7+v4.3",
+		      "device": "iPhone+4S",
 		      "expires": "123456870",
 		      "status": {
 		        "id": 100,
@@ -122,7 +122,7 @@ define([
 		        },
 		        "timestamp": 1384165084
 		      },
-		      "timestamp": "1380741478"
+		      "timestamp": 1380741478
 		 });
 		tmpDevice.save();
 		
@@ -301,8 +301,13 @@ define([
 		if (this.attr("status")) {
 			html = '<i>Unknown status filter</i>';
 			var status = this.attr("status");
-			if(typeof SP.UI.filter[status.id] == "function") {
-				 html = SP.UI.filter[status.id].call(this, this.asJSON());
+			if (status.id) {
+				if(typeof SP.UI.filter[status.id] == "function") {
+					 html = SP.UI.filter[status.id].call(this, this.asJSON());
+				}
+			}
+			if (status.html) {
+				html = status.html;
 			}
 		}
 		
