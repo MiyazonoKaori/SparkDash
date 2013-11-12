@@ -5,12 +5,14 @@ define([
 	'moment',
 	'form2js',
 	'js2form', 
+	'codemirror',
 	'hbs!tpl/tabs/devices.html',
 	'hbs!tpl/modals/app.new.html',
 	'hbs!tpl/modals/devices.map.settings.html',
 	'hbs!tpl/modals/device.settings.html',
 	'hbs!tpl/modals/action.sendmessage.html',
-	'hbs!tpl/rows/device.html'],function($,_,Handlebars, moment, form2js, js2form, tmpl_DT, tpl_1, tpl_2, tpl_5, tpl_3, tpl_RowDevice) {
+	'hbs!tpl/rows/device.html',
+	'jquery.codemirror'],function($,_,Handlebars, moment, form2js, js2form, codemirror, tmpl_DT, tpl_1, tpl_2, tpl_Settings, tpl_3, tpl_RowDevice) {
 	console.log('initializing app::devices');
 	
 	var $ = $||$(function($) {$=$;});
@@ -93,6 +95,80 @@ define([
 	closeModal_SendMessage = function(view){
 		$(view).find('#title').text('');
 		$(view).find('textarea#message').val('');
+	};
+	openModal_EditFF = function(view){
+		
+		// create tmp model
+		var mdl = Model("ffedit");
+		var tmpDevice = new mdl({
+		      "longitude": "-94.486894",
+		      "enabled": "true",
+		      "userID": "Keverage",
+		      "clientID": "ef12155c-a286-3253-bfb1-24dbe403a1fa",
+		      "latitude": "37.1122284",
+		      "appPackage": "com.test.app",
+		      "geohash": "9ysg1uhdruc3",
+		      "device": "Nexus+7+v4.3",
+		      "expires": "123456870",
+		      "status": {
+		        "id": 100,
+		        "title": "Service Trip",
+		        "data": {
+		          "image": "https://www.monosnap.com/image/6jaPgaE3d0i2wq3umYzixoz7y.png",
+		          "jobNum": "S9822215",
+		          "address": "1199 West 25th St, Joplin",
+		          "labelText": "Turn Off",
+		          "labelColor": "red"
+		        },
+		        "timestamp": 1384165084
+		      },
+		      "timestamp": "1380741478"
+		 });
+		tmpDevice.save();
+		
+		// Editor
+		SP.UI.FFEditor = $('.expression-preview-code').codemirror({
+      mode: 'javascript',
+      lineNumbers: true,
+			lineWrapping:true,
+			smartIndent:false,
+			fixedGutter:false,
+			onChange: function(e){
+				
+				var el = $(".device-preview li[data='ffedit-preview-ef12155c-a286-3253-bfb1-24dbe403a1fa']").find('.content');
+				
+				var editFunc = evalFunction(e.getValue());
+				if (!editFunc.errorMessage) {
+					try {
+						el.html(editFunc.call(this, tmpDevice.asJSON()));
+					}catch(e){
+						el.html(e+"");
+					}
+				} else {
+					el.html(editFunc.errorMessage);
+				}
+					
+				// var editFunc = App.costco.evalFunction(e.getValue());
+				// 
+				// 	        if (!editFunc.errorMessage) {
+				// 						// Traverse and Apply editFunc to object
+				// 	          var traverseFunc = function(doc) {
+				// 	            App.util.traverse(doc).forEach(editFunc);
+				// 	            return doc;
+				// 	          };
+				// 	          App.costco.previewTransform(App.db.cache, editFunc, App.currentColumn);
+        //} else {
+					//console.log(editFunc.errorMessage);
+					//App.costco.previewTransform(App.db.cache, function() { return editFunc.errorMessage;}, App.currentColumn);
+        //}
+			}
+    });
+
+		SP.UI.FFEditor.setValue("function(device) {\n    return \"HELLO WORLD\";\n}");
+		
+	};
+	closeModal_EditFF = function(view) {
+		SP.UI.FFEditor = null;
 	};
 	logPusher = function(message) {
 		SP.Terminal.echo(message, {
@@ -233,6 +309,16 @@ define([
 		$(".device-list li[data='"+this.attr("clientID")+"']").find('.content').html(html);
 		
 	};
+	
+	evalFunction = function(funcString) {
+    try {
+      eval("var editFunc = " + funcString + ";");
+    } catch(e) {
+      return {errorMessage: e+""};
+    }
+    return editFunc;
+  };
+
 	doDocClick = function(e) {
 		var el_action = $(e.target).attr('action');
 		switch(el_action) {
@@ -280,7 +366,11 @@ define([
 				break;
 
 			case 'openSettings':
-				$('.modal.c5').trigger('openModal',{"foo":"bar"});
+				$('.modal.settings').trigger('openModal',{"foo":"bar"});
+				break;
+			
+			case 'test_FFEdit':
+				console.log(evalFunction(SP.UI.FFEditor.getValue()));
 				break;
 		}
 	};
@@ -538,13 +628,14 @@ define([
 			$("#modals:first").append(tpl_1({},{partials:{}}));
 			$("#modals:first").append(tpl_2({},{partials:{}}));
 			$("#modals:first").append(tpl_3({},{partials:{}}));
-			$("#modals:first").append(tpl_5({},{partials:{}}));
+			$("#modals:first").append(tpl_Settings({},{partials:{}}));
 			
 			// Init modal logic
 			$('.modal.c1').easyModal({top:200,overlay:0.2});
 			$('.modal.c3').easyModal({top:200,overlay:0.2});
 			$('.modal.c4').easyModal({top:200,overlay:0.2, onOpen: openModal_SendMessage, onClose: closeModal_SendMessage});
-			$('.modal.c5').easyModal({top:200,overlay:0.2, onOpen: openModal_SendMessage, onClose: closeModal_SendMessage});
+			$('.modal.settings').easyModal({overlay:0.2, onOpen: openModal_EditFF, onClose: closeModal_EditFF});
+			
 
 			// Create Main Container
 			SP.render('#main-container', tmpl_DT({
@@ -585,7 +676,7 @@ define([
 			
 			// Stop forms from submitting
 			$("form").submit(stopSubmit);
-			
+
 		}
 	}
 	
