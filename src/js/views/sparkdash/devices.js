@@ -177,54 +177,58 @@ define([
 	};
 	createClient = function(device) {
 
-		// Add client to markers
-		var marker = new L.userMarker([
-			device.latitude,
-			device.longitude
-		],{
-			clientID:device.clientID,
-			bounceOnAdd:true,
-			pulsing:true, 
-			accuracy:10, 
-			smallIcon:true,
-			contextmenu: true,
-	    contextmenuWidth: 140,
-	    contextmenuItems: [{
-	        text: 'Set Idle Filter',
-	        callback: function(){alert('hi');}
-	    },{
-        separator: true,
-        index: 1
-			}]
-		});
-		
-		
-		// Set for marker timestamp
-		marker._timestamp = device.timestamp;
-		
-		// Add marker to map
-		marker.addTo(SP.Tab.Devices.MAP);
-		
-		// Check if marker is idle
-		var idleState = SP.Tab.Devices.setMarkerIdleState(marker);
-		SP.Tab.Devices.setDeviceIdleState(marker.options.clientID,idleState);
-
-		if (idleState == 2) {
-			marker.setPulsing(false);
-			$(marker._icon).toggleClass('idle');
-		}
-		
-		var last_active = moment.unix(device.timestamp).format('MMM-Do hh:mm');
-		
-		marker.bindPopup('<div style="font-size:22px;">'+device.userID+'</div><div style="font-size:12px;">Device: '+device.device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
-		
 		// Save to DB		
 		var d = new SP.DB.devices(device);
-		d.attr({_marker:marker});
 		d.bind("set:status", setClientStatus);
-		d.save();
 				
+		// Set Location
+		if (device.hasOwnProperty('latitude') && device.hasOwnProperty('longitude')) {
+			// Add client to markers
+			var marker = new L.userMarker([
+				device.latitude,
+				device.longitude
+			],{
+				clientID:device.clientID,
+				bounceOnAdd:true,
+				pulsing:true, 
+				accuracy:10, 
+				smallIcon:true,
+				contextmenu: true,
+		    contextmenuWidth: 140,
+		    contextmenuItems: [{
+		        text: 'Set Idle Filter',
+		        callback: function(){alert('hi');}
+		    },{
+	        separator: true,
+	        index: 1
+				}]
+			});
+
+			// Set for marker timestamp
+			marker._timestamp = device.timestamp;
+
+			// Add marker to map
+			marker.addTo(SP.Tab.Devices.MAP);
+
+			// Check if marker is idle
+			var idleState = SP.Tab.Devices.setMarkerIdleState(marker);
+			SP.Tab.Devices.setDeviceIdleState(marker.options.clientID,idleState);
+
+			if (idleState == 2) {
+				marker.setPulsing(false);
+				$(marker._icon).toggleClass('idle');
+			}
+
+			var last_active = moment.unix(device.timestamp).format('MMM-Do hh:mm');
+
+			marker.bindPopup('<div style="font-size:22px;">'+device.userID+'</div><div style="font-size:12px;">Device: '+device.device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
+			
+			d.attr({_marker:marker});
+		}
+		
+		d.save();
 		SP.incrementTabIcon(1);
+
   };
 	removeClient = function(_data) {
 		console.log('Removing client: '+_data.clientID);
