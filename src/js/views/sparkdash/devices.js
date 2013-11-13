@@ -171,132 +171,112 @@ define([
 		SP.UI.FFEditor = null;
 	};
 	logPusher = function(message) {
-		SP.Terminal.echo(message, {
+		SP.Terminal.echo(message+"\n", {
         finalize: function(el) {el.css("color", "white");}
     });
 	};
-	listen_newClient = function(data) {
+	createClient = function(device) {
 
 		// Add client to markers
 		var marker = new L.userMarker([
-			data.latitude,
-			data.longitude
+			device.latitude,
+			device.longitude
 		],{
-			bounceOnAdd: true,
-			clientID:data.clientID,
+			clientID:device.clientID,
+			bounceOnAdd:true,
 			pulsing:true, 
 			accuracy:10, 
-			smallIcon:true
+			smallIcon:true,
+			contextmenu: true,
+	    contextmenuWidth: 140,
+	    contextmenuItems: [{
+	        text: 'Set Idle Filter',
+	        callback: function(){alert('hi');}
+	    },{
+        separator: true,
+        index: 1
+			}]
 		});
+		
+		
+		// Set for marker timestamp
+		marker._timestamp = device.timestamp;
 		
 		// Add marker to map
 		marker.addTo(SP.Tab.Devices.MAP);
-		marker.bindPopup('<div style="font-size:22px;">'+data.userID+'</div><div style="font-size:12px;">Device: '+data.device+'</div>');
-		Markers.push(marker);
 		
-		// Add device to left panel
-		
-		
-		// Notify the user
-		//alert('A new device has been added.');
-  };
-	listen_updateClient = function(_data) {
-		
-		// Find the existing marker to update..			
-		_.each(Markers,function(_marker,i) {
+		// Check if marker is idle
+		var idleState = SP.Tab.Devices.setMarkerIdleState(marker);
+		SP.Tab.Devices.setDeviceIdleState(marker.options.clientID,idleState);
 
-			// Ensure clientID matches event clientID
-			if (Markers[i].options.clientID === _data.clientID) {				
+		if (idleState == 2) {
+			marker.setPulsing(false);
+			$(marker._icon).toggleClass('idle');
+		}
+		
+		var last_active = moment.unix(device.timestamp).format('MMM-Do hh:mm');
+		
+		marker.bindPopup('<div style="font-size:22px;">'+device.userID+'</div><div style="font-size:12px;">Device: '+device.device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
+		
+		// Save to DB		
+		var d = new SP.DB.devices(device);
+		d.attr({_marker:marker});
+		d.bind("set:status", setClientStatus);
+		d.save();
 				
-				var pFrom = new L.LatLng(Markers[i]._latlng.lat, Markers[i]._latlng.lng);
-				var pTo = new L.LatLng(_data.latitude, _data.longitude);
-				var pList = [pFrom, pTo];
-				
-				// Create path to animate on
-				var pline = new L.Polyline(pList);
-				
-				// Create temp marker to animate
-				var pMarker = L.icon({
-		      iconUrl: '/img/sparkdash/bluedot.path.png',
-		      iconSize: [18, 18],
-		      iconAnchor: [9, 9],
-		      shadowUrl: null
-				});
-				
-				// Create marker animation path
-				var path = 	new L.animatedMarker(pline.getLatLngs(), {
-		      icon: pMarker,
-		      autoStart: false,
-					distance: 600,  // meters
-					interval: 800,
-					onEnd:function(){
-						$(this._icon).fadeOut(1000, function(){
-							SP.Tab.Devices.MAP.removeLayer(this);
-						});
-					
-					}
-			  });
-			
-				// Add marker animation path to map
-				SP.Tab.Devices.MAP.addLayer(path);
-				
-				// Hide marker then start
-				$(path._icon).hide().fadeIn(300, function(){
-					path.start();
-				});
-				
-				// Set marker to pulsate
-				_marker.setPulsing(true);
-				
-				// Update Device idlestatus to active (1=active, 2=idle)
-				SP.Tab.Devices.setDeviceIdleState(_marker.options.clientID,1);
-				
-				// Set final marker location from request
-				_marker.setLatLng(new L.LatLng(_data.latitude, _data.longitude));
-				
-				// Update timestamp with latest data
-				_marker._timestamp = _data.timestamp;
-				
-				// Set idle expiration date
-				_marker.options._idletimestamp = new Date().getTime() + (SP.Tab.Devices.Settings.idleTimeout * 60) * 1000;
-				
-				// Set active/idle state based on settings
-				setTimeout(function() {
-					
-					console.log(Markers[i].options._idletimestamp + ' - ' + new Date().getTime());
-					
-					if (Markers[i].options._idletimestamp - new Date().getTime() <= 0 ) {
-						console.log('SHOULD IDLE');
-						Markers[i].setPulsing(false);
-						$(Markers[i]._icon).toggleClass('idle');
-						SP.Tab.Devices.setDeviceIdleState(Markers[i].options.clientID,2);
-					}
-				}, (SP.Tab.Devices.Settings.idleTimeout * 60) * 1000);
-				
-			}
-		});
-  };
-	listen_message = function(_data) {
-		$('.modal.c4 .loader').text('Message successfully sent');
-		setTimeout(function(){
-			$('.modal.c4').trigger('closeModal');
-		},2000);
 		SP.incrementTabIcon(1);
-	};
-	listen_status = function(_data) {
-		console.log('Status received for '+_data.clientID);
-		var d  = SP.DB.devices.find_by_ID(_data.clientID);
-		if(d){
-			//_data.data = JSON.parse(_data.data.data);
-			d.attr({status: _data.data});
-			d.trigger("update:status");	
+  };
+	removeClient = function(_data) {
+		console.log('Removing client: '+_data.clientID);
+		var el = $(".device-list li[data='"+_data.clientID+"']");
+		var d = SP.DB.devices.find_by_ID(_data.clientID);
+		if (d) {
+			SP.Tab.Devices.MAP.removeLayer(d.attr('_marker'));
+			SP.DB.devices.remove(d);
 			SP.incrementTabIcon(1);
 		}
+		el.remove();
 	};
-	listen_updateDeviceStatus = function(){
-		console.log('Updating device object.. status: '+this.attr("status"));
+	updateClient = function(_data) {
 		
-		var html = 'Status is empty';
+		// Render device status if no status is set
+		// todo: ensure the frequent updates don't overwrite the status..
+		var d = SP.DB.devices.find_by_ID(_data.clientID);
+		if (d) {
+			d.attr(_data);
+			d.trigger("set:status");	
+			SP.incrementTabIcon(1);
+			
+			if(!_data.latitude || !_data.longitude) {
+				return false;
+			}
+			// Update map marker for device
+			d.updateMarker();
+			
+		}	else {
+			// Create new client
+			createClient(_data);
+		}
+  };
+	messageEvt = function(_data) {
+		if (_data.nonce) {
+			console.log(_data.nonce + ' = ' + $('.modal.c4 form').attr('nonce'));
+			if (_data.nonce == $('.modal.c4 form').attr('nonce')) {
+				$('.modal.c4 .loader').text('Message successfully sent');
+				$('.modal.c4 form').attr('nonce','');
+				setTimeout(function(){
+					$('.modal.c4').trigger('closeModal');
+				},2000);
+				SP.incrementTabIcon(1);
+			}
+		}
+	};
+
+	setClientStatus = function(){
+		console.log('Updating device status for clientID: '+this.attr("clientID"));
+		
+		var title = 'Device '+this.attr("clientID");
+		var content = '<div style="padding:13px;">Current state: <span class="label green">' + this.getLifecycleState() + '</span></div>';
 		
 		if (this.attr("status")) {
 			html = '<i>Unknown status filter</i>';
@@ -311,7 +291,14 @@ define([
 			}
 		}
 		
-		$(".device-list li[data='"+this.attr("clientID")+"']").find('.content').html(html);
+		// Set Title
+		if (this.attr('userID')) {
+			title = '<b>'+this.attr('userID')+'</div>';
+		}
+		
+		var el = $(".device-list li[data='"+this.attr("clientID")+"']");
+		el.find('.deviceTitle').html(title);
+		el.find('.content').html(content);
 		
 	};
 	
@@ -419,6 +406,8 @@ define([
 				}
 				return str;
 			});
+
+			formData.nonce = (new Date()).getTime() * Math.floor(Math.random()*3+1);			
 			
 			// Build list of SocketIDs to target
 			formData.devices = [];
@@ -432,6 +421,9 @@ define([
 				});
 			});
 			
+			// Update form with nonce
+			$('.modal.c4 form').attr('nonce',formData.nonce);
+			
 			// Set App Settings
 			SP.Network.http({
 				url:'/'+ID+'/messages',
@@ -443,7 +435,6 @@ define([
 				dataType:'json',
 				data:JSON.stringify(formData)
 			}).done(function(res) {
-				console.log(res);
 				if (res.status == 200) {
 					// Update modal and wait for confirmation
 					$('.modal.c4 form').hide();
@@ -457,44 +448,38 @@ define([
 		}
 		
 	};
+	doDeviceClick = function(){
+		
+		// update UI
+		$(".device-list ul li.device").each(function(){
+			$(this).removeClass('selected');
+		});
+		$(this).addClass('selected');
+
+		// show marker
+		var d = SP.DB.devices.find_by_ID($(this).attr('data'));
+		if (d) {
+			var marker = d.attr('_marker');
+			marker.openPopup();
+			SP.Tab.Devices.MAP.panTo(new L.LatLng(marker._latlng.lat, marker._latlng.lng),{animate:true});
+		}
+	};
 	stopSubmit = function( event ) {
 		event.preventDefault();
 		return false;
 	};
-	addDeviceItem = function(d) {
-		console.log('Adding device');
-		console.log(d);
-		
+	DB_addEvt = function(d) {
 		// Update UI
-		$(".left-panel .device-list").append(tpl_RowDevice(d.asJSON(),{partials:{}}));
-		
+		$(".left-panel .device-list ul").append(tpl_RowDevice(d.asJSON(),{partials:{}}));
 		// Update status
-		d.trigger("update:status");	
-		
-		// console.log('Updating status for clientID: '+d.attr('clientID'));
-		// SP.Network.http({url:'/'+ID+'/'+d.attr('clientID')+'/status'}).done(function(_res){
-		// 	if (_res.status == 200) {
-		// 		listen_status(_res.message);
-		// 	} else {
-		// 		alert(_res.message);
-		// 	}
-		// });
-		
+		d.trigger("set:status");	
 	};
-	setupMap = function(response) {			
+	setupMap = function(response) {
 			
-			if (response.status != 200) {
-				alert(response.message);
-				return;
-			}
-			//$('#applist .loading_dots').remove();
-			
-			// Save device to SP.DB.devices
-			_.each(response.message,function(doc){
-				var d = new SP.DB.devices(doc);
-				d.bind("update:status", listen_updateDeviceStatus);
-				d.save();
-			});
+			SP.Tab.Devices.Settings = {
+			  "id": "map",
+			  "idleTimeout": "2"
+			};
 			
 			// Create map
 			SP.Tab.Devices.MAP = new L.Map("devices-map", {
@@ -512,13 +497,13 @@ define([
 			    contextmenuWidth: 140,
 			    contextmenuItems: [{
 			        text: 'Show coordinates',
-			        callback: function(){alert('hi')}
+			        callback: function(){alert('hi');}
 			    }]
 			});
 			
 			L.Control.Command = L.Control.extend({
 			    options: {
-			        position: 'topleft',
+			        position: 'topleft'
 			    },
 			    onAdd: function (map) {
 			        var controlDiv = L.DomUtil.create('div', 'leaflet-control-command');
@@ -539,56 +524,13 @@ define([
 
 			var commandControl = new L.Control.Command({});
 			SP.Tab.Devices.MAP.addControl(commandControl);
-
-			// Store markers
-			for(key in response.message) {
-
-				var marker = new L.userMarker([
-					response.message[key].latitude, 
-					response.message[key].longitude
-				],{
-					clientID:response.message[key].clientID,
-					pulsing:true, 
-					accuracy:10, 
-					smallIcon:true,
-					contextmenu: true,
-			    contextmenuWidth: 140,
-			    contextmenuItems: [{
-			        text: 'Set Idle Filter',
-			        callback: function(){alert('hi')}
-			    },{
-		        separator: true,
-		        index: 1
-					}]
-				});
-
-				// Set for marker timestamp
-				marker._timestamp = response.message[key].timestamp;
-
-				// Add to map
-				marker.addTo(SP.Tab.Devices.MAP);
-
-				// Check if marker is idle
-				var idleState = SP.Tab.Devices.setMarkerIdleState(marker);
-				SP.Tab.Devices.setDeviceIdleState(marker.options.clientID,idleState);
-
-				if (idleState == 2) {
-					marker.setPulsing(false);
-					$(marker._icon).toggleClass('idle');
-				}
-				
-				var last_active = moment.unix(response.message[key].timestamp).format('MMM-Do hh:mm');
-				marker.bindPopup('<div style="font-size:22px;">'+response.message[key].userID+'</div><div style="font-size:12px;">Device: '+response.message[key].device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
-				Markers.push(marker);
-			}
-			
 							
 			SP.Tab.Devices.MAP.on('popupopen', function(e) {
 			  var marker = e.popup._source;
 				// loop through device list to find the target
 				$(".device-list ul li.device").each(function(){
 					$(this).removeClass('selected');
-					var clientID = $(this).attr('data')
+					var clientID = $(this).attr('data');
 					if (clientID == marker.options.clientID) {
 						$(this).addClass('selected');
 						$('html,body').animate({scrollTop: $(this).position().top-10}, 500);
@@ -596,23 +538,21 @@ define([
 				});
 			});
 			
-		
-			// Device click handler
-			$('.device-list ul li.device').on('click',function(){
-				// update UI
-				$(".device-list ul li.device").each(function(){
-					$(this).removeClass('selected');
-				});
-				$(this).addClass('selected');
-
-				// show marker
-				var marker = Markers[$(".device-list ul li.device").index(this)];
-				marker.openPopup();
-				SP.Tab.Devices.MAP.panTo(new L.LatLng(marker._latlng.lat, marker._latlng.lng),{animate:true});
-			});
+			// get devices 
+      SP.Network.http({url:'/'+ID+'/_devices'}).done(populateMap);
 			
 	};
-	
+	populateMap = function(response){
+		if (response.status != 200) {
+			alert(response.message);
+			return;
+		}
+		//$('#applist .loading_dots').remove();
+
+		// Save device to SP.DB.devices
+		_.each(response.message,createClient);
+		
+	};
 	
 	/*
 	 *
@@ -622,10 +562,9 @@ define([
 	return {
 		
 		render: function() {
-			console.log('Rendering map..');	
 			
-			// Create Device List Item
-			SP.DB.devices.bind("add", addDeviceItem);
+			// Bind database events to the UI
+			SP.DB.devices.bind("add", DB_addEvt);
 			
 			/*
 			 *
@@ -647,36 +586,22 @@ define([
 			$('.modal.c4').easyModal({top:200,overlay:0.2, onOpen: openModal_SendMessage, onClose: closeModal_SendMessage});
 			$('.modal.settings').easyModal({overlay:0.2, onOpen: openModal_EditFF, onClose: closeModal_EditFF});
 			
-
 			// Create Main Container
 			SP.render('#main-container', tmpl_DT({
 				height:$(document).height() - $('body').offset().top-65+'px'
 			}, {partials: {}}));
 			
-			
-			// Set App Settings
-			SP.Network.http({
-				url:'/_db?id=map',
-				type:'GET',
-				dataType:'json'
-			}).done(function(response) {	
-				SP.Tab.Devices.Settings = {
-				  "id": "map",
-				  "idleTimeout": "2"
-				};
-			});
-			
 			// Create terminal log
 			Pusher.log = logPusher;
 			var WSClient = new Pusher(SP.WS.key);
 		  var WSChannel = WSClient.subscribe(SP.WS.channel);
-			WSChannel.bind('update_client@beacon', listen_updateClient);
-			WSChannel.bind('new_client@beacon', listen_newClient);
-			WSChannel.bind('message@main', listen_message);
-			WSChannel.bind('status@main', listen_status);
-								
-			// get devices 
-      SP.Network.http({url:'/'+ID+'/_devices'}).done(setupMap);
+			WSChannel.bind('update_client@beacon', updateClient);
+			WSChannel.bind('new_client@beacon', createClient);
+			WSChannel.bind('startapp@beacon', updateClient);
+			WSChannel.bind('stopapp@beacon', updateClient);
+			WSChannel.bind('remove_client@beacon', removeClient);
+			WSChannel.bind('message@main', messageEvt);
+			WSChannel.bind('status@main', updateClient);
 		
 			// Hide element on doc click
 			$(document).on("click",doDocClick);
@@ -685,10 +610,20 @@ define([
 			// https://github.com/maxatwork/form2js
 			$('form button').on('click',doFormSubmit);
 			
+			// Device click handler
+			$('.device-list ul').on('click','li.device', doDeviceClick);
+			
 			// Stop forms from submitting
 			$("form").submit(stopSubmit);
 
+			// Set App Settings
+			SP.Network.http({
+				url:'/_db?id=map',
+				type:'GET',
+				dataType:'json'
+			}).done(setupMap);
+
 		}
-	}
+	};
 	
 });
