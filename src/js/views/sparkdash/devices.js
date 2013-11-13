@@ -175,56 +175,69 @@ define([
         finalize: function(el) {el.css("color", "white");}
     });
 	};
-	createClient = function(device) {
+	createMarker = function(device) {
+		// Add client to markers
+		var marker = new L.userMarker([
+			device.latitude,
+			device.longitude
+		],{
+			clientID:device.clientID,
+			bounceOnAdd:true,
+			pulsing:true, 
+			accuracy:10, 
+			smallIcon:true,
+			contextmenu: true,
+	    contextmenuWidth: 140,
+	    contextmenuItems: [{
+	        text: 'Set Idle Filter',
+	        callback: function(){alert('hi');}
+	    },{
+        separator: true,
+        index: 1
+			}]
+		});
 
+		// Set for marker timestamp
+		marker._timestamp = device.timestamp;
+
+		// Add marker to map
+		marker.addTo(SP.Tab.Devices.MAP);
+
+		// Check if marker is idle
+		var idleState = SP.Tab.Devices.setMarkerIdleState(marker);
+		SP.Tab.Devices.setDeviceIdleState(marker.options.clientID,idleState);
+
+		if (idleState == 2) {
+			marker.setPulsing(false);
+			$(marker._icon).toggleClass('idle');
+		}
+
+		var last_active = moment.unix(device.timestamp).format('MMM-Do hh:mm');
+
+		marker.bindPopup('<div style="font-size:22px;">'+device.userID+'</div><div style="font-size:12px;">Device: '+device.device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
+		return marker;
+	}
+	createClient = function(device) {
+		
 		// Save to DB		
 		var d = new SP.DB.devices(device);
 		d.bind("set:status", setClientStatus);
-				
-		// Set Location
-		if (device.hasOwnProperty('latitude') && device.hasOwnProperty('longitude')) {
-			// Add client to markers
-			var marker = new L.userMarker([
-				device.latitude,
-				device.longitude
-			],{
-				clientID:device.clientID,
-				bounceOnAdd:true,
-				pulsing:true, 
-				accuracy:10, 
-				smallIcon:true,
-				contextmenu: true,
-		    contextmenuWidth: 140,
-		    contextmenuItems: [{
-		        text: 'Set Idle Filter',
-		        callback: function(){alert('hi');}
-		    },{
-	        separator: true,
-	        index: 1
-				}]
-			});
-
-			// Set for marker timestamp
-			marker._timestamp = device.timestamp;
-
-			// Add marker to map
-			marker.addTo(SP.Tab.Devices.MAP);
-
-			// Check if marker is idle
-			var idleState = SP.Tab.Devices.setMarkerIdleState(marker);
-			SP.Tab.Devices.setDeviceIdleState(marker.options.clientID,idleState);
-
-			if (idleState == 2) {
-				marker.setPulsing(false);
-				$(marker._icon).toggleClass('idle');
+		
+		var marker = false;
+		
+		// Rebuild device object
+		if (device.hasOwnProperty('data')) {
+			if (device.data.hasOwnProperty('latitude') && device.data.hasOwnProperty('longitude')) {
+				device.latitude = device.data.latitude;
+				device.longitude = device.data.longitude;
 			}
-
-			var last_active = moment.unix(device.timestamp).format('MMM-Do hh:mm');
-
-			marker.bindPopup('<div style="font-size:22px;">'+device.userID+'</div><div style="font-size:12px;">Device: '+device.device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
-			
-			d.attr({_marker:marker});
 		}
+		
+		// Verify lat/lng exists
+		if (device.hasOwnProperty('latitude') && device.hasOwnProperty('longitude')) {
+			marker = createMarker(device);
+			d.attr({_marker:marker});
+		}		
 		
 		d.save();
 		SP.incrementTabIcon(1);
@@ -244,20 +257,32 @@ define([
 		el.remove();
 	};
 	updateClient = function(_data) {
-		
 		// Render device status if no status is set
 		// todo: ensure the frequent updates don't overwrite the status..
 		var d = SP.DB.devices.find_by_ID(_data.clientID);
 		if (d) {
+			
+			if (_data.hasOwnProperty('data')) {
+				if (_data.data.hasOwnProperty('latitude') && _data.data.hasOwnProperty('longitude')) {
+					_data.latitude = _data.data.latitude;
+					_data.longitude = _data.data.longitude;
+					delete _data.data.latitude;
+					delete _data.data.longitude;
+					
+					if (!d.attr('_marker')) {
+						marker = createMarker(_data);
+						d.attr({_marker:marker});
+					}
+				}
+			}
 			d.attr(_data);
 			d.trigger("set:status");	
 			SP.incrementTabIcon(1);
 			
-			if(!_data.latitude || !_data.longitude) {
-				return false;
+			if (d.attr('_marker')) {
+				// Update map marker for device
+				d.updateMarker();
 			}
-			// Update map marker for device
-			d.updateMarker();
 			
 		}	else {
 			// Create new client
