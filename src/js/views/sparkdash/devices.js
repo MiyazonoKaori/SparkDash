@@ -290,9 +290,9 @@ define([
 		}
   };
 	messageEvt = function(_data) {
-		if (_data.nonce) {
-			console.log(_data.nonce + ' = ' + $('.modal.c4 form').attr('nonce'));
-			if (_data.nonce == $('.modal.c4 form').attr('nonce')) {
+		if (_data.data.nonce) {
+			console.log(_data.data.nonce + ' = ' + $('.modal.c4 form').attr('nonce'));
+			if (_data.data.nonce == $('.modal.c4 form').attr('nonce')) {
 				$('.modal.c4 .loader').text('Message successfully sent');
 				$('.modal.c4 form').attr('nonce','');
 				setTimeout(function(){
