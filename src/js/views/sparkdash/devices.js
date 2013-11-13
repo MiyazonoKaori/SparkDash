@@ -423,7 +423,13 @@ define([
 			// Build list of SocketIDs to target
 			formData.devices = [];
 			SP.DB.devices.getMarked().each(function() {
-			  formData.devices.push(this.attr("socketID"));
+				// Send an array of device socketIDs.
+				// todo: add an option to send clientID or userID instead.
+			  formData.devices.push({
+				"socketID":this.attr("socketID"),
+				"clientID":this.attr("clientID"),
+				"userID":this.attr("userID")
+				});
 			});
 			
 			// Set App Settings
