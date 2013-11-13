@@ -277,20 +277,21 @@ define([
 		
 		var title = 'Device '+this.attr("clientID");
 		var content = '<div style="padding:13px;">Current state: <span class="label green">' + this.getLifecycleState() + '</span></div>';
-		
+				
 		if (this.attr("status")) {
-			html = '<i>Unknown status filter</i>';
+			content = '<i>Unknown status filter</i>';
 			var status = this.attr("status");
 			if (status.id) {
+				console.log('Applying filter function');
 				if(typeof SP.UI.filter[status.id] == "function") {
-					 html = SP.UI.filter[status.id].call(this, this.asJSON());
+					 content = SP.UI.filter[status.id].call(this, this.asJSON());
 				}
 			}
 			if (status.html) {
-				html = status.html;
+				content = status.html;
 			}
 		}
-		
+
 		// Set Title
 		if (this.attr('userID')) {
 			title = '<b>'+this.attr('userID')+'</div>';
