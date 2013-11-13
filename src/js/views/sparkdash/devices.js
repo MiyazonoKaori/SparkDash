@@ -465,8 +465,12 @@ define([
 		var d = SP.DB.devices.find_by_ID($(this).attr('data'));
 		if (d) {
 			var marker = d.attr('_marker');
-			marker.openPopup();
-			SP.Tab.Devices.MAP.panTo(new L.LatLng(marker._latlng.lat, marker._latlng.lng),{animate:true});
+			if (marker) {
+				marker.openPopup();
+				SP.Tab.Devices.MAP.panTo(new L.LatLng(marker._latlng.lat, marker._latlng.lng),{animate:true});
+			} else {
+				console.log('This device does not have a marker');
+			}
 		}
 	};
 	stopSubmit = function( event ) {
