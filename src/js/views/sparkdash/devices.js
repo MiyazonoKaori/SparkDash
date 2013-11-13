@@ -235,7 +235,9 @@ define([
 		var el = $(".device-list li[data='"+_data.clientID+"']");
 		var d = SP.DB.devices.find_by_ID(_data.clientID);
 		if (d) {
-			SP.Tab.Devices.MAP.removeLayer(d.attr('_marker'));
+			if (d.attr('_marker')) {
+				SP.Tab.Devices.MAP.removeLayer(d.attr('_marker'));
+			}
 			SP.DB.devices.remove(d);
 			SP.incrementTabIcon(1);
 		}
