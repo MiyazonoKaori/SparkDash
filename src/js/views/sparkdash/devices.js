@@ -221,10 +221,10 @@ define([
 	createClient = function(device) {
 				
 		if (typeof device.clientID == "object") {
-			device.clientID = device.clientID[0].clientID;
+			device.clientID = device.clientID[0];
 		}
 		if (typeof device.userID == "object") {
-			device.userID = device.userID[0].userID;	
+			device.userID = device.userID[0];	
 		}
 		
 		// Save to DB		
@@ -248,10 +248,10 @@ define([
 	removeClient = function(device) {
 		
 		if (typeof device.clientID == "object") {
-			device.clientID = device.clientID[0].clientID;
+			device.clientID = device.clientID[0];
 		}
 		if (typeof device.userID == "object") {
-			device.userID = device.userID[0].userID;	
+			device.userID = device.userID[0];	
 		}
 		
 		console.log('Removing client: '+device.clientID);
@@ -269,10 +269,10 @@ define([
 	updateClient = function(device) {
 		
 		if (typeof device.clientID == "object") {
-			device.clientID = device.clientID[0].clientID;
+			device.clientID = device.clientID[0];
 		}
 		if (typeof device.userID == "object") {
-			device.userID = device.userID[0].userID;	
+			device.userID = device.userID[0];	
 		}
 				
 		// Render device status if no status is set
