@@ -178,8 +178,8 @@ define([
 	createMarker = function(device) {
 		// Add client to markers
 		var marker = new L.userMarker([
-			device.latitude,
-			device.longitude
+			device.data.latitude,
+			device.data.longitude
 		],{
 			clientID:device.clientID,
 			bounceOnAdd:true,
@@ -228,16 +228,10 @@ define([
 		// Rebuild device object
 		if (device.hasOwnProperty('data')) {
 			if (device.data.hasOwnProperty('latitude') && device.data.hasOwnProperty('longitude')) {
-				device.latitude = device.data.latitude;
-				device.longitude = device.data.longitude;
+				marker = createMarker(device);
+				d.attr({_marker:marker});
 			}
 		}
-		
-		// Verify lat/lng exists
-		if (device.hasOwnProperty('latitude') && device.hasOwnProperty('longitude')) {
-			marker = createMarker(device);
-			d.attr({_marker:marker});
-		}		
 		
 		d.save();
 		SP.incrementTabIcon(1);
@@ -264,11 +258,6 @@ define([
 			
 			if (_data.hasOwnProperty('data')) {
 				if (_data.data.hasOwnProperty('latitude') && _data.data.hasOwnProperty('longitude')) {
-					_data.latitude = _data.data.latitude;
-					_data.longitude = _data.data.longitude;
-					delete _data.data.latitude;
-					delete _data.data.longitude;
-					
 					if (!d.attr('_marker')) {
 						marker = createMarker(_data);
 						d.attr({_marker:marker});
@@ -308,18 +297,19 @@ define([
 		
 		var title = 'Device '+this.attr("clientID");
 		var content = '<div style="padding:13px;">Current state: <span class="label green">' + this.getLifecycleState() + '</span></div>';
-				
-		if (this.attr("status")) {
+		
+		var dData = this.attr('data');
+		
+		if (dData.status) {
 			content = '<i>Unknown status filter</i>';
-			var status = this.attr("status");
 			if (status.id) {
 				console.log('Applying filter function');
-				if(typeof SP.UI.filter[status.id] == "function") {
-					 content = SP.UI.filter[status.id].call(this, this.asJSON());
+				if(typeof SP.UI.filter[dData.status.id] == "function") {
+					 content = SP.UI.filter[dData.status.id].call(this, this.asJSON());
 				}
 			}
-			if (status.html) {
-				content = status.html;
+			if (dData.status.html) {
+				content = dData.status.html;
 			}
 		}
 
