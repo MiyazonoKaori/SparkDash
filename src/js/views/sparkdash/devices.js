@@ -168,6 +168,7 @@ define([
 		
 	};
 	closeModal_EditFF = function(view) {
+		$('.modal.settings .CodeMirror.CodeMirror-wrap').remove();
 		SP.UI.FFEditor = null;
 	};
 	logPusher = function(message) {
@@ -321,7 +322,8 @@ define([
 		console.log('Updating device status for clientID: '+this.attr("clientID"));
 		
 		var title = 'Device '+this.attr("clientID");
-		var content = '<div style="padding:13px;">Current state: <span class="label green">' + this.getLifecycleState() + '</span></div>';
+		var lifecycle_state = this.getLifecycleState();
+		var content = '';
 		
 		var dData = this.attr('data');
 		
@@ -329,12 +331,12 @@ define([
 						
 			if (dData.status.hasOwnProperty('id')) {
 				if(typeof SP.UI.filter[dData.status.id] == "function") {
-					 content = SP.UI.filter[dData.status.id].call(this, this.asJSON());
+					 content = '<div style="padding: 6px;width: 100%;">'+SP.UI.filter[dData.status.id].call(this, this.asJSON())+'</div>';
 				}
 			}
 						
 			if (dData.status.hasOwnProperty('html')) {
-				content = dData.status.html;
+				content = '<div style="padding: 6px;width: 100%;">'+dData.status.html+'</div>';
 			}
 		}
 		
@@ -348,6 +350,7 @@ define([
 		var el = $(".device-list li[data='"+this.attr("clientID")+"']");
 		el.find('.deviceTitle').html(title);
 		el.find('.content').html(content);
+		el.find('.lifecycle-state').removeClass().addClass('lifecycle-state '+lifecycle_state.toLowerCase()).text(lifecycle_state);
 		
 	};
 	
