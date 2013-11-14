@@ -218,6 +218,13 @@ define([
 		return marker;
 	};
 	createClient = function(device) {
+				
+		if (typeof device.clientID == "object") {
+			device.clientID = device.clientID[0].clientID;
+		}
+		if (typeof device.userID == "object") {
+			device.userID = device.userID[0].userID;	
+		}
 		
 		// Save to DB		
 		var d = new SP.DB.devices(device);
@@ -237,10 +244,18 @@ define([
 		SP.incrementTabIcon(1);
 
   };
-	removeClient = function(_data) {
-		console.log('Removing client: '+_data.clientID);
-		var el = $(".device-list li[data='"+_data.clientID+"']");
-		var d = SP.DB.devices.find_by_ID(_data.clientID);
+	removeClient = function(device) {
+		
+		if (typeof device.clientID == "object") {
+			device.clientID = device.clientID[0].clientID;
+		}
+		if (typeof device.userID == "object") {
+			device.userID = device.userID[0].userID;	
+		}
+		
+		console.log('Removing client: '+device.clientID);
+		var el = $(".device-list li[data='"+device.clientID+"']");
+		var d = SP.DB.devices.find_by_ID(device.clientID);
 		if (d) {
 			if (d.attr('_marker')) {
 				SP.Tab.Devices.MAP.removeLayer(d.attr('_marker'));
@@ -250,24 +265,30 @@ define([
 		}
 		el.remove();
 	};
-	updateClient = function(_data) {
-		console.log(_data);
+	updateClient = function(device) {
+		
+		if (typeof device.clientID == "object") {
+			device.clientID = device.clientID[0].clientID;
+		}
+		if (typeof device.userID == "object") {
+			device.userID = device.userID[0].userID;	
+		}
 				
 		// Render device status if no status is set
 		// todo: ensure the frequent updates don't overwrite the status..
-		var d = SP.DB.devices.find_by_ID(_data.clientID);
+		var d = SP.DB.devices.find_by_ID(device.clientID);
 		if (d) {
 			
-			if (_data.hasOwnProperty('data')) {
-				if (_data.data.hasOwnProperty('latitude') && _data.data.hasOwnProperty('longitude')) {
+			if (device.hasOwnProperty('data')) {
+				if (device.data.hasOwnProperty('latitude') && device.data.hasOwnProperty('longitude')) {
 					if (!d.attr('_marker')) {
-						marker = createMarker(_data);
+						marker = createMarker(device);
 						d.attr({_marker:marker}).save();
 					}
 				}
 			}
 			
-			d.merge($.extend(true, d.asJSON(), _data));
+			d.merge($.extend(true, d.asJSON(), device));
 			
 			d.trigger("set:status");	
 			SP.incrementTabIcon(1);
@@ -279,7 +300,7 @@ define([
 			
 		}	else {
 			// Create new client
-			createClient(_data);
+			createClient(device);
 		}
   };
 	messageEvt = function(_data) {
@@ -571,6 +592,11 @@ define([
 			
 	};
 	populateMap = function(response){
+		
+		$('.device-list .loading_dots').fadeTo( "fast", 0, function() {
+		    $(this).remove();
+		});
+		
 		if (response.status != 200) {
 			alert(response.message);
 			return;
@@ -623,13 +649,13 @@ define([
 			Pusher.log = logPusher;
 			var WSClient = new Pusher(SP.WS.key);
 		  var WSChannel = WSClient.subscribe(SP.WS.channel);
-			WSChannel.bind('update_client@beacon', updateClient);
 			WSChannel.bind('new_client@beacon', createClient);
+			WSChannel.bind('update_client@beacon', updateClient);
 			WSChannel.bind('startapp@beacon', updateClient);
 			WSChannel.bind('stopapp@beacon', updateClient);
+			WSChannel.bind('status@main', updateClient);
 			WSChannel.bind('remove_client@beacon', removeClient);
 			WSChannel.bind('message@main', messageEvt);
-			WSChannel.bind('status@main', updateClient);
 		
 			// Hide element on doc click
 			$(document).on("click",doDocClick);
