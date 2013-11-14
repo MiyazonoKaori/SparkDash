@@ -216,7 +216,7 @@ define([
 
 		marker.bindPopup('<div style="font-size:22px;">'+device.userID+'</div><div style="font-size:12px;">Device: '+device.device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
 		return marker;
-	}
+	};
 	createClient = function(device) {
 		
 		// Save to DB		
@@ -251,6 +251,8 @@ define([
 		el.remove();
 	};
 	updateClient = function(_data) {
+		console.log(_data);
+				
 		// Render device status if no status is set
 		// todo: ensure the frequent updates don't overwrite the status..
 		var d = SP.DB.devices.find_by_ID(_data.clientID);
@@ -260,11 +262,13 @@ define([
 				if (_data.data.hasOwnProperty('latitude') && _data.data.hasOwnProperty('longitude')) {
 					if (!d.attr('_marker')) {
 						marker = createMarker(_data);
-						d.attr({_marker:marker});
+						d.attr({_marker:marker}).save();
 					}
 				}
 			}
-			d.attr(_data);
+			
+			d.merge($.extend(true, d.asJSON(), _data));
+			
 			d.trigger("set:status");	
 			SP.incrementTabIcon(1);
 			
@@ -301,21 +305,23 @@ define([
 		var dData = this.attr('data');
 		
 		if (dData.status) {
-			content = '<i>Unknown status filter</i>';
-			if (status.id) {
-				console.log('Applying filter function');
+						
+			if (dData.status.hasOwnProperty('id')) {
 				if(typeof SP.UI.filter[dData.status.id] == "function") {
 					 content = SP.UI.filter[dData.status.id].call(this, this.asJSON());
 				}
 			}
-			if (dData.status.html) {
+						
+			if (dData.status.hasOwnProperty('html')) {
 				content = dData.status.html;
 			}
 		}
-
+		
 		// Set Title
 		if (this.attr('userID')) {
-			title = '<b>'+this.attr('userID')+'</div>';
+			if (this.attr('userID') != '*') {
+				title = '<b>'+this.attr('userID')+'</div>';
+			}
 		}
 		
 		var el = $(".device-list li[data='"+this.attr("clientID")+"']");
@@ -434,15 +440,11 @@ define([
 			// Build list of SocketIDs to target
 			formData.devices = [];
 			SP.DB.devices.getMarked().each(function() {
-				// Send an array of device socketIDs.
-				// todo: add an option to send clientID or userID instead.
-			  formData.devices.push({
-				"socketID":this.attr("socketID"),
-				"clientID":this.attr("clientID"),
-				"userID":this.attr("userID")
-				});
+				// Send an array of device clientIDs
+				// todo: add an option to send socketIDs or userID instead.				
+				formData.devices.push({"clientID":this.attr("clientID")});
 			});
-			
+						
 			// Update form with nonce
 			$('.modal.c4 form').attr('nonce',formData.nonce);
 			
