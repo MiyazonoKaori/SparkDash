@@ -2,6 +2,7 @@ define([
 	'jquery',
 	'underscore',
 	"Leaflet",
+	"Pusher",
 	'handlebars',
 	'moment',
 	'form2js',
@@ -18,12 +19,15 @@ define([
 	'leaflet.animatedmarker',
 	'leaflet.usermarker',
 	'leaflet.contextmenu',
-	'lvector'],function($,_,L, Handlebars, moment, form2js, js2form, codemirror, tmpl_DT, tpl_1, tpl_2, tpl_Settings, tpl_3, tpl_RowDevice) {
+	'lvector'],function($,_,L, Pusher, Handlebars, moment, form2js, js2form, codemirror, tmpl_DT, tpl_1, tpl_2, tpl_Settings, tpl_3, tpl_RowDevice) {
 	console.log('initializing app::devices');
 	
 	var $ = $||$(function($) {$=$;});
 	var Markers = [];
 
+
+
+	
 	/*
 	 *
 	 * App Namespace
