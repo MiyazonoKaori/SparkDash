@@ -5,6 +5,11 @@
  */
 
 (function(window) {
+	
+	if (!L) {
+		return false;
+	}
+	
     var icon = L.divIcon({
         className: "leaflet-usermarker",
         iconSize: [34, 34],

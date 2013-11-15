@@ -29,38 +29,46 @@
 
     <body controller="dash" class="unselectable">
         
-        <div id="header" action="showAppHandlers">
-          <div class="title">Field Service</div>
-          <div class="subtitle">com.test.app</div>
-        </div>
+        <aside id="status-bar">
+          <p>You are offline</p>
+        </aside>
         
-        <div id="layout" class="pure-g-r">
+        <div id="content">
+        
+          <div id="header" action="showAppHandlers">
+            <div class="title">Field Service</div>
+            <div class="subtitle">com.test.app</div>
+          </div>
+        
+          <div id="layout" class="pure-g-r">
           
-          <a href="#menu" id="menuLink" class="pure-menu-link">
-            <span></span>
-          </a>
+            <a href="#menu" id="menuLink" class="pure-menu-link">
+              <span></span>
+            </a>
                     
-          <div id="menu" class="pure-u">
-            <div id="menu-logo" action="openDashboard"></div>
-            <div id="app_tabs"></div>
-            <div id="menu-bottom" class="settings" action="openSettings">
-              <div action="openSettings">Settings</div>
-            </div>
-            <div id="menu-bottom" class="console" action="openConsole">
-              <div action="openConsole">Console</div>
-            </div>
-          </div>
-
-          <div id="main" class="pure-u-1">
-            
-            <div id="main-menu-container" class="pure-g">
-              <div id="menu-right" class="pure-u-1"></div>
+            <div id="menu" class="pure-u">
+              <div id="menu-logo" action="openDashboard"></div>
+              <div id="app_tabs"></div>
+              <div id="menu-bottom" class="settings" action="openSettings">
+                <div action="openSettings">Settings</div>
+              </div>
+              <div id="menu-bottom" class="console" action="openConsole">
+                <div action="openConsole">Console</div>
+              </div>
             </div>
 
-            <div id="main-container" class="pure-g-r"></div>
+            <div id="main" class="pure-u-1">
             
-          </div>
+              <div id="main-menu-container" class="pure-g">
+                <div id="menu-right" class="pure-u-1"></div>
+              </div>
+
+              <div id="main-container" class="pure-g-r"></div>
+            
+            </div>
           
+          </div>
+        
         </div>
         
         <div id="terminal"></div>
@@ -68,18 +76,14 @@
         <div id="modals"></div>
         
         <script>
-        L_PREFER_CANVAS = true;
         var DOMAIN = '{{#domain}}{{.}}{{/domain}}';
         var PKG = '{{#app}}{{appPackage}}{{/app}}';
         var ID = '{{#app}}{{_id}}{{/app}}';
         </script>
         <script src="http://js.pusher.com/2.1/pusher.min.js" type="text/javascript"></script>
-        <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"type="text/javascript"></script>
-        <script src="/js/sparkdash/leaflet.bouncemarker.js" type="text/javascript"></script>
-        <script src="/js/sparkdash/leaflet.animatedmarker.js" type="text/javascript"></script>
-        <script src="/js/sparkdash/leaflet.usermarker.js" type="text/javascript"></script>
-        <script src="/js/sparkdash/leaflet.contextmenu.js" type="text/javascript"></script>
-        <script src="/js/sparkdash/lvector.js" type="text/javascript"></script>
         <script data-main="/js/sparkdash/sparkdash.min" src="/js/sparkdash/require.js"></script>
+        
+        <!-- Force 3d acceleration always and forever :) -->
+        <div style="-webkit-transform: translateZ(0)"></div>
     </body>
 </html>

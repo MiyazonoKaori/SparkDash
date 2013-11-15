@@ -19,18 +19,6 @@ define([
 	
 	var $ = $||$(function($) {$=$;});
 	
-	
-
-	window.addEventListener('online', function(e) {
-	  console.log("And we're back :)");
-	  // Get updates from server.
-	}, false);
-
-	window.addEventListener('offline', function(e) {
-	  console.log("Connection is flaky.");
-	  // Use offine mode.
-	}, false);
-	
 	function updateNavLinks(appid) {
 		$("#menu nav a").each(function(){
 			if ($(this).attr('data')) {

@@ -1,6 +1,7 @@
 define([
 	'jquery',
 	'underscore',
+	"Leaflet",
 	'handlebars',
 	'moment',
 	'form2js',
@@ -12,7 +13,12 @@ define([
 	'hbs!tpl/modals/device.settings.html',
 	'hbs!tpl/modals/action.sendmessage.html',
 	'hbs!tpl/rows/device.html',
-	'jquery.codemirror'],function($,_,Handlebars, moment, form2js, js2form, codemirror, tmpl_DT, tpl_1, tpl_2, tpl_Settings, tpl_3, tpl_RowDevice) {
+	'jquery.codemirror',
+	'leaflet.bouncemarker',
+	'leaflet.animatedmarker',
+	'leaflet.usermarker',
+	'leaflet.contextmenu',
+	'lvector'],function($,_,L, Handlebars, moment, form2js, js2form, codemirror, tmpl_DT, tpl_1, tpl_2, tpl_Settings, tpl_3, tpl_RowDevice) {
 	console.log('initializing app::devices');
 	
 	var $ = $||$(function($) {$=$;});
@@ -81,8 +87,83 @@ define([
 	    return JSON.stringify(context);
 	});
 
+	http_online = function(){
+		$('body').removeClass().addClass('status-bar-active online');
+		$('#status-bar p').text('Online');
+		setTimeout(function(){
+			$('body').removeClass('status-bar-active');
+		},2000);
+	};
+	http_offline = function(){
+		$('body').removeClass().addClass('status-bar-active offline');
+		$('#status-bar p').text('SparkDash is offline');
+	};
+	pushConnectionEvt_state_change = function(states) {
+		switch(states.current) {
+			case 'unavailable':
+				pushClient_unavailable();
+				break;
+			case 'connecting':
+				pushClient_connecting();
+				break;
+			case 'connected':
+				pushClient_connected();
+				break;
+			case 'disconnected':
+				pushClient_disconnected();
+				break;
+			case 'failed':
+				pushClient_failed();
+				break;
+		}
+	};
+	pushClient_initialized = function(){
+		console.log('pusher: initialized');
+		$('body').removeClass().addClass('status-bar-active');
+		$('#status-bar p').text('Initializing');
+	};
+	pushClient_connecting = function(){
+		console.log('pusher: connecting');
+		$('body').removeClass().addClass('status-bar-active pause');
+		$('#status-bar p').text('Connecting');
+	};
+	pushClient_connected = function(){
+		console.log('pusher: connected');
+		$('body').removeClass().addClass('status-bar-active online');
+		$('#status-bar p').text('Connected!');
+		setTimeout(function(){
+			$('body').removeClass('status-bar-active');
+		},2000);
+	};
+	pushClient_unavailable = function(){
+		console.log('pusher: unavailable');
+		$('body').removeClass().addClass('status-bar-active offline');
+		$('#status-bar p').text('SparkDash is offline');
+	};
+	pushClient_failed = function(msg){
+		console.log('pusher: failed');
+		$('#status-bar p').text(msg||'SparkDash is not supported by the browser.');
+		$('body').removeClass().addClass('status-bar-active offline');
+	};
+	pushClient_disconnected = function(){
+		console.log('pusher: disconnected');
+		$('#status-bar p').text('SparkDash is not supported by the browser.');
+		$('body').removeClass().addClass('status-bar-active');
+	};
+	pushClient_connecting_in = function(delay) {
+		console.log('pusher: connecting_in');
+		$('#status-bar p').text('SparkDash is unable to connect.  I will try again in ' + delay + ' seconds.');
+	};
+	pushChannel_subscription_error = function(status) {
+		console.log('pusher: failed to subscribe');
+		$('body').removeClass().addClass('status-bar-active pause')
+	  if(status == 408 || status == 503){
+			$('#status-bar p').text('SparkDash could not connect to the main channel. Retry?');
+	  } else {
+			$('#status-bar p').text('SparkDash failed to subscribe to the main channel. Error: '+status);
+		}
+	};
 	
-		
 	showOfflineBanner = function(){
 		$("#main-container").append('<p style="text-align:center;margin-top:100px;"><h1 style="text-align:center;">You are offline.</h1><h3 style="text-align:center;">Refresh to try again</h3></p>');
 	};
@@ -527,7 +608,7 @@ define([
 		d.trigger("set:status");	
 	};
 	setupMap = function(response) {
-			
+					
 			SP.Tab.Devices.Settings = {
 			  "id": "map",
 			  "idleTimeout": "2"
@@ -595,6 +676,9 @@ define([
 			
 	};
 	populateMap = function(response){
+		console.log(response);
+		
+		console.log('response.error: '+response.error);
 		
 		$('.device-list .loading_dots').fadeTo( "fast", 0, function() {
 		    $(this).remove();
@@ -619,6 +703,10 @@ define([
 	return {
 		
 		render: function() {
+			
+			// Bind network availability to the UI
+			Offline.on('up', http_online);
+			Offline.on('down', http_offline);
 			
 			// Bind database events to the UI
 			SP.DB.devices.bind("add", DB_addEvt);
@@ -649,16 +737,31 @@ define([
 			}, {partials: {}}));
 			
 			// Create terminal log
-			Pusher.log = logPusher;
-			var WSClient = new Pusher(SP.WS.key);
-		  var WSChannel = WSClient.subscribe(SP.WS.channel);
-			WSChannel.bind('new_client@beacon', createClient);
-			WSChannel.bind('update_client@beacon', updateClient);
-			WSChannel.bind('startapp@beacon', updateClient);
-			WSChannel.bind('stopapp@beacon', updateClient);
-			WSChannel.bind('status@main', updateClient);
-			WSChannel.bind('remove_client@beacon', removeClient);
-			WSChannel.bind('message@main', messageEvt);
+			//Pusher.log = logPusher;
+			if (!Pusher) {
+				pushClient_failed('Pusher is not loaded. Verify that Pusher is accessible.');
+			} else {
+				
+				var WSClient = new Pusher(SP.WS.key);
+				WSClient.connection.bind('error', function( err ) { 
+				  if( err.data.code === 4004 ) {
+				    console.log('>>> detected limit error');
+				  }
+				});
+
+				WSClient.connection.bind('state_change', pushConnectionEvt_state_change);
+
+			  var WSChannel = WSClient.subscribe(SP.WS.channel);
+				WSChannel.bind('pusher:subscription_error', pushChannel_subscription_error);
+				WSChannel.bind('new_client@beacon', createClient);
+				WSChannel.bind('update_client@beacon', updateClient);
+				WSChannel.bind('startapp@beacon', updateClient);
+				WSChannel.bind('stopapp@beacon', updateClient);
+				WSChannel.bind('status@main', updateClient);
+				WSChannel.bind('remove_client@beacon', removeClient);
+				WSChannel.bind('message@main', messageEvt);
+				
+			}
 		
 			// Hide element on doc click
 			$(document).on("click",doDocClick);
@@ -675,11 +778,12 @@ define([
 
 			// Set App Settings
 			SP.Network.http({
-				url:'/_db?id=map',
+				url:'/test?id=map',
 				type:'GET',
 				dataType:'json'
-			}).done(setupMap);
-
+			})
+			.done(setupMap);
+			
 		}
 	};
 	

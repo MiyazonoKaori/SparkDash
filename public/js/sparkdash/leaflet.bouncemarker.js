@@ -26,6 +26,10 @@
  */
 
 (function () {
+	
+	if (!L) {
+		return false;
+	}
 
   // Retain the value of the original onAdd and onRemove functions
   var originalOnAdd = L.Marker.prototype.onAdd;
