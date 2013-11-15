@@ -26,7 +26,14 @@ define([
 	var Markers = [];
 
 
-
+	console.log(Pusher);
+	
+	Pusher.Dependencies = new Pusher.DependencyLoader({
+	  cdn_http: "/js/sparkdash/p/2.1/",
+	  cdn_https: "/js/sparkdash/p/2.1/",
+	  version: Pusher.VERSION,
+	  suffix: Pusher.dependency_suffix
+	});
 	
 	/*
 	 *
