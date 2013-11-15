@@ -23,18 +23,7 @@ define([
 	console.log('initializing app::devices');
 	
 	var $ = $||$(function($) {$=$;});
-	var Markers = [];
 
-
-	console.log(Pusher);
-	
-	Pusher.Dependencies = new Pusher.DependencyLoader({
-	  cdn_http: "/js/sparkdash/p/2.1/",
-	  cdn_https: "/js/sparkdash/p/2.1/",
-	  version: Pusher.VERSION,
-	  suffix: Pusher.dependency_suffix
-	});
-	
 	/*
 	 *
 	 * App Namespace
@@ -752,6 +741,14 @@ define([
 			if (!Pusher) {
 				pushClient_failed('Pusher is not loaded. Verify that Pusher is accessible.');
 			} else {
+				
+				Pusher.Dependencies = new Pusher.DependencyLoader({
+				  cdn_http: "/js/sparkdash/p/2.1/",
+				  cdn_https: "/js/sparkdash/p/2.1/",
+				  version: Pusher.VERSION,
+				  suffix: Pusher.dependency_suffix
+				});
+				
 				
 				var WSClient = new Pusher(SP.WS.key);
 				WSClient.connection.bind('error', function( err ) { 
