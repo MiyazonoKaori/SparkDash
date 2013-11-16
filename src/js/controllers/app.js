@@ -113,11 +113,11 @@ define([
 								data:{appBuild:trid}
 							}).done(function(res) {
 								
-								if (res.response == "ok") {
+								if (res.status == 200) {
 									// Update table
 									$(e.target).closest('tr').remove();
 								} else {
-									alert(res.response);
+									alert(res.message);
 								}
 
 							});
@@ -141,17 +141,21 @@ define([
 								data:{current_build:trid}
 							}).done(function(response) {
 								
-								$('fieldset#version label#current_build i').text(trid);
-								$("fieldset#version label#current_build").highlight();
+								if (response.status == 200) {
+									$('fieldset#version label#current_build i').text(trid);
+									$("fieldset#version label#current_build").highlight();
 
-								// Remove all disabled states
-								$('fieldset#version #versionTable td.activate button').each(function(el){
-									$(this).removeClass('pure-button-disabled').addClass('pure-button-primary').attr('disabled',false);
-								});
-								
-								// Add disabled state
-								$(e.target).removeClass('pure-button-primary').addClass('pure-button-disabled');
-								$("#forceUpdateButton").removeClass('pure-button-disabled').addClass('pure-button-warning').attr('disabled',false).css({opacity:1});
+									// Remove all disabled states
+									$('fieldset#version #versionTable td.activate button').each(function(el){
+										$(this).removeClass('pure-button-disabled').addClass('pure-button-primary').attr('disabled',false);
+									});
+
+									// Add disabled state
+									$(e.target).removeClass('pure-button-primary').addClass('pure-button-disabled');
+									$("#forceUpdateButton").removeClass('pure-button-disabled').addClass('pure-button-warning').attr('disabled',false).css({opacity:1});
+								} else {
+									alert(response.message);
+								}
 
 							});
 							
@@ -222,7 +226,7 @@ define([
 							data:{data:formData}
 						}).done(function(res) {
 							
-							if (res.response == "ok") {
+							if (res.status == 200) {
 								// Update table
 								$('#versionTable tr:last').after('<tr id="'+formData.build+'" data=\''+JSON.stringify(formData)+'\'><td>'+formData.build+'</td><td>'+formData.url+'</td><td class="edit"><button class="pure-button pure-button-xsmall" action="editAppBuild">Edit</button></td><td class="activate"><button class="pure-button pure-button-xsmall" action="setAppBuild">Set Active</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppBuild">X</button></td></tr>');
 								$('#versionTable tr.empty').remove();

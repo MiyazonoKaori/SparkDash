@@ -41,7 +41,7 @@ define([
 				cache: false
 			}).done(function(res) {	
 				$('#applist .loading_dots').remove();
-				_.each(res.data,function(doc){
+				_.each(res.message,function(doc){
 					var app = new SP.DB.apps(doc);
 					app.save();
 				});
@@ -169,7 +169,7 @@ define([
 							if (response.status==200) {
 								
 								// Add new
-								var app = new SP.DB.apps(response.data);
+								var app = new SP.DB.apps(response.message);
 								app.save();
 
 							}
