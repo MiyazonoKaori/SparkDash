@@ -141,6 +141,7 @@ switch(subcommand) {
 							tpl:'../tpl',
 			        jquery: 'jquery.1.8.2.min',
 							underscore: 'underscore.min',
+							Pusher: "p/2.1/pusher.min",
 							text: 'requirejs-text/text',
 							sammy: 'sammy-latest.min',
 							handlebars: 'handlebars.runtime',
@@ -160,6 +161,9 @@ switch(subcommand) {
 							'jquery.cookie'					: ['jquery'],
 							'handlebars': {
 								exports: 'Handlebars'
+							},
+							'Pusher': {
+								exports: 'Pusher'
 							},
 							'sammy':{
 								deps: ['jquery'],
@@ -226,7 +230,7 @@ switch(subcommand) {
 							wrench.copyDirSyncRecursive(sparkdashSource+'/src/js/views', path.join(__dirname, '../src/js/views/sparkdash'),{forceDelete: true});							
 							fs.writeFileSync(path.join(__dirname, '../src/js/controllers/sparkdash/dash.js'),fs.readFileSync(sparkdashSource+'/src/js/controllers/dash.js','utf8'));
 							fs.writeFileSync(path.join(__dirname, '../views/sparkdash/dash.html'),fs.readFileSync(sparkdashSource+'/views/dash.html','utf8'));
-
+							
 							// Copy Error pages
 							fs.writeFileSync(path.join(compiledAssets, '/error503.html'),fs.readFileSync(srcAssets+'/error503.html','utf8'));
 														

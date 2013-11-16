@@ -1,6 +1,7 @@
 define([
 	'jquery',
 	'underscore',
+	"Pusher",
 	'sammy',
 	'form2js',
 	'js2form',
@@ -8,7 +9,7 @@ define([
 	'jquery.terminal',
 	'jquery.easyModal',
 	'jquery.ui.widget'], 
-	function($, _, sammy, form2js, js2form, tpl_0) {
+	function($, _, Pusher, sammy, form2js, js2form, tpl_0) {
 		
 	console.log("Loaded app");
 	
