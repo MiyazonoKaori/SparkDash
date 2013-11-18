@@ -20,9 +20,11 @@
         <div style="height:65px;width:550px;margin-left:80px;">
           <div style="">
             <ul style="padding:0;">
-              <li style="float:left;width:175px;height:50px;"><div style="font-size:42px;float:left;">0</div><div style="font-size:15px;float:left;width:40px;margin-top:4px;margin-left: 5px;">Online Users</div></li>
-              <li style="float:left;width:175px;height:50px;"><div style="font-size:42px;float:left;">0</div><div style="font-size:15px;float:left;width:40px;margin-top:4px;margin-left: 5px;">Total Users</div></li>
-              <li style="float:left;width:175px;height:50px;"><div style="font-size:42px;float:left;">0</div><div style="font-size:15px;float:left;width:40px;margin-top:4px;margin-left: 5px;">Pending Orders</div></li>
+              {{#analytics}}
+              <li style="float:left;width:175px;height:50px;"><div style="font-size:42px;float:left;">{{device_count}}</div><div style="font-size:15px;float:left;width:40px;margin-top:4px;margin-left: 5px;">Total Devices</div></li>
+              <li style="float:left;width:175px;height:50px;"><div style="font-size:42px;float:left;">{{active_count}}</div><div style="font-size:15px;float:left;width:40px;margin-top:4px;margin-left: 5px;">Active Users</div></li>
+              <li style="float:left;width:175px;height:50px;"><div style="font-size:42px;float:left;">{{event_count}}</div><div style="font-size:15px;float:left;width:40px;margin-top:4px;margin-left: 5px;">Total Events</div></li>
+              {{/analytics}}
             </ul>
           </div>
         </div>
