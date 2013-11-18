@@ -26,6 +26,28 @@ define([
 
 	/*
 	 *
+	 * Handlebars
+	 * 
+	*/
+	Handlebars.registerHelper("key_value", function(obj, options) {
+	    var buffer = "",
+	        key;
+
+	    for (key in obj) {
+	        if (obj.hasOwnProperty(key)) {
+	            buffer += options.fn({key: key, value: obj[key]});
+	        }
+	    }
+
+	    return buffer;
+	});
+	Handlebars.registerHelper('json', function(context) {
+	    return JSON.stringify(context);
+	});
+
+
+	/*
+	 *
 	 * App Namespace
 	 * 
 	*/
@@ -65,28 +87,23 @@ define([
 		}
 	};
 
-	
-	/*
-	 *
-	 * Handlebars
-	 * 
-	*/
-	Handlebars.registerHelper("key_value", function(obj, options) {
-	    var buffer = "",
-	        key;
-
-	    for (key in obj) {
-	        if (obj.hasOwnProperty(key)) {
-	            buffer += options.fn({key: key, value: obj[key]});
+	getUTF8Length = function(string) {
+	    var utf8length = 0;
+	    for (var n = 0; n < string.length; n++) {
+	        var c = string.charCodeAt(n);
+	        if (c < 128) {
+	            utf8length++;
+	        }
+	        else if((c > 127) && (c < 2048)) {
+	            utf8length = utf8length+2;
+	        }
+	        else {
+	            utf8length = utf8length+3;
 	        }
 	    }
-
-	    return buffer;
-	});
-	Handlebars.registerHelper('json', function(context) {
-	    return JSON.stringify(context);
-	});
-
+	    return utf8length;
+	};
+	
 	http_online = function(){
 		$('body').removeClass().addClass('status-bar-active online');
 		$('#status-bar p').text('Online');
@@ -167,17 +184,21 @@ define([
 	showOfflineBanner = function(){
 		$("#main-container").append('<p style="text-align:center;margin-top:100px;"><h1 style="text-align:center;">You are offline.</h1><h3 style="text-align:center;">Refresh to try again</h3></p>');
 	};
-	openModal_SendMessage = function(view){
+	
+	modal_Message_open = function(view){
 		$('.modal.c4 form').show();
 		$('.modal.c4 .header').show();
 		$('.modal.c4 .loader').hide().text('Please wait while we confirm receipt.');
 		$(view).find('#title').html('<i style="background-color:#ffff33;padding:3px;border-radius:3px;">'+SP.DB.devices.countMarked()+'</i> devices selected');	
 	};
-	closeModal_SendMessage = function(view){
+	modal_Message_close = function(view){
 		$(view).find('#title').text('');
 		$(view).find('textarea#message').val('');
 	};
-	openModal_EditFF = function(view){
+	modal_Message_validate = function(){
+		console.log(' Bytes: '+getUTF8Length($(this).val()));
+	};
+	modal_Settings_open = function(view){
 		
 		// create tmp model
 		var mdl = Model("ffedit");
@@ -210,11 +231,14 @@ define([
 		// Editor
 		SP.UI.FFEditor = $('.expression-preview-code').codemirror({
       mode: 'javascript',
+			_hasChanged:false,
       lineNumbers: true,
 			lineWrapping:true,
 			smartIndent:false,
 			fixedGutter:false,
 			onChange: function(e){
+				
+				SP.UI.FFEditor._hasChanged = true;
 				
 				var el = $(".device-preview li[data='ffedit-preview-ef12155c-a286-3253-bfb1-24dbe403a1fa']").find('.content');
 				
@@ -244,18 +268,41 @@ define([
         //}
 			}
     });
-
-		SP.UI.FFEditor.setValue("function(device) {\n    return \"HELLO WORLD\";\n}");
 		
 	};
-	closeModal_EditFF = function(view) {
+	modal_Settings_close = function(view) {
 		$('.modal.settings .CodeMirror.CodeMirror-wrap').remove();
+		$('.modal.settings section').removeClass().first().addClass('active');
+    $('.modal.settings .header ul li').removeClass();
 		SP.UI.FFEditor = null;
 	};
+	modal_Settings_click_tabs = function(){
+    $('.modal.settings section').removeClass();
+    $('.modal.settings .header ul li').removeClass();
+
+    $(this).addClass('pure-menu-selected');
+
+		var sel = $('.modal.settings section')[$(this).index()];
+		$(sel).addClass('active');
+		
+		switch($(sel).attr('id')) {
+			case 'devices':
+				if (!SP.UI.FFEditor._hasChanged) {
+					SP.UI.FFEditor.setValue("function(device) {\n    return \"HELLO WORLD\";\n}");
+				}
+			break;
+		}
+		    
+  };
+	
 	logPusher = function(message) {
 		SP.Terminal.echo(message+"\n", {
         finalize: function(el) {el.css("color", "white");}
     });
+	};
+	createMarkerBubble = function(device) {
+		var last_active = moment.unix(device.timestamp).format('MMM-Do hh:mm');
+		return '<div style="font-size:22px;">'+device.userID+'</div><div style="font-size:12px;">Device: '+device.device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>';
 	};
 	createMarker = function(device) {
 		// Add client to markers
@@ -294,9 +341,7 @@ define([
 			$(marker._icon).toggleClass('idle');
 		}
 
-		var last_active = moment.unix(device.timestamp).format('MMM-Do hh:mm');
-
-		marker.bindPopup('<div style="font-size:22px;">'+device.userID+'</div><div style="font-size:12px;">Device: '+device.device+'</div><div style="font-size:12px;">Last Active: '+last_active+'</div>');
+		marker.bindPopup(createMarkerBubble(device));
 		return marker;
 	};
 	createClient = function(device) {
@@ -435,13 +480,13 @@ define([
 		
 	};
 	
-	evalFunction = function(funcString) {
+	evalFunction = function(fnString) {
     try {
-      eval("var editFunc = " + funcString + ";");
+      eval("var fn = " + fnString + ";");
     } catch(e) {
       return {errorMessage: e+""};
     }
-    return editFunc;
+    return fn;
   };
 
 	doDocClick = function(e) {
@@ -497,6 +542,7 @@ define([
 			case 'test_FFEdit':
 				console.log(evalFunction(SP.UI.FFEditor.getValue()));
 				break;
+
 		}
 	};
 	doFormSubmit = function(){
@@ -728,8 +774,12 @@ define([
 			// Init modal logic
 			$('.modal.c1').easyModal({top:200,overlay:0.2});
 			$('.modal.c3').easyModal({top:200,overlay:0.2});
-			$('.modal.c4').easyModal({top:200,overlay:0.2, onOpen: openModal_SendMessage, onClose: closeModal_SendMessage});
-			$('.modal.settings').easyModal({overlay:0.2, onOpen: openModal_EditFF, onClose: closeModal_EditFF});
+			$('.modal.c4').easyModal({top:200,overlay:0.2, onOpen: modal_Message_open, onClose: modal_Message_close});
+			$('.modal.settings').easyModal({overlay:0.2, onOpen: modal_Settings_open, onClose: modal_Settings_close});
+			
+			// Modal events
+			$('.modal.c4').on('input propertychange','textarea', modal_Message_validate);
+			$('.modal.settings').on('click','.header ul li', modal_Settings_click_tabs);
 			
 			// Create Main Container
 			SP.render('#main-container', tmpl_DT({
@@ -780,7 +830,7 @@ define([
 			
 			// Device click handler
 			$('.device-list ul').on('click','li.device', doDeviceClick);
-			
+				
 			// Stop forms from submitting
 			$("form").submit(stopSubmit);
 

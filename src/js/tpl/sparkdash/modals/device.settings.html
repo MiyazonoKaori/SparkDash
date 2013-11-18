@@ -1,92 +1,114 @@
 <div class="modal settings">
 	<div class="header">
-		<h3>Settings</h3>
+		<div class="pure-menu pure-menu-open pure-menu-horizontal">
+        <ul>
+          <li class="pure-menu-selected"><a href="#">General</a></li>
+          <li><a href="#">Map</a></li>
+          <li><a href="#">Devices</a></li>
+          <li><a href="#">Notifications</a></li>
+        </ul>
+    </div>
 	</div>
   
-  <div class="left" style="width:400px;float:left;">
-    <div style="width:400px;" class="tableview">
-      <ul>
-        <p>Filter Functions</p>
-        <li>&nbsp;</li>
-        <li>&nbsp;</li>
-        <li>&nbsp;</li>
-        <li>&nbsp;</li>
-        <li>&nbsp;</li>
-      </ul>
-    </div>
-    <div class="clearfix" style="text-align: center;">
-      <button type="submit" class="pure-button pure-button-primary" data="submit-c3">New Filter</button>
-    </div>
-  </div>
-  
-  <div class="right" style="display: block;float: left;margin-left: 10px;width: 550px;">
-      
-      <div class="pure-menu pure-menu-open pure-menu-horizontal">
-          <ul>
-            <li class="pure-menu-selected"><a href="#">Code</a></li>
-              <li><a href="#">Data</a></li>
-          </ul>
-      </div>
-      
-      <div class="container">
-        <div class="panel code">
-          <div style="border:1px solid #afafaf;height:290px;width:100%;background-image: url('/img/sparkdash/bg.ffedit.png'); ">
-            <textarea class="expression-preview-code" id="code" name="code" style="height:290px;width:100%;"></textarea>
-          </div>
-        </div>
-        <div class="panel data" style="display:none;">
-          <div style="border:1px solid #afafaf;height:290px;width:100%;"></div>
-        </div>
-        
-        <div style="margin-top:5px;margin-bottom:5px;">
-          <button class="pure-button pure-button-warning" action="test_FFEdit">Test</button>
-          <button class="pure-button pure-button-disabled" action="save_FFEdit" style="float:right;">Save</button>
-        </div>
-        
-        <div class="preview" style="border:1px solid #336699;height:200px;width:100%;background-image:url('/img/sparkdash/device.settings.preview.map.png');">
-          
-          <div class="device-preview" style="width:330px;margin:auto;">
-            <ul>
-              <li data="ffedit-preview-ef12155c-a286-3253-bfb1-24dbe403a1fa" class="device unselectable">
-                <div class="header">
-                  <div class="deviceIcon"></div>
-                  <div class="deviceTitle">Keverage</div>
-                  <div class="deviceCheckBox">
-                    <label class="styled-checkbox">
-                      <input type="checkbox" />
-                      <span></span>
-                    </label>
-                  </div>
-                </div>
-                
-                <div class="content">
-                  <div style="width:50px;height:50px;margin-top: 3px;float:left;">
-                    <img src="https://www.monosnap.com/image/6jaPgaE3d0i2wq3umYzixoz7y.png" width="50">
-                  </div>
-                  <div style="float:left;margin-left: 10px;">
-                    <div style="float:left;" class="row1">
-                      <a style="text-decoration:none;font-weight:bold;color:#336699;" href="#">S9822215</a>
-                    </div>
-                    <div style="float:left;" class="row2">1199 West 25th St, Joplin</div>
-                    <div style="float:left;" class="row3">
-                      <div class="label red">Turn Off</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="footer">
-                  <div>
-                    <div class="led state2"></div>
-                    <div class="timestamp">Last updated: 3 hours ago</div>
-                    <div class="socket"></div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-          
-        </div>
-      </div>
-      
-  </div> 
+  <section id="general" class="active">
+    <h1 style="paddin:40px;text-align:center;">General</h1>
+  </section>
+
+  <section id="map">
+    <h1 style="paddin:40px;text-align:center;">Map</h1>
+  </section>
     
+  <section id="devices">
+    
+    <div class="left" style="width:400px;float:left;">
+      <div style="width:400px;" class="tableview">
+        <ul>
+          <p>Filter Functions</p>
+          <li>&nbsp;</li>
+          <li>&nbsp;</li>
+          <li>&nbsp;</li>
+          <li>&nbsp;</li>
+          <li>&nbsp;</li>
+        </ul>
+      </div>
+      <div class="clearfix" style="text-align: center;">
+        <button type="submit" class="pure-button pure-button-primary" data="submit-c3">New Filter</button>
+      </div>
+    </div>
+    <div class="right" style="display: block;float: left;margin-left: 10px;width: 550px;">
+
+        <div class="pure-menu pure-menu-open pure-menu-horizontal">
+            <ul>
+              <li class="pure-menu-selected"><a href="#">Code</a></li>
+                <li><a href="#">Data</a></li>
+            </ul>
+        </div>
+
+        <div class="container">
+          <div class="panel code">
+            <div style="border:1px solid #afafaf;height:290px;width:100%;background-image: url('/img/sparkdash/bg.ffedit.png'); ">
+              <textarea class="expression-preview-code" id="code" name="code" style="height:290px;width:100%;"></textarea>
+            </div>
+          </div>
+          <div class="panel data" style="display:none;">
+            <div style="border:1px solid #afafaf;height:290px;width:100%;"></div>
+          </div>
+
+          <div style="margin-top:5px;margin-bottom:5px;">
+            <button class="pure-button pure-button-warning" action="test_FFEdit">Test</button>
+            <button class="pure-button pure-button-disabled" action="save_FFEdit" style="float:right;">Save</button>
+          </div>
+
+          <div class="preview" style="border:1px solid #336699;height:200px;width:100%;background-image:url('/img/sparkdash/device.settings.preview.map.png');">
+
+            <div class="device-preview" style="width:330px;margin:auto;">
+              <ul>
+                <li data="ffedit-preview-ef12155c-a286-3253-bfb1-24dbe403a1fa" class="device unselectable">
+                  <div class="header">
+                    <div class="deviceIcon"></div>
+                    <div class="deviceTitle">Keverage</div>
+                    <div class="deviceCheckBox">
+                      <label class="styled-checkbox">
+                        <input type="checkbox" />
+                        <span></span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="content">
+                    <div style="width:50px;height:50px;margin-top: 3px;float:left;">
+                      <img src="https://www.monosnap.com/image/6jaPgaE3d0i2wq3umYzixoz7y.png" width="50">
+                    </div>
+                    <div style="float:left;margin-left: 10px;">
+                      <div style="float:left;" class="row1">
+                        <a style="text-decoration:none;font-weight:bold;color:#336699;" href="#">S9822215</a>
+                      </div>
+                      <div style="float:left;" class="row2">1199 West 25th St, Joplin</div>
+                      <div style="float:left;" class="row3">
+                        <div class="label red">Turn Off</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="footer">
+                    <div>
+                      <div class="led state2"></div>
+                      <div class="timestamp">Last updated: 3 hours ago</div>
+                      <div class="socket"></div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+    </div> 
+    
+  </section>
+  
+  <section id="notifications">
+    <h1 style="paddin:40px;text-align:center;">Notifications</h1>
+  </section>
+   
 </div>
