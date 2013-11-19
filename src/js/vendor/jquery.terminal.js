@@ -3314,7 +3314,6 @@
                         output_buffer = [];
                         draw_line(string, settings);
                         if (settings.flush) {
-                            console.log('flush');
                             flush();
                         }
                         lines.push([string, settings]);
