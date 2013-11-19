@@ -1,6 +1,7 @@
 define([
 	'jquery',
 	'underscore',
+	'dc',
 	"Pusher",
 	'sammy',
 	'form2js',
@@ -8,8 +9,10 @@ define([
 	'hbs!tpl/modals/app.createbuild.html', 
 	'jquery.terminal',
 	'jquery.easyModal',
-	'jquery.ui.widget'], 
-	function($, _, Pusher, sammy, form2js, js2form, tpl_0) {
+	'jquery.ui.widget',
+	'crossfilter',
+	'd3'], 
+	function($, _, dc, Pusher, sammy, form2js, js2form, tpl_0) {
 		
 	console.log("Loaded app");
 	
@@ -265,6 +268,30 @@ define([
 			 *
 			*/
 			//app.setLocation('#/devices');
+			
+			var chart = dc.lineChart("#chart");
+			d3.csv("/img/morley.csv", function(error, experiments) {
+
+			 		experiments.forEach(function(x) {
+				    x.Speed = +x.Speed;
+				  });
+
+				  var ndx                 = crossfilter(experiments),
+				      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
+				      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+
+				  chart
+				    .width(768)
+				    .height(480)
+				    .x(d3.scale.linear().domain([6,20]))
+				    .brushOn(false)
+				    .yAxisLabel("This is the Y Axis!")
+				    .dimension(runDimension)
+				    .group(speedSumGroup);
+
+				  chart.render();
+
+			});
 			
       return true;
     }

@@ -151,8 +151,15 @@ switch(subcommand) {
 							form2js: "form2js",
 							js2form: "js2form",
 							shortlink: "shortlink",
-							jsmodel: "js-model-0.11.0.min"
+							jsmodel: "js-model-0.11.0.min",
+							d3: "d3.v3",
+							dc: "dc",
+							crossfilter: "crossfilter"
 			    },
+					// uglify2: {
+					//      mangle: false
+					// },
+					// optimize: "uglify2",
 					shim: {
 			        'jquery.mustache'				: ['jquery'],
 							'jquery.easyModal'			: ['jquery'],
@@ -168,6 +175,10 @@ switch(subcommand) {
 							'sammy':{
 								deps: ['jquery'],
 								exports: 'Sammy'
+							},
+							'dc': {
+								deps: ['d3','crossfilter'],
+								exports: 'dc'
 							}
 			    },
 			    name: '../app',
