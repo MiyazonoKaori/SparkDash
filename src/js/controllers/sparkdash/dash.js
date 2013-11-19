@@ -203,8 +203,7 @@ define([
 					// renders Tabs, dropdowns, etc
 					// Load Devices view
 					updateNavLinks(this.params['appid']);
-					app.setLocation('#/devices');
-					
+					this.redirect('/', this.params['appid'], '/sparkdash/#/devices');					
 				});
 				
 				
