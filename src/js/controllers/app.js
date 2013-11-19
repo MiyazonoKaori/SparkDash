@@ -260,6 +260,7 @@ define([
 				
 				
 				var chart = dc.lineChart("#chart");
+				$('#chart .loading_dots').remove();
 				d3.csv("/img/morley.csv", function(error, experiments) {
 
 				 		experiments.forEach(function(x) {
@@ -279,7 +280,6 @@ define([
 					    .dimension(runDimension)
 					    .group(speedSumGroup);
 
-						$('#chart .loading_dots').remove();
 					  chart.render();
 				});
 				
