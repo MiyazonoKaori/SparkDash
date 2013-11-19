@@ -288,9 +288,9 @@ define([
 				    .yAxisLabel("This is the Y Axis!")
 				    .dimension(runDimension)
 				    .group(speedSumGroup);
-
+					
+					$('#chart .loading_dots').remove();
 				  chart.render();
-
 			});
 			
       return true;
