@@ -259,6 +259,10 @@ define([
 				});
 				
 				
+				console.log(d3);
+				console.log(dc);
+				console.log(crossfilter);
+				
 				var chart = dc.lineChart("#chart");
 				$('#chart .loading_dots').remove();
 				d3.csv("/img/morley.csv", function(error, experiments) {
