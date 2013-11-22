@@ -27,7 +27,7 @@
         <link rel="apple-touch-icon" href="/img/logos/apple-touch-icon-57.png">
     </head>
 
-    <body controller="register" style="background-color: #111;">
+    <body controller="register">
         
         <div id="layout" class="pure-g-r">
 
@@ -50,15 +50,16 @@
                     <p>{{.}}</p>
                   </aside>
                 {{/error}}
-            		<h2 style="text-align:center;">{{#message}}{{.}}{{/message}}</h2>
+            		
+            		{{#errconn}}
+                   <h2 style="text-align:center;">{{#message}}{{.}}{{/message}}</h2>
+                {{/errconn}}
+                
+            		{{#connected}}
+                   <h2 style="text-align:center;">{{#message}}{{.}}{{/message}}</h2>
+                {{/connected}}
             	</div>
             </div>
-          </div>
-        </div>
-        
-        <div id="settings"></div>
-        <div class="avgrund-cover">
-          <div class="avgrund-contents">
           </div>
         </div>
         
