@@ -7,7 +7,6 @@ define([
 	'moment',
 	'form2js',
 	'js2form', 
-	'codemirror',
 	'hbs!tpl/tabs/devices.html',
 	'hbs!tpl/modals/app.new.html',
 	'hbs!tpl/modals/devices.map.settings.html',
@@ -19,11 +18,28 @@ define([
 	'leaflet.animatedmarker',
 	'leaflet.usermarker',
 	'leaflet.contextmenu',
-	'lvector'],function($,_,L, Pusher, Handlebars, moment, form2js, js2form, codemirror, tmpl_DT, tpl_1, tpl_2, tpl_Settings, tpl_3, tpl_RowDevice) {
+	'lvector',
+	'jsonlint',
+	'codemirror',
+	'codemirror.mode.javascript'],function($,_,L, Pusher, Handlebars, moment, form2js, js2form, tmpl_DT, tpl_1, tpl_2, tpl_Settings, tpl_3, tpl_RowDevice) {
 	console.log('initializing app::devices');
 	
 	var $ = $||$(function($) {$=$;});
-
+	
+	CodeMirror.registerHelper("lint", "json", function(text) {
+	  var found = [];
+	  jsonlint.parseError = function(str, hash) {
+	    var loc = hash.loc;
+	    found.push({from: CodeMirror.Pos(loc.first_line - 1, loc.first_column),
+	                to: CodeMirror.Pos(loc.last_line - 1, loc.last_column),
+	                message: str});
+	  };
+	  try { jsonlint.parse(text); }
+	  catch(e) {}
+	  return found;
+	});
+	CodeMirror.jsonValidator = CodeMirror.lint.json; // deprecated
+	
 	/*
 	 *
 	 * Handlebars
@@ -146,11 +162,13 @@ define([
 	};
 	pushClient_connected = function(){
 		console.log('pusher: connected');
-		$('body').removeClass().addClass('status-bar-active online');
-		$('#status-bar p').text('Connected!');
-		setTimeout(function(){
-			$('body').removeClass('status-bar-active');
-		},2000);
+		if(SP.Tab.Devices.MAP) {
+			$('body').removeClass().addClass('status-bar-active online');
+			$('#status-bar p').text('Connected!');
+			setTimeout(function(){
+				$('body').removeClass('status-bar-active');
+			},2000);
+		}
 	};
 	pushClient_unavailable = function(){
 		console.log('pusher: unavailable');
@@ -173,7 +191,7 @@ define([
 	};
 	pushChannel_subscription_error = function(status) {
 		console.log('pusher: failed to subscribe');
-		$('body').removeClass().addClass('status-bar-active pause')
+		$('body').removeClass().addClass('status-bar-active pause');
 	  if(status == 408 || status == 503){
 			$('#status-bar p').text('SparkDash could not connect to the main channel. Retry?');
 	  } else {
@@ -199,84 +217,87 @@ define([
 		console.log(' Bytes: '+getUTF8Length($(this).val()));
 	};
 	modal_Settings_open = function(view){
-		
-		// create tmp model
-		var mdl = Model("ffedit");
-		var tmpDevice = new mdl({
-		      "longitude": "-94.486894",
-		      "enabled": "true",
-		      "userID": "TZMartin",
-		      "clientID": "TZ-ef12155c-a286-3253-bfb1-24dbe403a1fa",
-		      "latitude": "37.1122284",
-		      "appPackage": "com.test.app",
-		      "geohash": "9ysg1uhdruc3",
-		      "device": "iPhone+4S",
-		      "expires": "123456870",
-		      "status": {
-		        "id": 100,
-		        "title": "Service Trip",
-		        "data": {
-		          "image": "https://www.monosnap.com/image/6jaPgaE3d0i2wq3umYzixoz7y.png",
-		          "jobNum": "S9822215",
-		          "address": "1199 West 25th St, Joplin",
-		          "labelText": "Turn Off",
-		          "labelColor": "red"
-		        },
-		        "timestamp": 1384165084
-		      },
-		      "timestamp": 1380741478
-		 });
-		tmpDevice.save();
-		
+				
 		// Editor
-		SP.UI.FFEditor = $('.expression-preview-code').codemirror({
-      mode: 'javascript',
+		SP.UI.FF.StatusCode = CodeMirror.fromTextArea($('.expression-preview-code')[0], {
+      mode: "javascript",
+			_hasChanged:false,
+      lineNumbers: true,
+			lineWrapping: true,
+			gutters: ["CodeMirror-lint-markers"],
+			lint:true
+		});
+		SP.UI.FF.StatusCode.on("change", modal_Settings_device_preview);
+		
+		SP.UI.FF.StatusData = CodeMirror.fromTextArea($('.expression-preview-data')[0], {
+      mode: "application/json",
 			_hasChanged:false,
       lineNumbers: true,
 			lineWrapping:true,
 			smartIndent:false,
 			fixedGutter:false,
-			onChange: function(e){
-				
-				SP.UI.FFEditor._hasChanged = true;
-				
-				var el = $(".device-preview li[data='ffedit-preview-ef12155c-a286-3253-bfb1-24dbe403a1fa']").find('.content');
-				
-				var editFunc = evalFunction(e.getValue());
-				if (!editFunc.errorMessage) {
-					try {
-						el.html(editFunc.call(this, tmpDevice.asJSON()));
-					}catch(e){
-						el.html(e+"");
-					}
-				} else {
-					el.html(editFunc.errorMessage);
-				}
-					
-				// var editFunc = App.costco.evalFunction(e.getValue());
-				// 
-				// 	        if (!editFunc.errorMessage) {
-				// 						// Traverse and Apply editFunc to object
-				// 	          var traverseFunc = function(doc) {
-				// 	            App.util.traverse(doc).forEach(editFunc);
-				// 	            return doc;
-				// 	          };
-				// 	          App.costco.previewTransform(App.db.cache, editFunc, App.currentColumn);
-        //} else {
-					//console.log(editFunc.errorMessage);
-					//App.costco.previewTransform(App.db.cache, function() { return editFunc.errorMessage;}, App.currentColumn);
-        //}
-			}
-    });
+			gutters: ["CodeMirror-lint-markers"],
+			lint:true
+		});
+		SP.UI.FF.StatusData.on("change",modal_Settings_device_preview);
 		
+		SP.UI.FF.MarkerCode = CodeMirror.fromTextArea($('.marker-preview-code')[0], {
+      mode: "javascript",
+			_hasChanged:false,
+      lineNumbers: true,
+			lineWrapping:true,
+			smartIndent:false,
+			fixedGutter:false,
+			gutters: ["CodeMirror-lint-markers"],
+			lint:true
+		});
+		SP.UI.FF.MarkerCode.on("change",modal_Settings_device_preview);
+	};
+	modal_Settings_device_preview = function(e){
+		
+		e._hasChanged = true;
+		
+		var el = $(".device-preview li[data='ffedit-preview-ef12155c-a286-3253-bfb1-24dbe403a1fa']").find('.content');
+		
+		var editFunc = evalFunction(SP.UI.FF.StatusCode.getValue());
+		if (!editFunc.errorMessage) {
+			try {
+				var d = SP.UI.FF.StatusData.getValue();
+				if(!d && !SP.UI.FF.StatusData._hasChanged) {
+					d = {"name":"Bob"}
+				} else {
+					d = JSON.parse(d);
+				}
+				el.html(editFunc.call(this, SP.UI.tmp.device.first().asJSON(), d));
+			}catch(e){
+				el.html(e+"");
+			}
+		} else {
+			el.html(editFunc.errorMessage);
+		}
+			
+		// var editFunc = App.costco.evalFunction(e.getValue());
+		// 
+		// 	        if (!editFunc.errorMessage) {
+		// 						// Traverse and Apply editFunc to object
+		// 	          var traverseFunc = function(doc) {
+		// 	            App.util.traverse(doc).forEach(editFunc);
+		// 	            return doc;
+		// 	          };
+		// 	          App.costco.previewTransform(App.db.cache, editFunc, App.currentColumn);
+    //} else {
+			//console.log(editFunc.errorMessage);
+			//App.costco.previewTransform(App.db.cache, function() { return editFunc.errorMessage;}, App.currentColumn);
+    //}
 	};
 	modal_Settings_close = function(view) {
 		$('.modal.settings .CodeMirror.CodeMirror-wrap').remove();
 		$('.modal.settings section').removeClass().first().addClass('active');
     $('.modal.settings .header ul li').removeClass();
-		SP.UI.FFEditor = null;
+		SP.UI.FF.StatusCode = null;
+		SP.UI.FF.StatusData = null;
 	};
-	modal_Settings_click_tabs = function(){
+	modal_Settings_click_main_tabs = function(){
     $('.modal.settings section').removeClass();
     $('.modal.settings .header ul li').removeClass();
 
@@ -286,14 +307,29 @@ define([
 		$(sel).addClass('active');
 		
 		switch($(sel).attr('id')) {
+			case 'map':
+				if (!SP.UI.FF.MarkerCode._hasChanged) {
+					SP.UI.FF.MarkerCode.setValue("function(device, payload) {\n    return \"Hello \" + payload.name;\n}");
+				}
+				break;
 			case 'devices':
-				if (!SP.UI.FFEditor._hasChanged) {
-					SP.UI.FFEditor.setValue("function(device) {\n    return \"HELLO WORLD\";\n}");
+				if (!SP.UI.FF.StatusCode._hasChanged) {
+					SP.UI.FF.StatusCode.setValue("function(device, payload) {\n    return \"Hello \" + payload.name;\n}");
+				}
+				if (!SP.UI.FF.StatusData._hasChanged) {
+					SP.UI.FF.StatusData.setValue("{\n	\"name\" : \"Bob\"\n}");
 				}
 			break;
 		}
 		    
   };
+	modal_Settings_click_devices_tabs = function() {
+		$('.modal.settings section#devices .container #panel').removeClass();
+    $('.modal.settings section#devices .right .pure-menu ul li').removeClass();
+		var sel = $('.modal.settings section#devices .container #panel')[$(this).index()];
+		$(sel).addClass('active');
+		SP.UI.FFEditorData.setValue(SP.UI.FFEditorData.getValue());
+	};	
 	
 	logPusher = function(message) {
 		SP.Terminal.echo(message+"\n", {
@@ -540,7 +576,7 @@ define([
 				break;
 			
 			case 'test_FFEdit':
-				console.log(evalFunction(SP.UI.FFEditor.getValue()));
+				console.log(evalFunction(SP.UI.FF.StatusCode.getValue()));
 				break;
 
 		}
@@ -779,7 +815,8 @@ define([
 			
 			// Modal events
 			$('.modal.c4').on('input propertychange','textarea', modal_Message_validate);
-			$('.modal.settings').on('click','.header ul li', modal_Settings_click_tabs);
+			$('.modal.settings').on('click','.header ul li', modal_Settings_click_main_tabs);
+			$('.modal.settings').on('click','section#devices ul li', modal_Settings_click_devices_tabs);
 			
 			// Create Main Container
 			SP.render('#main-container', tmpl_DT({

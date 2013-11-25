@@ -1,13 +1,47 @@
 #terminal-header {
-  background-color: rgb(51, 51, 51);
+  background-color: #fff;
   font-family: FreeMono, monospace;
   font-size: 13px; 
+  font-weight: bold;
   height: 20px; 
-  color: rgb(221, 221, 221); 
+  color: #3366ff; 
   padding: 3px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
   text-transform: capitalize;
+  border-bottom:1px solid #efefef;
+  line-height: 6px;
+}
+
+#terminal {
+  height:300px;
+  overflow-y: auto;
+  background-color:#FFF;
+  border-bottom: 1px solid #EFEFEF;
+  
+  div.row {
+    margin-top: 4px;
+    margin-bottom:4px;
+    font-size:12px;
+    
+    .cmd {
+      width:75px;
+      float:left;
+      text-align: center;
+      
+      span {
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: bold;
+        padding-left: 3px;
+        padding-right: 3px;
+      }
+      .blue {
+        background-color: #336699;
+        color: #FFFFFF;
+      }
+    }
+    
+    .log { font-family:courier; }
+  }
 }
 
 .terminal .terminal-output .format, 
@@ -39,6 +73,7 @@
     display: block;
     line-height: 14px;
     height: auto;
+    color:#333;
 }
 .terminal .prompt {
     float: left;
@@ -54,6 +89,7 @@
 .terminal-output > div {
     /*padding-top: 3px;*/
     min-height: 14px;
+    color:#333;
 }
 .terminal .terminal-output div span {
     display: inline-block;

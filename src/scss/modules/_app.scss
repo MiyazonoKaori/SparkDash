@@ -101,7 +101,7 @@ u {
 
 #main-menu-container {
   background: #1773B1;
-  height: 30px;
+  height: 42px;
   position: fixed;
   top: 0;
   width: 100%;
@@ -136,14 +136,16 @@ u {
 }
 
 #main-menu-container nav ul {
+  height: 100%;
   margin: 0;
   padding: 0;
 }
 
 #main-menu-container nav ul li {
+  height: 100%;
   min-width: 20px;
   margin: 0 1px 0 0;
-  padding: 2px 20px;
+  padding: 10px 20px;
   float: left;
   text-align: left;
   opacity: 0.7;
@@ -162,16 +164,19 @@ u {
 }
 
 #main-menu-login nav {
+  height: 100%;
   margin-right:0px;
   float: right;
   cursor:pointer;
 }
 #main-menu-tabs nav {
+  height: 100%;
   margin-right:0px;
   float: left;
   cursor:pointer;
 }
 #main-menu-login nav ul, #main-menu-tabs nav ul {
+  height: 100%;
   list-style-type: none;
 }
 #main-menu-login nav ul li:last-child, #main-menu-tabs nav ul li:last-child {
@@ -182,7 +187,7 @@ u {
 #main-container {
   height: 100%;
   position: relative;
-  top: 25px;
+  top: 42px;
   letter-spacing: 0;
   overflow: auto;
 }
@@ -197,9 +202,11 @@ u {
 }
 
 #main-container div.content {
-    margin: 0 auto 50px;
-    width: 800px;
-    padding: 0 2em;
+    margin: 20px auto 50px;
+    width: 1000px;
+    max-width: 100%;
+    min-width: 768px;
+    padding: 0;
 }
 
 

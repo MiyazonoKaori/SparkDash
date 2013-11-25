@@ -2,10 +2,10 @@
 /* foundational CSS */
 .pure-table {
     /* Remove spacing between table cells (from Normalize.css) */
-    border-collapse: separate;
+    border-collapse: collapse;
     border-spacing: 0;
     empty-cells: show;
-    border: 1px solid $border;
+    border: none;
 }
 
 .pure-table caption {
@@ -17,7 +17,7 @@
 
 .pure-table td,
 .pure-table th {
-    border-left: 1px solid $border;/* inner column border */
+    border-left: none;
     border-width: 0 0 0 1px;
     font-size: inherit;
     margin: 0;
@@ -36,6 +36,17 @@
     text-align: left;
     vertical-align: bottom;
     white-space: nowrap;
+}
+.pure-table thead th {
+  padding: $cell-header-padding; /* cell padding */
+}
+
+.pure-table tbody tr {
+  background-color:#fff;
+  border-bottom: 1px solid $border;
+}
+.pure-table tbody > tr:last-child {
+  border-bottom: 2px solid $border;
 }
 
 /*

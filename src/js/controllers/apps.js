@@ -8,14 +8,11 @@ define([
 	'hbs!tpl/modals/app.license.html',
 	'hbs!tpl/rows/row.applist.html', 
 	'jquery.easyModal',
-	'jquery.ui.widget',
-	'jsmodel'], 
+	'jquery.ui.widget'], 
 	function($, _, sammy, form2js, tpl_0, tpl_1, tpl_2, tpl_3) {
 		
 	console.log("Loaded apps");
-	
-	console.log(this);
-	
+		
 	var $ = $||$(function($) {$=$;});
 
 	var SEL = false;
@@ -187,7 +184,7 @@ define([
 				});
 				
 		  });
-			app.run();
+			//app.run();
 			
       return true;
     }

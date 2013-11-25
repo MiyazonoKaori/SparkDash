@@ -23,9 +23,7 @@ define([
   return {
     start: function() {
       console.log("starting data");
-			
-			SP.Pace.start();
-			
+						
 	    // Generate random shortlink
 	    var randomStr = shortlink.generate(6);
 	    console.log('Generate random shortlink: ' + randomStr);

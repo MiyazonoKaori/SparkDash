@@ -18,7 +18,7 @@ var SP = {
 				timeout:60000,
 				async:true,
 		    url: "/"
-		  }
+		  };
 			var responseError = function(response) {
 				if (response) {
 					if(_.isArray(response) && (response.length > 0) ) response = response[0];
@@ -65,18 +65,18 @@ var SP = {
 			this.extend({
 			    find_by_ID: function(id) {
 			      return this.detect(function() {
-			        return this.attr("_id") == id
-			      })
+			        return this.attr("_id") == id;
+			      });
 			    }
-			  })
+			  });
 		}),
 		devices:Model("devices",function(){
 			
 			this.extend({
 			    find_by_ID: function(id) {
 			      return this.detect(function() {
-			        return this.attr("clientID") == id
-			      })
+			        return this.attr("clientID") == id;
+			      });
 			    }
 			});
 			
@@ -99,7 +99,7 @@ var SP = {
 							if (this.attr("marked")) {
 								return this.attr("socketID");
 							}
-						})
+						});
 			    }
 			});
 			
@@ -111,11 +111,11 @@ var SP = {
 									return this.attr("socketID");
 								}
 							}
-						})
+						});
 			    }
 			});
 			
-		}),
+		})
 	}
 };
 
@@ -134,11 +134,13 @@ require([
 	'jquery', 
 	'controllers/launchpad', 
 	'controllers/app', 
+	'controllers/devices',
+	'controllers/device',
 	'controllers/apps', 
 	'controllers/data', 
 	'controllers/login', 
-	'controllers/register', 
-	'pace'], function($, launchpad, app, apps, data, login, register, pace) {
+	'controllers/register',
+	'jsmodel'], function($, launchpad, app, devices, device, apps, data, login, register) {
 	
 	/**
 	 * MicroEvent - to make any js object an event emitter (server or browser)
@@ -167,7 +169,7 @@ require([
 			this._events = this._events || {};
 			if( event in this._events === false  )	return;
 			for(var i = 0; i < this._events[event].length; i++){
-				this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1))
+				this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
 			}
 		}
 	};
@@ -184,7 +186,7 @@ require([
 		for(var i = 0; i < props.length; i ++){
 			destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
 		}
-	}
+	};
 	
 	function registerEmitter() {
     var Emitter = function(obj) {
@@ -199,12 +201,9 @@ require([
 
 	var Emitter = registerEmitter();
 	
-	
-	SP.Pace = pace;
-	
 		
   $(function($) {
-		console.log('Starting app');
+		console.log('Starting main app');		
 		
 		// Init controller based on the HTML controller property
 		SP.Controller = eval($('body').attr('controller'));

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>{{app_name}}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
+        <meta http-equiv="cleartype" content="on">
+        <meta name="description" content="" />
+      	<meta name='keywords' content=''/>
+
+        <link rel="author" href="/humans.txt">
+        
+        <link href="/css/main.css" rel="stylesheet">
+
+        <meta property="og:title" content="SparkDash Mobile Analytics.">
+        <meta property="og:type" content="company">
+        <meta property="og:image" content="http://semanticpress.com/assets/img/logos/sparkdash.png">
+        <meta property="og:site_name" content="SemanticPress.com">
+        <meta property="og:url" content="http://SemanticPress.com/">
+        <meta property="og:description" content="">   
+
+        <link rel="shortcut icon" href="/favicon.ico">
+        <link rel="icon" href="/img/logos/favicon.png" type="image/png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/img/logos/apple-touch-icon-144.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/img/logos/apple-touch-icon-114.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/img/logos/apple-touch-icon-72.png">
+        <link rel="apple-touch-icon" href="/img/logos/apple-touch-icon-57.png">
+    </head>
+
+    <body controller="devices">
+        
+        <div id="layout" class="pure-g-r">
+
+          <div id="main" class="pure-u-1">
+            <div id="main-menu-container" class="pure-g">
+              <div id="main-menu-tabs" class="pure-u-1">
+                <nav>
+                  <ul>
+                    <li action="tab.launchpad"><a href="/">LaunchPad</a></li>
+                    <li class="active" action="tab.apps"><a href="/apps">Apps</a></li>
+                    <li action="tab.data"><a href="/data">Data</a></li>
+                  </ul>
+                </nav>
+              </div>
+              <div class="pure-u-1" style="text-align:center;padding:0;font-size:18px;opacity:0.9;color:#fff;width:200px;margin:auto;">{{#domain}}{{title}}{{/domain}}</div>
+              <div id="main-menu-login" class="pure-u-1">
+                <nav>
+                  <ul>
+                    <li class="active" action="user.logout">sign out</li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+
+            <div id="main-container" class="pure-g-r">
+              
+              <div class="content">
+                                
+                  <div class="pure-u-1-1" style="clear:both;">
+                                          
+                      <section>
+                        
+                        <h2 style="font-size: 2.5em; margin: 5px; text-align: center;margin-top:10px;">Devices</h2>
+                        
+                        <table id="versionTable" class="pure-table pure-table-horizontal" style="width:100%;max-width: 1000px;margin-top:30px;">
+                            <thead>
+                                <tr>
+                                    <th style="width:30px;">#</th>
+                                    <th style="width:600px;">ClientID</th>
+                                    <th style="width:100px;"></th>
+                                    <th style="width:30px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              
+                              {{#devices}}
+                              <tr id="{{clientID}}" data="">
+                                <td></td>
+                                <td><a href="d/{{.}}">{{.}}</a></td>
+                                <td class="activate"><button class="pure-button pure-button-xsmall pure-button-primary" action="setAppBuild">Send Message</button></td><td><button class="pure-button pure-button-xsmall pure-button-error" action="deleteAppBuild">X</button></td>
+                              </tr>
+                              {{/devices}}
+                              
+                            </tbody>
+                        </table>
+                        
+                      </section>
+                                            
+                  </div>
+                
+              </div>
+              
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        
+        <div id="modals"></div>
+        
+        <script>
+        var DOMAIN = '{{#domain}}{{id}}{{/domain}}';
+        var PKG = '{{#app}}{{appPackage}}{{/app}}';
+        var ID = '{{#app}}{{_id}}{{/app}}';
+        </script>
+        <script data-main="/js/app.min" src="/js/require.js"></script>
+    </body>
+</html>

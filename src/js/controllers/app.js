@@ -27,22 +27,33 @@ define([
 			$('.modal.c0').easyModal({top:200,overlay:0.2});
 			
 			// Create Terminal
-			SP.Terminal = $('fieldset#logs #terminal').terminal({}, {
-	      enabled:false,
-				greetings:'Ready.',
-	      onFocus: function(){
-	        return false;
-	      },
-	      onBlur: function() {
-	        return true;
-	      }
-	    });
+			// SP.Terminal = $('section#logs #terminal').terminal({}, {
+			// 	      enabled:false,
+			// 				color: '#333',
+			// 				greetings:'Ready.',
+			// 	      onFocus: function(){
+			// 	        return false;
+			// 	      },
+			// 	      onBlur: function() {
+			// 	        return true;
+			// 	      }
+			// 	    });
 			
 			// Create Websocket
-			Pusher.log = function(message) {
-				SP.Terminal.echo("  rec'd -> "+message+"\n", {
-	          finalize: function(el) {el.css("color", "white");}
-	      });
+			Pusher.log = function(str) {
+				var msg = '', cmd = false, out = false;
+				
+				str = str.split(' : ');
+
+				if (str.length > 2) {
+					msg = str[2];
+					cmd = str[1];
+				} else {
+					msg = str[1];
+				}
+				out = msg;
+				cmd = (cmd) ? cmd.split(' ')[1] : '';
+				$('#terminal').append('<div class="row"><div class="cmd"><span class="blue">'+cmd+'</span></div><div class="log">'+out+'</div>');	
 			};
 			
 			var WSClient = new Pusher(SP.WS.key);
@@ -258,34 +269,34 @@ define([
 					return false;
 				});
 				
-				
-				console.log(d3);
-				console.log(dc);
-				console.log(crossfilter);
-				
-				var chart = dc.lineChart("#chart");
-				$('#chart .loading_dots').remove();
-				d3.csv("/img/morley.csv", function(error, experiments) {
-
-				 		experiments.forEach(function(x) {
-					    x.Speed = +x.Speed;
-					  });
-
-					  var ndx                 = crossfilter(experiments),
-					      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-					      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-
-					  chart
-					    .width(768)
-					    .height(480)
-					    .x(d3.scale.linear().domain([6,20]))
-					    .brushOn(false)
-					    .yAxisLabel("This is the Y Axis!")
-					    .dimension(runDimension)
-					    .group(speedSumGroup);
-
-					  chart.render();
-				});
+				// 
+				// console.log(d3);
+				// console.log(dc);
+				// console.log(crossfilter);
+				// 
+				// var chart = dc.lineChart("#chart");
+				// $('#chart .loading_dots').remove();
+				// d3.csv("/img/morley.csv", function(error, experiments) {
+				// 
+				//  		experiments.forEach(function(x) {
+				// 	    x.Speed = +x.Speed;
+				// 	  });
+				// 
+				// 	  var ndx                 = crossfilter(experiments),
+				// 	      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
+				// 	      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+				// 
+				// 	  chart
+				// 	    .width(950)
+				// 	    .height(480)
+				// 	    .x(d3.scale.linear().domain([6,20]))
+				// 	    .brushOn(false)
+				// 	    .yAxisLabel("This is the Y Axis!")
+				// 	    .dimension(runDimension)
+				// 	    .group(speedSumGroup);
+				// 
+				// 	  chart.render();
+				// });
 				
 		  });
 			app.run();

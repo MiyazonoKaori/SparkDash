@@ -3,7 +3,7 @@
 		<div class="pure-menu pure-menu-open pure-menu-horizontal">
         <ul>
           <li class="pure-menu-selected"><a href="#">General</a></li>
-          <li><a href="#">Map</a></li>
+          <li><a href="#">Markers</a></li>
           <li><a href="#">Devices</a></li>
           <li><a href="#">Notifications</a></li>
         </ul>
@@ -11,12 +11,73 @@
 	</div>
   
   <section id="general" class="active">
-    <h1 style="paddin:40px;text-align:center;">General</h1>
+    <div class="left" style="width:400px;float:left;">
+      <h2 style="text-align:center;">Left</h2>
+    </div>
+    <div class="right" style="display: block;float: left;margin-left: 10px;width: 550px;">
+      <h2 style="text-align:center;">Right</h2>
+    </div>
   </section>
 
   <section id="map">
-    <h1 style="paddin:40px;text-align:center;">Map</h1>
-  </section>
+    <div class="left" style="width:450px;float:left;">
+      <div class="pure-menu pure-menu-open pure-menu-horizontal">
+          <h2 style="text-align:center;margin:0.23em 0;">Code</h2>
+      </div>
+      <div id="panel" class="active" style="height:520px;">
+        <div style="border:1px solid #afafaf;width:100%;background-image: url('/img/sparkdash/bg.ffedit.png'); ">
+          <textarea class="marker-preview-code" id="code" name="code" height="520" style="width:100%;"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="right" style="display: block;float: left;margin-left: 10px;width: 500px;">
+      <div class="pure-menu pure-menu-open pure-menu-horizontal">
+          <h2 style="text-align:center;margin:0.23em 0;">Preview</h2>
+      </div>      
+      <div class="preview" style="border:1px solid #336699;height:520px;width:100%;background-image:url('/img/sparkdash/device.settings.preview.map.png');">
+
+        <div class="device-preview" style="width:330px;margin:auto;">
+          <ul>
+            <li data="ffedit-preview-ef12155c-a286-3253-bfb1-24dbe403a1fa" class="device unselectable">
+              <div class="header">
+                <div class="deviceIcon"></div>
+                <div class="deviceTitle">Keverage</div>
+                <div class="deviceCheckBox">
+                  <label class="styled-checkbox">
+                    <input type="checkbox" />
+                    <span></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="content">
+                <div style="width:50px;height:50px;margin-top: 3px;float:left;">
+                  <img src="https://www.monosnap.com/image/6jaPgaE3d0i2wq3umYzixoz7y.png" width="50">
+                </div>
+                <div style="float:left;margin-left: 10px;">
+                  <div style="float:left;" class="row1">
+                    <a style="text-decoration:none;font-weight:bold;color:#336699;" href="#">S9822215</a>
+                  </div>
+                  <div style="float:left;" class="row2">1199 West 25th St, Joplin</div>
+                  <div style="float:left;" class="row3">
+                    <div class="label red">Turn Off</div>
+                  </div>
+                </div>
+              </div>
+              <div class="footer">
+                <div>
+                  <div class="led state2"></div>
+                  <div class="timestamp">Last updated: 3 hours ago</div>
+                  <div class="socket"></div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>  
     
   <section id="devices">
     
@@ -40,18 +101,20 @@
         <div class="pure-menu pure-menu-open pure-menu-horizontal">
             <ul>
               <li class="pure-menu-selected"><a href="#">Code</a></li>
-                <li><a href="#">Data</a></li>
+              <li><a href="#">Payload</a></li>
             </ul>
         </div>
 
         <div class="container">
-          <div class="panel code">
-            <div style="border:1px solid #afafaf;height:290px;width:100%;background-image: url('/img/sparkdash/bg.ffedit.png'); ">
+          <div id="panel" class="active">
+            <div style="border:1px solid #afafaf;width:100%;background-image: url('/img/sparkdash/bg.ffedit.png'); ">
               <textarea class="expression-preview-code" id="code" name="code" style="height:290px;width:100%;"></textarea>
             </div>
           </div>
-          <div class="panel data" style="display:none;">
-            <div style="border:1px solid #afafaf;height:290px;width:100%;"></div>
+          <div id="panel">
+            <div style="border:1px solid #afafaf;width:100%;background-image: url('/img/sparkdash/bg.ffedit.png'); ">
+              <textarea class="expression-preview-data" id="code" name="code" style="height:290px;width:100%;"></textarea>
+            </div>
           </div>
 
           <div style="margin-top:5px;margin-bottom:5px;">
@@ -102,13 +165,20 @@
 
           </div>
         </div>
-
+          
+        </div>
+        
     </div> 
     
   </section>
   
   <section id="notifications">
-    <h1 style="paddin:40px;text-align:center;">Notifications</h1>
+    <div class="left" style="width:400px;float:left;">
+      <h2 style="text-align:center;">Left</h2>
+    </div>
+    <div class="right" style="display: block;float: left;margin-left: 10px;width: 550px;">
+      <h2 style="text-align:center;">Right</h2>
+    </div>
   </section>
    
 </div>

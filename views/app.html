@@ -59,30 +59,45 @@
                 {{#app}}
                 
                   <div class="pure-u-1-1" style="clear:both;">
-                    <div class="l-box" style="border:1px solid #999;border-radius:5px;margin-top:10px;background-color:#FFF;padding:10px;letter-spacing:0px;">
-                      <h2 style="text-align:center;font-size: 2.5em;margin: 0;">{{appTitle}}</h2>
-                      <div style="text-align:center;margin-top:-10px;margin-bottom:20px;">{{appPackage}}</div>
-                      
-                      <div style="margin-bottom:20px;">
-                        <div class="pure-menu pure-menu-open pure-menu-horizontal">
-                            <ul>
-                                <li class="pure-menu-selected"><a href="#">Sessions</a></li>
-                                <li class="pure-menu-disabled"><a href="#">Installs</a></li>
-                            </ul>
-                        </div>
+                                          
+                      <section>
                         
+                        <h2 style="font-size: 2.5em; margin: 5px; text-align: center;margin-top:10px;">{{appTitle}}</h2>
+                        <div style="text-align:center;">{{appPackage}}</div>
+                      
+                        <div style="margin-bottom:20px;margin:30px auto 10px">
+                          
+                          <div class="pure-g">
+                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="devices">32</a> devices</div></div>
+                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="users">3</a> users</div></div>
+                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="events">432</a> events</div></div>
+                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="exceptions">9</a> exceptions</div></div>
+                          </div>
+                          
+                        </div>
+                      
+                      
+                        <!-- <div class="pure-menu pure-menu-open pure-menu-horizontal">
+                          <ul>
+                              <li class="pure-menu-selected"><a href="#">Sessions</a></li>
+                              <li class="pure-menu-disabled"><a href="#">Installs</a></li>
+                          </ul>
+                        </div>
+                      
                         <div id="chart_container" style="border:1px solid #efefef;">
-                        	<div id="chart">
-                        	  <div class="loading_dots">
+                          <div id="chart">
+                            <div class="loading_dots">
                               <span></span>
                               <span></span>
                               <span></span>
                             </div>
-                        	</div>
-                        </div>
+                          </div>
+                        </div> -->
                         
-                      </div>
-                      <form class="pure-form">
+                      </section>
+                      
+                      <section>
+                        <form class="pure-form">
                         <fieldset id="version" style="padding:10px;">
                             <legend>App Version</legend>
                             <p>
@@ -98,7 +113,7 @@
                               <button class="pure-button pure-button-xsmall pure-button-success" action="addNewAppBuild" style="float:right;margin-right:10px;">New</button>
                             </p>
                             
-                            <table id="versionTable" class="pure-table pure-table-horizontal" style="width:100%;max-width: 800px;">
+                            <table id="versionTable" class="pure-table" style="width:100%;max-width: 1000px;">
                                 <thead>
                                     <tr>
                                         <th style="width:80px;">Build</th>
@@ -146,14 +161,17 @@
                             
                         </fieldset>
                       </form>
-                     
-                      <fieldset id="logs" style="padding:10px;">
-                          <legend>Real-Time Logs</legend>
-                          <div id="terminal-header">Initializing...</div>
-                          <div id="terminal" style="height:300px;background-color:#000;"></div>
-                      </fieldset>
+                      </section>
+                                              
+                      <section id="logs" style="padding:10px;">
+                          <h2>App Logs</h2>
+                          <div id="terminal-header">
+                            <div class="spinner spinner-normal spinner-left" style="position: relative; width: 0px; z-index: 1; left: 12px; top: -10px;" aria-role="progressbar"><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-0-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(0deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-1-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(27deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-2-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(55deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-3-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(83deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-4-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(110deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-5-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(138deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-6-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(166deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-7-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(193deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-8-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(221deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-9-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(249deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-10-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(276deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-11-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(304deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div><div style="position: absolute; top: -1px; -webkit-transform: translate3d(0, 0, 0); opacity: 0.25; -webkit-animation: opacity-50-25-12-13 1s linear infinite;"><div style="position: absolute; width: 5px; height: 2px; background-color: rgb(152, 172, 179); box-shadow: rgba(0, 0, 0, 0.0980392) 0px 0px 1px; -webkit-transform-origin: 0% 50%; -webkit-transform: rotate(332deg) translate(7px, 0px); border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; background-position: initial initial; background-repeat: initial initial;"></div></div></div>
+                            <div style="float:left;">Initializing...</div>
+                          </div>
+                          <div id="terminal"></div>
+                      </section>
                                             
-                    </div>
                   </div>
                 
                 {{/app}}  

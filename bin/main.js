@@ -166,6 +166,7 @@ switch(subcommand) {
 							'jquery.ui.widget'			: ['jquery'],
 							'jquery.terminal'				: ['jquery'],
 							'jquery.cookie'					: ['jquery'],
+							'inspector_json'				: ['jquery','underscore'],
 							'handlebars': {
 								exports: 'Handlebars'
 							},
@@ -184,6 +185,12 @@ switch(subcommand) {
 			    name: '../app',
 			    out: compiledAssets+'/js/app.min.js'
 			};
+			
+			
+			if (process.env.NODE_ENV === 'development') {
+				config.optimize = 'none';
+			}
+			
 
 			console.log('Pre-compiling RequireJS files..');
 
