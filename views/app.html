@@ -67,12 +67,14 @@
                       
                         <div style="margin-bottom:20px;margin:30px auto 10px">
                           
+                          {{#stats}}
                           <div class="pure-g">
-                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="devices">32</a> devices</div></div>
-                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="users">3</a> users</div></div>
-                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="events">432</a> events</div></div>
-                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="exceptions">9</a> exceptions</div></div>
+                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="devices">{{device_count}}</a> devices</div></div>
+                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="users">{{user_count}}</a> users</div></div>
+                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="events">{{event_count}}</a> events</div></div>
+                            <div class="pure-u-1-2"><div style="height:100px;text-align:center;font-size: 30px;"><a href="exceptions">{{exception_count}}</a> exceptions</div></div>
                           </div>
+                          {{/stats}}
                           
                         </div>
                       
