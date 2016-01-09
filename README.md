@@ -1,26 +1,17 @@
-# Semantic Press API
+![SparkDash Logo](https://www.monosnap.com/image/sYNfJinbliOwDs6aenwxMuzVj.png)
 
-| URL |  |
-| - | - |
-| http://api.semanticpress.com |  |
+SparkDash is a dashboard for managing mobile workers, devices and dispatching messages.  It's a lightweight, comprehensive notification platform for mobile device management and device analytics. 
 
-## /health
+SparkDash is low cost, easy to implement and open source.
 
-### GET
+SparkDash allows you to:
 
-Returns a JSON object of the server health, including CPU profiling and heap profiling.
+- Communicate with your mobile workforce
+- See all of their locations on a map
+- Pinpoint and assign jobs/tasks to your workforce
+- Notify and update your workforce instantly
+- Report and review everything that happens
 
-Read more about server monitoring: [http://stackoverflow.com/questions/5580776/monitoring-a-node-js-server](http://stackoverflow.com/questions/5580776/monitoring-a-node-js-server)
+SparkDash is a web application intended to run as a self-hosted (on-premise) application or as a hosted cloud service.  It is open source and fully customizable to your needs using a familiar JQuery, CSS and node.js server stack.
 
-```
-{
-  "pid": 13592,
-  "memory": {
-    "rss": 42119168,
-    "heapTotal": 20608760,
-    "heapUsed": 11413688
-  },
-  "uptime": 99
-}
-```
-
+Refer to the [wiki](https://github.com/SemanticPress/SparkDash/wiki)
